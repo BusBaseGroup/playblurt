@@ -1,7 +1,6 @@
 # BLURT
 
-A live typed-answer multiplayer party game built for Cloudflare Workers + Durable Objects.
-
+A live typed-answer multiplayer party game.
 ## Features
 - Fresh randomized 6-character room code for every game, using letters and numbers
 - Host + join flow
