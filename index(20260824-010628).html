@@ -1,0 +1,2069 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0b0d">
+  <meta name="description" content="BLURT — the live multiplayer party game where the funniest answer wins.">
+  <title>BLURT — Live Party Game</title>
+  <style>
+:root {
+  --bg: #0b0b0d;
+  --bg-soft: #101014;
+  --panel: #141419;
+  --panel-2: #19191f;
+  --panel-3: #202027;
+  --text: #f5f4f1;
+  --muted: #96949e;
+  --muted-2: #74727b;
+  --line: rgba(255,255,255,.09);
+  --line-strong: rgba(255,255,255,.15);
+  --orange: #ff5d3a;
+  --orange-2: #ff774f;
+  --orange-soft: rgba(255,93,58,.12);
+  --yellow: #f7c657;
+  --green: #58d68d;
+  --red: #ff6977;
+  --twitch: #9146ff;
+  --twitch-soft: rgba(145,70,255,.13);
+  --shadow: 0 28px 90px rgba(0,0,0,.38);
+  --shadow-soft: 0 18px 45px rgba(0,0,0,.24);
+  --radius-lg: 28px;
+  --radius: 20px;
+  --radius-sm: 13px;
+}
+
+* { box-sizing: border-box; }
+
+html { min-height: 100%; background: var(--bg); }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 80% 0%, rgba(255,93,58,.08), transparent 30%),
+    radial-gradient(circle at 5% 90%, rgba(145,70,255,.055), transparent 32%),
+    var(--bg);
+  color: var(--text);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: .22;
+  background-image: linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(to bottom, black, transparent 70%);
+}
+
+button, input, select, textarea { font: inherit; }
+button { cursor: pointer; }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid rgba(255,119,79,.75); outline-offset: 2px; }
+.hidden { display: none !important; }
+
+.ambient {
+  position: fixed;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+  opacity: .06;
+  z-index: 0;
+}
+.ambient-one { background: var(--orange); top: -220px; right: 4vw; }
+.ambient-two { background: var(--twitch); left: -260px; bottom: -220px; }
+
+.boot {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  background: #0a0a0c;
+  text-align: center;
+}
+.boot-mark, .brand-mark {
+  display: grid;
+  place-items: center;
+  background: var(--orange);
+  color: #fff;
+  font-weight: 1000;
+  line-height: 1;
+}
+.boot-mark { width: 52px; height: 52px; border-radius: 15px; font-size: 27px; box-shadow: 0 12px 35px rgba(255,93,58,.23); }
+.boot-logo { margin-top: 15px; font-size: 28px; font-weight: 1000; letter-spacing: -.05em; }
+.boot-text { margin-top: 7px; color: var(--muted); font-size: 13px; font-weight: 650; }
+
+.app {
+  position: relative;
+  z-index: 1;
+  width: min(1240px, calc(100% - 40px));
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+.site-header {
+  min-height: 88px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--text);
+}
+.brand-mark { width: 34px; height: 34px; border-radius: 10px; font-size: 18px; }
+.brand-word { font-size: 22px; font-weight: 1000; letter-spacing: -.045em; }
+.header-actions { display: flex; align-items: center; justify-content: flex-end; gap: 9px; }
+
+.room-pill {
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(20,20,25,.78);
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .12em;
+  transition: border-color .15s ease, background .15s ease;
+}
+.room-pill:hover { border-color: var(--line-strong); background: var(--panel-2); }
+.room-pill strong { color: #fff; font-size: 15px; letter-spacing: .13em; }
+
+.twitch-auth {
+  min-height: 42px;
+  max-width: 230px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 12px;
+  border: 1px solid rgba(145,70,255,.28);
+  border-radius: 12px;
+  background: var(--twitch-soft);
+  color: #e9ddff;
+  font-size: 12px;
+  font-weight: 850;
+  transition: background .15s ease, border-color .15s ease, transform .15s ease;
+}
+.twitch-auth:hover { background: rgba(145,70,255,.19); border-color: rgba(145,70,255,.42); transform: translateY(-1px); }
+.twitch-auth.signed-in { background: rgba(145,70,255,.1); color: #fff; }
+.twitch-glyph { color: #b784ff; font-size: 13px; }
+.twitch-avatar { width: 26px; height: 26px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255,255,255,.14); order: -1; }
+
+.screen { display: none; }
+.screen.active { display: block; }
+
+.home-screen {
+  min-height: calc(100vh - 89px);
+  padding: 74px 0 90px;
+  align-items: center;
+  grid-template-columns: minmax(0, 1.05fr) minmax(420px, .95fr);
+  gap: 74px;
+}
+.home-screen.active { display: grid; }
+.home-copy { max-width: 700px; }
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 19px;
+  color: #b4b1bb;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .17em;
+}
+.live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--orange); box-shadow: 0 0 0 5px rgba(255,93,58,.08); }
+.home-copy h1 {
+  margin: 0;
+  max-width: 780px;
+  font-size: clamp(58px, 7.4vw, 103px);
+  line-height: .91;
+  letter-spacing: -.065em;
+  font-weight: 950;
+}
+.home-copy h1 span { color: var(--orange); }
+.hero-text {
+  max-width: 660px;
+  margin: 28px 0 30px;
+  color: #aaa7b1;
+  font-size: 18px;
+  line-height: 1.62;
+}
+.hero-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+.btn {
+  min-height: 45px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 0 17px;
+  font-weight: 900;
+  font-size: 12px;
+  letter-spacing: .02em;
+  transition: transform .15s ease, background .15s ease, border-color .15s ease, opacity .15s ease;
+}
+.btn:hover:not(:disabled) { transform: translateY(-1px); }
+.btn:active:not(:disabled) { transform: translateY(0); }
+.btn:disabled { opacity: .36; cursor: not-allowed; }
+.btn.primary { background: var(--orange); color: #fff; box-shadow: 0 10px 30px rgba(255,93,58,.13); }
+.btn.primary:hover:not(:disabled) { background: var(--orange-2); }
+.btn.secondary { background: #1b1b21; border-color: var(--line); color: #f3f2f0; }
+.btn.secondary:hover:not(:disabled), .btn.ghost:hover:not(:disabled) { background: #222229; border-color: var(--line-strong); }
+.btn.ghost { background: transparent; border-color: var(--line); color: #e6e5e3; }
+.btn.danger { background: rgba(255,105,119,.08); border-color: rgba(255,105,119,.18); color: #ff98a3; }
+.btn.danger:hover:not(:disabled) { background: rgba(255,105,119,.14); }
+.btn.small { min-height: 31px; padding: 0 9px; border-radius: 8px; font-size: 9px; }
+.btn.full { width: 100%; }
+.hero-btn { min-height: 54px; padding: 0 20px; font-size: 12px; }
+.hero-btn span, .action-btn span { margin-left: 7px; }
+.action-btn { min-height: 51px; margin-top: 5px; }
+
+.trust-row {
+  margin-top: 46px;
+  padding-top: 23px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  gap: 34px;
+  flex-wrap: wrap;
+}
+.trust-row div { display: grid; gap: 1px; }
+.trust-row strong { font-size: 18px; color: #fff; font-weight: 950; }
+.trust-row span { color: var(--muted-2); font-size: 11px; font-weight: 650; }
+
+.game-preview {
+  position: relative;
+  overflow: hidden;
+  padding: 24px;
+  border: 1px solid rgba(255,255,255,.105);
+  border-radius: 28px;
+  background: linear-gradient(150deg, rgba(29,29,36,.98), rgba(15,15,19,.98));
+  box-shadow: var(--shadow);
+}
+.game-preview::after {
+  content: "";
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  right: -70px;
+  top: -90px;
+  background: rgba(255,93,58,.12);
+  filter: blur(45px);
+}
+.preview-top { position: relative; z-index: 1; display: flex; align-items: flex-start; justify-content: space-between; gap: 15px; }
+.preview-kicker { color: var(--orange); font-size: 10px; font-weight: 950; letter-spacing: .15em; }
+.preview-room { margin-top: 7px; color: var(--muted); font-size: 11px; font-weight: 800; }
+.preview-room b { margin-left: 5px; color: #fff; letter-spacing: .1em; }
+.preview-live { display: inline-flex; align-items: center; gap: 7px; color: #b5b3bc; font-size: 9px; font-weight: 900; letter-spacing: .08em; }
+.preview-live span { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+.preview-question-wrap { position: relative; z-index: 1; margin: 52px 0 25px; }
+.preview-number { color: #77757f; font-size: 9px; font-weight: 900; letter-spacing: .13em; }
+.preview-question { margin-top: 10px; max-width: 460px; font-size: clamp(25px, 2.5vw, 37px); line-height: 1.08; letter-spacing: -.035em; font-weight: 900; }
+.preview-answer { position: relative; z-index: 1; display: grid; grid-template-columns: 29px minmax(0,1fr) auto; gap: 12px; align-items: center; min-height: 74px; padding: 13px 14px; border: 1px solid var(--line); border-radius: 14px; background: #121217; margin-top: 9px; }
+.winner-answer { border-color: rgba(255,93,58,.26); background: rgba(255,93,58,.055); }
+.faded-answer { opacity: .52; }
+.answer-number { color: #696771; font-size: 10px; font-weight: 950; }
+.answer-copy { font-size: 13px; line-height: 1.35; font-weight: 750; }
+.answer-score { color: var(--green); font-size: 11px; font-weight: 950; }
+.preview-footer { position: relative; z-index: 1; margin-top: 23px; display: flex; align-items: center; gap: 16px; color: #77757e; font-size: 10px; font-weight: 700; }
+.preview-progress { flex: 1; height: 3px; overflow: hidden; border-radius: 999px; background: #27272e; }
+.preview-progress i { display: block; width: 68%; height: 100%; border-radius: inherit; background: var(--orange); }
+
+.setup-screen { min-height: calc(100vh - 89px); padding: 68px 0 100px; }
+.setup-screen.active { display: block; }
+.setup-wrap { max-width: 770px; margin: 0 auto; display: grid; grid-template-columns: minmax(0,.8fr) minmax(390px,1.2fr); gap: 70px; align-items: start; }
+.join-wrap { max-width: 760px; }
+.setup-heading { padding-top: 14px; }
+.back-link { border: 0; background: transparent; color: #787680; padding: 0; margin: 0 0 46px; font-size: 10px; font-weight: 900; letter-spacing: .12em; }
+.back-link:hover { color: #fff; }
+.setup-heading h2 { margin: 0; font-size: clamp(43px, 5vw, 64px); line-height: .97; letter-spacing: -.05em; }
+.setup-heading p { margin: 20px 0 0; color: var(--muted); line-height: 1.58; font-size: 14px; }
+
+.panel { border: 1px solid var(--line); border-radius: var(--radius-lg); background: rgba(20,20,25,.93); box-shadow: var(--shadow-soft); }
+.setup-card { padding: 26px; }
+.field-group { margin-bottom: 20px; }
+.field-group > label { display: block; margin-bottom: 8px; color: #85838d; font-size: 9px; font-weight: 950; letter-spacing: .13em; }
+.field-group input, .field-group select, .answer-field, .custom-field {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #0e0e12;
+  color: #f6f5f2;
+  outline: none;
+  transition: border-color .15s ease, background .15s ease, box-shadow .15s ease;
+}
+.field-group input, .field-group select { height: 50px; padding: 0 14px; }
+.field-group input::placeholder, .answer-field::placeholder, .custom-field::placeholder { color: #55535c; }
+.field-group input:focus, .field-group select:focus, .answer-field:focus, .custom-field:focus { border-color: rgba(255,93,58,.55); background: #111116; box-shadow: 0 0 0 3px rgba(255,93,58,.065); }
+.field-group input[readonly] { color: #cfcbd5; background: #111116; }
+.field-help { margin-top: 7px; color: #67656e; font-size: 10px; line-height: 1.4; }
+.code-field { text-transform: uppercase; letter-spacing: .22em; font-size: 20px; font-weight: 950; }
+
+.toggle-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 38px minmax(0,1fr) auto;
+  gap: 13px;
+  align-items: start;
+  margin: 9px 0 22px;
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  background: #101015;
+  cursor: pointer;
+  transition: border-color .15s ease, background .15s ease;
+}
+.toggle-card:hover { border-color: var(--line-strong); background: #121218; }
+.toggle-card:has(input:checked) { border-color: rgba(145,70,255,.32); background: rgba(145,70,255,.055); }
+.toggle-icon { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 10px; }
+.twitch-mini { background: var(--twitch-soft); color: #b98cff; }
+.toggle-copy { display: grid; gap: 4px; }
+.toggle-copy strong { font-size: 13px; }
+.toggle-copy span { color: #898690; font-size: 10px; line-height: 1.45; }
+.toggle-copy small { margin-top: 3px; color: #6c6974; font-size: 9px; line-height: 1.4; }
+.toggle-copy small.ready { color: #b993ff; }
+.toggle-card input { position: absolute; opacity: 0; pointer-events: none; }
+.switch { position: relative; width: 38px; height: 22px; margin-top: 7px; border-radius: 999px; background: #303038; transition: background .15s ease; }
+.switch i { position: absolute; width: 16px; height: 16px; left: 3px; top: 3px; border-radius: 50%; background: #aaa8b0; transition: transform .15s ease, background .15s ease; }
+.toggle-card input:checked + .switch { background: var(--twitch); }
+.toggle-card input:checked + .switch i { transform: translateX(16px); background: #fff; }
+
+.login-note { display: flex; gap: 10px; align-items: flex-start; margin: 4px 0 20px; padding: 12px; border: 1px solid rgba(145,70,255,.16); border-radius: 12px; background: rgba(145,70,255,.055); color: #888590; font-size: 10px; line-height: 1.45; }
+.login-note.signed { color: #b9a1e8; border-color: rgba(145,70,255,.28); }
+.login-note-icon { color: #af7dff; }
+
+.game-screen { padding: 28px 0 90px; }
+.game-grid { display: grid; grid-template-columns: minmax(0,1fr) 350px; gap: 17px; align-items: start; }
+.main-panel { min-height: 590px; padding: 28px; }
+.side-panel { position: sticky; top: 20px; min-height: 0; padding: 22px; }
+
+.topline { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 32px; }
+.round-label { color: #787680; font-size: 9px; font-weight: 950; letter-spacing: .14em; }
+.phase { padding: 7px 9px; border: 1px solid var(--line); border-radius: 8px; color: #a3a0aa; background: #18181e; font-size: 8px; font-weight: 1000; letter-spacing: .13em; }
+.game-kicker { margin-bottom: 9px; color: var(--orange); font-size: 9px; font-weight: 950; letter-spacing: .14em; }
+.question { max-width: 900px; margin: 0 0 31px; font-size: clamp(36px, 5vw, 66px); line-height: 1.015; letter-spacing: -.047em; font-weight: 900; }
+.question.small { font-size: clamp(28px, 3.8vw, 47px); }
+
+.lobby-code-card { margin: 8px 0 24px; padding: 26px; border: 1px solid rgba(255,93,58,.2); border-radius: 20px; background: linear-gradient(135deg, rgba(255,93,58,.08), rgba(255,93,58,.015)); }
+.lobby-code-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.room-code-big { font-size: clamp(61px, 8.6vw, 106px); line-height: .95; color: #fff; font-weight: 1000; letter-spacing: .105em; }
+.copy-code { min-height: 38px; border: 1px solid rgba(255,255,255,.1); border-radius: 10px; background: rgba(255,255,255,.045); color: #cac8cf; padding: 0 12px; font-size: 9px; font-weight: 900; letter-spacing: .08em; }
+.copy-code:hover { background: rgba(255,255,255,.075); color: #fff; }
+.room-badges { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 18px; }
+.room-badge { display: inline-flex; align-items: center; gap: 6px; min-height: 27px; padding: 0 9px; border: 1px solid var(--line); border-radius: 999px; color: #8f8c96; background: rgba(0,0,0,.12); font-size: 8px; font-weight: 900; letter-spacing: .08em; }
+.room-badge.twitch { color: #c2a2f5; border-color: rgba(145,70,255,.24); background: rgba(145,70,255,.07); }
+.waiting { color: #898690; font-size: 13px; line-height: 1.58; }
+.waiting strong { color: #d9d7dc; }
+.host-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 28px; padding-top: 21px; border-top: 1px solid var(--line); }
+
+.answer-wrap { display: grid; gap: 10px; }
+.answer-field { min-height: 166px; resize: vertical; padding: 17px; font-size: 18px; line-height: 1.45; }
+.answer-meta { display: flex; justify-content: space-between; gap: 12px; color: #66646d; font-size: 9px; }
+.answers-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
+.answer-card { position: relative; min-height: 130px; padding: 17px; border: 1px solid var(--line); border-radius: 15px; background: #19191f; color: #f1f0ee; text-align: left; font-size: 16px; line-height: 1.38; font-weight: 750; transition: border-color .15s ease, background .15s ease, transform .15s ease; }
+.answer-card:hover:not(:disabled) { transform: translateY(-1px); border-color: rgba(255,93,58,.42); background: #1e1e25; }
+.answer-card.mine { opacity: .38; }
+.answer-card.selected { border-color: rgba(247,198,87,.55); background: rgba(247,198,87,.07); }
+.answer-card::after { content: "VOTE"; position: absolute; right: 12px; bottom: 10px; color: #55535d; font-size: 8px; font-weight: 950; letter-spacing: .1em; }
+.answer-card.mine::after { content: "YOUR ANSWER"; }
+.answer-card.selected::after { content: "VOTED"; color: var(--yellow); }
+
+.result-list { display: grid; gap: 8px; }
+.result-card { padding: 17px; border: 1px solid var(--line); border-radius: 14px; background: #17171d; }
+.result-card:first-child { border-color: rgba(247,198,87,.22); background: rgba(247,198,87,.04); }
+.result-answer { font-size: 17px; line-height: 1.4; font-weight: 800; }
+.result-meta { display: flex; justify-content: space-between; gap: 12px; margin-top: 10px; color: #77757e; font-size: 10px; }
+.points { color: var(--green); font-weight: 1000; }
+
+.side-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 13px; }
+.side-title { margin: 0; color: #77757f; font-size: 9px; font-weight: 950; letter-spacing: .14em; }
+.side-count { min-width: 24px; height: 24px; display: grid; place-items: center; border-radius: 8px; background: #1d1d24; color: #a5a2ac; font-size: 9px; font-weight: 900; }
+.player-list { display: grid; gap: 4px; }
+.player-row { padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,.055); }
+.player-main { display: grid; grid-template-columns: 33px minmax(0,1fr) auto; gap: 9px; align-items: center; }
+.player-avatar { width: 33px; height: 33px; overflow: hidden; display: grid; place-items: center; border-radius: 10px; border: 1px solid var(--line); background: #202027; color: #9d9aa4; font-size: 10px; font-weight: 950; }
+.player-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.player-copy { min-width: 0; }
+.player-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; font-weight: 850; }
+.player-sub { display: flex; align-items: center; gap: 6px; margin-top: 3px; color: #66646d; font-size: 8px; }
+.online-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--green); }
+.offline .online-dot { background: #4b4a51; }
+.player-score { color: #c6c3cb; font-size: 10px; font-weight: 950; }
+.role, .verified-badge { display: inline-flex; align-items: center; min-height: 16px; padding: 0 5px; border-radius: 5px; font-size: 7px; font-weight: 950; letter-spacing: .04em; }
+.role { color: #a19ea8; background: #222229; }
+.role.owner { color: #e7c97d; background: rgba(247,198,87,.09); }
+.verified-badge { color: #c3a2f8; background: rgba(145,70,255,.1); }
+.mod-row { display: flex; gap: 5px; flex-wrap: wrap; margin: 7px 0 0 42px; }
+
+.side-section { margin-top: 22px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.065); }
+.custom-row { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 6px; margin-top: 10px; }
+.custom-field { min-height: 38px; padding: 0 10px; font-size: 10px; }
+.custom-list { display: grid; gap: 6px; max-height: 190px; overflow: auto; margin-top: 8px; scrollbar-width: thin; }
+.custom-item { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 9px; border-radius: 9px; background: #101015; color: #8c8993; font-size: 9px; line-height: 1.35; }
+.custom-item button { border: 0; background: transparent; color: #af6971; font-size: 15px; line-height: 1; }
+.security-card { display: grid; gap: 8px; }
+.security-line { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: #77747f; font-size: 9px; }
+.security-line strong { color: #aaa7b1; font-weight: 800; }
+.security-line strong.twitch-on { color: #b894f0; }
+.notice { margin-top: 12px; padding: 11px; border: 1px solid rgba(255,255,255,.06); border-radius: 10px; background: #101015; color: #6e6b75; font-size: 9px; line-height: 1.5; }
+
+.leaderboard { display: grid; gap: 7px; }
+.leader-row { display: grid; grid-template-columns: 34px 36px minmax(0,1fr) auto; align-items: center; gap: 10px; min-height: 57px; padding: 8px 13px; border: 1px solid var(--line); border-radius: 13px; background: #17171d; }
+.leader-pos { color: #6e6c75; font-size: 11px; font-weight: 950; }
+.leader-avatar { width: 36px; height: 36px; overflow: hidden; display: grid; place-items: center; border-radius: 10px; background: #222229; color: #97949e; font-size: 10px; font-weight: 950; }
+.leader-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.leader-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; font-weight: 850; }
+.leader-score { color: var(--yellow); font-size: 11px; font-weight: 1000; }
+.winner { position: relative; overflow: hidden; margin: 4px 0 22px; padding: 34px 24px; border: 1px solid rgba(247,198,87,.24); border-radius: 22px; background: linear-gradient(145deg, rgba(247,198,87,.08), rgba(255,93,58,.045)); text-align: center; }
+.winner::before { content: ""; position: absolute; width: 220px; height: 220px; left: 50%; top: -150px; transform: translateX(-50%); border-radius: 50%; background: rgba(247,198,87,.12); filter: blur(42px); }
+.winner-avatar { position: relative; z-index: 1; width: 62px; height: 62px; overflow: hidden; display: grid; place-items: center; margin: 0 auto 15px; border: 2px solid rgba(247,198,87,.32); border-radius: 18px; background: #222229; color: #d2b76e; font-size: 17px; font-weight: 1000; }
+.winner-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.winner-crown { position: relative; z-index: 1; color: var(--yellow); font-size: 10px; font-weight: 950; letter-spacing: .16em; }
+.winner-name { position: relative; z-index: 1; margin-top: 8px; font-size: clamp(47px, 7.5vw, 82px); line-height: .94; font-weight: 1000; letter-spacing: -.06em; }
+.winner-score { position: relative; z-index: 1; margin-top: 12px; color: var(--yellow); font-size: 15px; font-weight: 950; }
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 25px;
+  z-index: 2000;
+  max-width: min(500px, calc(100% - 30px));
+  padding: 12px 15px;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 11px;
+  background: rgba(241,240,237,.96);
+  color: #151519;
+  box-shadow: var(--shadow-soft);
+  opacity: 0;
+  transform: translate(-50%, 20px);
+  pointer-events: none;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 800;
+  transition: opacity .18s ease, transform .18s ease;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@media (max-width: 980px) {
+  .home-screen { grid-template-columns: 1fr; gap: 54px; padding-top: 56px; }
+  .game-preview { max-width: 650px; }
+  .setup-wrap { grid-template-columns: 1fr; gap: 34px; max-width: 560px; }
+  .setup-heading { padding-top: 0; }
+  .back-link { margin-bottom: 30px; }
+  .game-grid { grid-template-columns: 1fr; }
+  .side-panel { position: static; }
+}
+
+@media (max-width: 680px) {
+  .app { width: min(100% - 24px, 1240px); }
+  .site-header { min-height: 72px; }
+  .brand-word { font-size: 19px; }
+  .brand-mark { width: 31px; height: 31px; border-radius: 9px; }
+  .twitch-auth { max-width: 162px; min-height: 38px; padding: 6px 9px; font-size: 10px; }
+  .twitch-auth #twitchAuthText { max-width: 105px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .room-pill { height: 38px; padding: 0 10px; }
+  .room-pill span { display: none; }
+  .home-screen { min-height: calc(100vh - 73px); padding: 46px 0 74px; gap: 45px; }
+  .home-copy h1 { font-size: clamp(52px, 15vw, 76px); }
+  .hero-text { font-size: 15px; margin-top: 24px; }
+  .hero-actions { display: grid; grid-template-columns: 1fr; }
+  .hero-btn { width: 100%; }
+  .trust-row { gap: 22px; margin-top: 34px; }
+  .game-preview { padding: 18px; border-radius: 21px; }
+  .preview-question-wrap { margin-top: 38px; }
+  .preview-answer { grid-template-columns: 23px minmax(0,1fr); }
+  .answer-score { grid-column: 2; }
+  .setup-screen { min-height: calc(100vh - 73px); padding: 42px 0 75px; }
+  .setup-card { padding: 19px; border-radius: 20px; }
+  .toggle-card { grid-template-columns: 34px minmax(0,1fr) auto; gap: 10px; padding: 12px; }
+  .toggle-icon { width: 34px; height: 34px; }
+  .main-panel, .side-panel { padding: 17px; border-radius: 20px; }
+  .main-panel { min-height: 500px; }
+  .game-screen { padding-top: 15px; }
+  .topline { margin-bottom: 25px; }
+  .question { font-size: clamp(34px, 10.4vw, 51px); }
+  .answers-grid { grid-template-columns: 1fr; }
+  .room-code-big { font-size: clamp(51px, 16vw, 82px); letter-spacing: .075em; }
+  .lobby-code-card { padding: 19px; }
+  .lobby-code-top { align-items: flex-start; flex-direction: column; }
+  .result-meta { flex-direction: column; }
+  .leader-row { grid-template-columns: 28px 34px minmax(0,1fr) auto; gap: 7px; padding: 8px 9px; }
+  .winner { padding: 28px 15px; }
+}
+
+@media (max-width: 430px) {
+  .header-actions { gap: 5px; }
+  .twitch-glyph { display: none; }
+  .twitch-auth { max-width: 138px; }
+  .trust-row div { min-width: 86px; }
+  .toggle-card { grid-template-columns: 34px minmax(0,1fr); }
+  .switch { grid-column: 2; margin-top: 2px; }
+}
+
+  
+
+/* --------------------------------------------------------------------------
+   BLURT UI — restrained, product-style skin
+   -------------------------------------------------------------------------- */
+:root{
+  --bg:#111214;
+  --bg-soft:#151618;
+  --panel:#191a1d;
+  --panel-2:#1f2024;
+  --panel-3:#24262a;
+  --text:#f4f1ea;
+  --muted:#aaa8a2;
+  --muted-2:#85837e;
+  --line:#303136;
+  --line-strong:#44464c;
+  --orange:#ff6b3d;
+  --orange-2:#ff7950;
+  --orange-soft:#241a16;
+  --yellow:#e6c16b;
+  --green:#7ec79e;
+  --red:#e77e86;
+  --twitch:#a970ff;
+  --twitch-soft:#20192a;
+  --shadow:none;
+  --shadow-soft:none;
+  --radius-lg:14px;
+  --radius:12px;
+  --radius-sm:9px;
+}
+html,body{background:var(--bg)}
+body{background:var(--bg);font-family:Arial,Helvetica,sans-serif;letter-spacing:0}
+body::before,.ambient{display:none!important}
+
+.boot{background:var(--bg)}
+.boot-mark{display:none}
+.boot-logo{margin:0;font-size:34px;font-weight:900;letter-spacing:-1.5px}
+.boot-text{margin-top:10px;font-size:13px;font-weight:400;color:var(--muted)}
+
+.app{width:min(1080px,calc(100% - 36px))}
+.site-header{min-height:70px;border-bottom:1px solid var(--line)}
+.brand{display:block;color:var(--text);font-size:22px;font-weight:900;letter-spacing:-1px}
+.brand-mark,.brand-word{display:none}
+.header-actions{gap:8px}
+.room-pill,.twitch-auth{height:36px;min-height:36px;border-radius:8px;background:transparent;box-shadow:none;font-size:12px;font-weight:600;letter-spacing:0}
+.room-pill{border:1px solid var(--line);color:var(--muted);padding:0 11px}
+.room-pill strong{font-size:13px;letter-spacing:1.5px;color:var(--text)}
+.twitch-auth{border:1px solid #4a3b62;color:#d9c4fa;padding:0 11px}
+.twitch-auth:hover{transform:none;background:#1b1721;border-color:#655080}
+.twitch-glyph{display:none}
+.twitch-avatar{width:22px;height:22px;border-radius:50%}
+
+.home-screen{min-height:calc(100vh - 71px);padding:84px 0 100px;grid-template-columns:minmax(0,1.15fr) minmax(330px,.85fr);gap:72px}
+.home-copy{max-width:650px}
+.eyebrow{display:block;margin:0 0 18px;color:var(--muted);font-size:14px;font-weight:600;letter-spacing:0;text-transform:none}
+.live-dot{display:none}
+.home-copy h1{max-width:720px;font-size:clamp(48px,6vw,76px);line-height:1;letter-spacing:-3px;font-weight:800}
+.home-copy h1 span{color:inherit}
+.hero-text{max-width:570px;margin:24px 0 30px;color:#b6b3ad;font-size:17px;line-height:1.55}
+.hero-actions{gap:9px}
+.btn{min-height:42px;border-radius:8px;padding:0 15px;font-size:13px;font-weight:700;letter-spacing:0;box-shadow:none!important}
+.btn:hover:not(:disabled){transform:none}
+.btn.primary{background:var(--orange);color:#fff}
+.btn.primary:hover:not(:disabled){background:var(--orange-2)}
+.btn.secondary{background:transparent;border-color:var(--line-strong);color:var(--text)}
+.btn.secondary:hover:not(:disabled),.btn.ghost:hover:not(:disabled){background:#1a1b1e}
+.btn.ghost{background:transparent;border-color:var(--line);color:var(--text)}
+.btn.danger{background:transparent;border-color:#633b40;color:#ee9da3}
+.btn.small{min-height:29px;border-radius:6px;padding:0 8px;font-size:11px}
+.hero-btn{min-height:46px;padding:0 18px;font-size:14px}
+.action-btn{min-height:44px;margin-top:5px}
+.hero-btn span,.action-btn span{display:none}
+.trust-row,.game-preview{display:none!important}
+
+.how-card{border-left:1px solid var(--line);padding-left:42px}
+.how-card h2{margin:0 0 26px;font-size:18px;font-weight:700;letter-spacing:-.2px}
+.how-list{list-style:none;padding:0;margin:0;display:grid;gap:22px}
+.how-list li{display:grid;grid-template-columns:30px 1fr;gap:13px;align-items:start}
+.how-list>li>span{width:26px;height:26px;border:1px solid var(--line-strong);border-radius:50%;display:grid;place-items:center;color:var(--muted);font-size:12px;font-weight:700}
+.how-list strong{display:block;font-size:14px;font-weight:700;color:var(--text);margin-top:2px}
+.how-list p{margin:5px 0 0;color:var(--muted);font-size:13px;line-height:1.45}
+.how-note{margin-top:28px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--muted-2);line-height:1.5}
+
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:none}
+.setup-screen{min-height:calc(100vh - 71px);padding:70px 0 90px}
+.setup-wrap{width:min(620px,100%);display:block;margin:0 auto}
+.setup-heading{margin-bottom:26px}
+.setup-heading .eyebrow{display:none}
+.setup-heading h2{margin:22px 0 8px;font-size:34px;line-height:1.1;letter-spacing:-1px;font-weight:800}
+.setup-heading p{margin:0;color:var(--muted);font-size:14px;line-height:1.55;max-width:520px}
+.back-link{border:0;background:none;padding:0;color:var(--muted);font-size:13px;font-weight:600}
+.back-link:hover{color:var(--text)}
+.setup-card{padding:24px}
+.field-group{margin-bottom:20px}
+.field-group label{display:block;margin:0 0 7px;color:#d6d3cd;font-size:13px;font-weight:700;letter-spacing:0;text-transform:none}
+.field-group input,.field-group select,.answer-field,.custom-field{width:100%;min-height:44px;background:#111214;border:1px solid #3b3c41;border-radius:8px;color:var(--text);padding:10px 12px;font-size:14px;outline:none}
+.field-group input:focus,.field-group select:focus,.answer-field:focus,.custom-field:focus{border-color:#74767d;box-shadow:none}
+.field-help{margin-top:6px;color:var(--muted-2);font-size:12px;line-height:1.4}
+.code-field{font-size:22px!important;font-weight:700!important;letter-spacing:4px!important;text-transform:uppercase}
+.toggle-card{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;margin:6px 0 22px;padding:16px 0;border:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);border-radius:0;background:none}
+.toggle-icon{display:none!important}
+.toggle-copy strong{display:block;font-size:14px;font-weight:700;color:var(--text)}
+.toggle-copy span{display:block;margin-top:4px;font-size:12px;line-height:1.45;color:var(--muted)}
+.toggle-copy small{display:block;margin-top:5px;font-size:11px;color:var(--muted-2)}
+.switch{width:38px;height:22px;border-radius:11px;background:#35363a;border:0}
+.switch i{width:16px;height:16px;top:3px;left:3px;background:#b8b7b3;box-shadow:none}
+.toggle-card input:checked+.switch{background:var(--orange)}
+.toggle-card input:checked+.switch i{transform:translateX(16px);background:#fff}
+.login-note{border:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);border-radius:0;background:transparent;padding:13px 0;margin:4px 0 18px;color:var(--muted);font-size:12px;line-height:1.45}
+.login-note-icon{display:none}
+
+.twitch-connect{display:flex;align-items:center;justify-content:center;gap:10px;min-height:44px;margin:4px 0 8px;border:1px solid #5f4680;border-radius:8px;background:#18131f;color:#eee3ff;font-size:13px;font-weight:700;cursor:pointer}
+.twitch-connect:hover{background:#1e1728;border-color:#7a5aa4}
+.twitch-connect.signed-in{background:#17131d;border-color:#4e3b65;color:#cdbbea}
+.twitch-wordmark{font-weight:800;color:#b889ff}
+.twitch-state{margin:0 0 18px}
+.twitch-state.ready{color:#9c87bd}
+
+.game-screen{padding:28px 0 80px}
+.game-grid{grid-template-columns:minmax(0,1fr) 310px;gap:14px}
+.main-panel,.side-panel{padding:24px;min-height:500px}
+.side-panel{top:14px}
+.topline{margin-bottom:24px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.round-label,.phase{font-size:11px;font-weight:700;letter-spacing:.4px;color:var(--muted)}
+.phase{background:transparent;border:1px solid var(--line);border-radius:6px;padding:5px 7px;color:#ccc9c2}
+.game-kicker,.side-title{color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.question{font-size:clamp(32px,4.5vw,54px);line-height:1.06;letter-spacing:-1.8px;font-weight:800}
+.question.small{font-size:clamp(26px,3.5vw,40px)}
+.lobby-code-card,.security-card,.notice{background:#141518;border:1px solid var(--line);border-radius:9px;box-shadow:none}
+.room-code-big{font-size:clamp(54px,8vw,88px);letter-spacing:6px;color:var(--text);font-weight:800}
+.copy-code{color:var(--orange);font-weight:700}
+.waiting{color:var(--muted);font-size:14px;line-height:1.55}
+.host-actions{border-top:1px solid var(--line);padding-top:16px;margin-top:22px}
+.answer-field{min-height:145px;font-size:17px;line-height:1.45;resize:vertical}
+.answers-grid{gap:9px}
+.answer-card{min-height:100px;border:1px solid var(--line);border-radius:9px;background:#151619;color:var(--text);padding:16px;font-size:16px;font-weight:600;box-shadow:none}
+.answer-card:hover:not(:disabled){background:#1d1e22;border-color:#55575d}
+.answer-card.selected{border-color:var(--orange);box-shadow:inset 3px 0 0 var(--orange)}
+.answer-card.mine{opacity:.45}
+.result-card{border-bottom:1px solid var(--line)}
+.result-answer{font-size:17px;font-weight:600}
+.result-meta{color:var(--muted);font-size:12px}
+.points{color:var(--green)}
+.side-head{padding-bottom:12px;border-bottom:1px solid var(--line)}
+.player-row{border-bottom:1px solid #292a2e;padding:10px 0}
+.player-name{font-size:13px;font-weight:700}
+.player-score{font-size:12px;color:#d8c17e}
+.role,.verified-badge,.room-badge{border-radius:4px;background:#26272b;color:#bdbab3;padding:2px 5px;font-size:9px;font-weight:700}
+.role.owner{background:#31271a;color:#e8c26f}
+.verified-badge.twitch,.room-badge.twitch{background:#241b31;color:#c7a8ef}
+.mod-row{margin-left:0}
+.side-section{border-top:1px solid var(--line)}
+.custom-row{gap:6px}
+.custom-item{background:#141518;border:1px solid #28292d;border-radius:7px}
+.leader-row{background:#151619;border:1px solid #292a2e;border-radius:8px}
+.leader-pos{color:var(--muted);font-size:15px}
+.leader-name{font-size:14px;font-weight:700}
+.leader-score{color:#d8c17e}
+.winner{background:#18191c;border:1px solid #4a4230;border-radius:10px;padding:28px;margin:8px 0 22px}
+.winner-crown{font-size:24px}
+.winner-name{font-size:clamp(42px,7vw,68px);letter-spacing:-2px;font-weight:800}
+.winner-score{color:#dec17b;font-size:18px}
+.toast{background:#eceae4;color:#171719;border-radius:7px;font-size:13px;font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+
+@media(max-width:850px){
+  .app{width:min(100% - 26px,1080px)}
+  .site-header{min-height:62px}
+  .brand{font-size:20px}
+  .twitch-auth{max-width:160px}
+  .home-screen.active{display:block;padding:60px 0 70px}
+  .home-copy h1{font-size:clamp(44px,14vw,62px);letter-spacing:-2px}
+  .how-card{margin-top:55px;padding:28px 0 0;border-left:0;border-top:1px solid var(--line)}
+  .setup-screen{padding:48px 0 70px}
+  .setup-heading h2{font-size:30px}
+  .setup-card{padding:18px}
+  .game-grid{grid-template-columns:1fr}
+  .main-panel,.side-panel{padding:18px}
+  .side-panel{position:static;min-height:0}
+  .answers-grid{grid-template-columns:1fr}
+}
+
+  </style>
+</head>
+<body>
+  <div id="boot" class="boot" aria-live="polite">
+    <div class="boot-logo">BLURT</div>
+    <div class="boot-text">Connecting…</div>
+  </div>
+
+  <main class="app hidden" id="appShell">
+    <header class="site-header">
+      <button id="brandBtn" class="brand" type="button" aria-label="Go to BLURT home">BLURT</button>
+
+      <div class="header-actions">
+        <button id="roomPill" class="room-pill hidden" type="button" title="Copy room code">
+          Room <strong id="roomPillCode"></strong>
+        </button>
+        <button id="twitchAuthBtn" class="twitch-auth" type="button">
+          <span id="twitchAuthText">Twitch sign in</span>
+          <img id="twitchAvatar" class="twitch-avatar hidden" alt="">
+        </button>
+      </div>
+    </header>
+
+    <section id="homeScreen" class="screen active home-screen">
+      <div class="home-copy">
+        <p class="eyebrow">A multiplayer answer game</p>
+        <h1>Say something funny.<br>Get the votes.</h1>
+        <p class="hero-text">One question. Everyone types an answer. The room votes, and BLURT keeps the score.</p>
+        <div class="hero-actions">
+          <button id="openHostBtn" class="btn primary hero-btn" type="button">Host a game</button>
+          <button id="openJoinBtn" class="btn secondary hero-btn" type="button">Join a game</button>
+        </div>
+      </div>
+
+      <div class="how-card">
+        <h2>How it works</h2>
+        <ol class="how-list">
+          <li><span>1</span><div><strong>Join the room</strong><p>Use the six-character code from the host.</p></div></li>
+          <li><span>2</span><div><strong>Type your answer</strong><p>Everyone gets the same random question.</p></div></li>
+          <li><span>3</span><div><strong>Vote</strong><p>Each vote is worth 100 points.</p></div></li>
+        </ol>
+        <div class="how-note">Custom questions · live scores · optional Twitch profiles</div>
+      </div>
+    </section>
+
+    <section id="hostScreen" class="screen setup-screen">
+      <div class="setup-wrap">
+        <div class="setup-heading">
+          <button class="back-link" data-home type="button">← Back</button>
+          <h2>Host a game</h2>
+          <p>Create a room and send the code to everyone playing.</p>
+        </div>
+
+        <div class="panel setup-card">
+          <div class="field-group">
+            <label for="hostName">Display name</label>
+            <input id="hostName" maxlength="20" autocomplete="nickname" placeholder="Enter your name">
+            <div class="field-help" id="hostNameHelp">Or connect Twitch to use your Twitch name and profile picture.</div>
+          </div>
+
+          <button id="hostTwitchBtn" class="twitch-connect full" type="button">
+            <span class="twitch-wordmark">Twitch</span>
+            <span id="hostTwitchBtnText">Login with Twitch</span>
+          </button>
+          <div id="hostTwitchState" class="field-help twitch-state">Optional — you can play as a guest instead.</div>
+
+          <div class="field-group">
+            <label for="roundCount">Questions</label>
+            <select id="roundCount">
+              <option value="3">3 — Quick</option>
+              <option value="5" selected>5 — Short</option>
+              <option value="7">7</option>
+              <option value="10">10 — Standard</option>
+              <option value="15">15 — Long</option>
+              <option value="20">20 — Marathon</option>
+            </select>
+          </div>
+
+          <button id="createRoomBtn" class="btn primary full action-btn" type="button">Create room</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="joinScreen" class="screen setup-screen">
+      <div class="setup-wrap join-wrap">
+        <div class="setup-heading">
+          <button class="back-link" data-home type="button">← Back</button>
+          <h2>Join a game</h2>
+          <p>Enter the code shown on the host's screen.</p>
+        </div>
+
+        <div class="panel setup-card">
+          <div class="field-group">
+            <label for="joinCode">Room code</label>
+            <input id="joinCode" class="code-field" maxlength="6" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="A7K9Q2">
+          </div>
+
+          <div class="field-group">
+            <label for="joinName">Display name</label>
+            <input id="joinName" maxlength="20" autocomplete="nickname" placeholder="Enter your name">
+            <div class="field-help">Or connect Twitch to use your Twitch identity.</div>
+          </div>
+
+          <button id="joinTwitchBtn" class="twitch-connect full" type="button">
+            <span class="twitch-wordmark">Twitch</span>
+            <span id="joinTwitchBtnText">Login with Twitch</span>
+          </button>
+          <div id="joinTwitchState" class="login-note">
+            <span>Twitch is optional. If you use it, Twitch will ask you to authorise BLURT.</span>
+          </div>
+
+          <button id="joinRoomBtn" class="btn primary full action-btn" type="button">Join room</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="gameScreen" class="screen game-screen">
+      <div class="game-grid">
+        <article id="mainPanel" class="panel main-panel"></article>
+        <aside id="sidePanel" class="panel side-panel"></aside>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+import {
+  getDatabase, ref, get, set, update, remove, push, onValue,
+  runTransaction, onDisconnect, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
+
+// -----------------------------------------------------------------------------
+// FIREBASE — already filled in for your Playblurt project.
+// -----------------------------------------------------------------------------
+const firebaseConfig = {
+  apiKey: "AIzaSyCicjorje95XEGXji1ffNabuuOziRt3WcY",
+  authDomain: "playblurt.firebaseapp.com",
+  databaseURL: "https://playblurt-default-rtdb.firebaseio.com",
+  projectId: "playblurt",
+  storageBucket: "playblurt.firebasestorage.app",
+  messagingSenderId: "701810881059",
+  appId: "1:701810881059:web:6a9cd8ee3e809dca017796",
+  measurementId: "G-LW65S7F668"
+};
+
+// -----------------------------------------------------------------------------
+// TWITCH LOGIN
+// 1) Create a Twitch Developer application.
+// 2) Add https://playblurt.co.uk/ as an OAuth Redirect URL.
+// 3) Paste ONLY the public Client ID below. Never paste a Client Secret here.
+// Twitch is optional. Any player who chooses it authorises their own account; no whitelist is needed.
+// -----------------------------------------------------------------------------
+const TWITCH_CLIENT_ID = "PASTE_TWITCH_CLIENT_ID_HERE";
+const TWITCH_REDIRECT_URI = "https://playblurt.co.uk/";
+const TWITCH_SESSION_KEY = "blurtTwitchSession";
+const TWITCH_STATE_KEY = "blurtTwitchState";
+const TWITCH_NONCE_KEY = "blurtTwitchNonce";
+const TWITCH_PENDING_KEY = "blurtTwitchPending";
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
+
+const $ = selector => document.querySelector(selector);
+const $$ = selector => [...document.querySelectorAll(selector)];
+const esc = value => String(value ?? "").replace(/[&<>'"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
+const cleanName = value => String(value || "").trim().replace(/\s+/g, " ").slice(0, 20);
+const cleanQuestion = value => String(value || "").trim().replace(/\s+/g, " ").slice(0, 180);
+const cleanAnswer = value => String(value || "").trim().replace(/\s+/g, " ").slice(0, 160);
+const CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+let me = null;
+let roomCode = sessionStorage.getItem("blurtRoom") || "";
+let roomUnsub = null;
+let roomState = null;
+let toastTimer = null;
+let localLeaving = false;
+let twitchUser = null;
+let twitchCallbackMessage = "";
+
+// -----------------------------------------------------------------------------
+// QUESTION BANK
+// 150+ hand-written prompts plus generated variations. The final unique pool is
+// well over 600 questions and is shuffled for every game.
+// -----------------------------------------------------------------------------
+const CURATED = [
+  "What is the worst thing to hear on a first date?",
+  "Invent a terrible name for a new theme park ride.",
+  "What would make the world's worst superpower?",
+  "What is something you should never shout in a library?",
+  "Give a bad slogan for a luxury hotel.",
+  "What's the strangest thing to find under your bed?",
+  "Name a completely useless app.",
+  "What would be the worst thing for a driving instructor to say?",
+  "What is a terrible name for a pet?",
+  "Invent a crisp flavour that nobody asked for.",
+  "What would be the worst prize to win on a game show?",
+  "Give a suspicious name for a restaurant.",
+  "What is the worst possible wedding gift?",
+  "What should never be included in a school lunch?",
+  "Name a product that definitely should not have Bluetooth.",
+  "What is a bad excuse for being late?",
+  "Give a terrible name for a band.",
+  "What would you not want your sat-nav to suddenly say?",
+  "Invent a weird rule for a new country.",
+  "What is the least impressive world record?",
+  "What is a bad thing to put on a birthday cake?",
+  "Name a job that would be much harder in roller skates.",
+  "What is a terrible thing to hear from your barber?",
+  "Give a bad title for a superhero film.",
+  "What would be the worst thing to find in your pocket?",
+  "What is the most pointless thing to make waterproof?",
+  "Name something that should never be sold in a vending machine.",
+  "What is a terrible password hint?",
+  "What would be a bad replacement for a steering wheel?",
+  "Give a terrible name for a new social network.",
+  "What would make a very awkward family photo?",
+  "Name a terrible attraction for a seaside town.",
+  "What is something a pilot should not say before take-off?",
+  "Invent the world's least useful kitchen gadget.",
+  "What should never be written on a welcome mat?",
+  "Name a bad thing to hear after pressing a big red button.",
+  "What is the worst possible name for a cruise ship?",
+  "What would be a terrible thing to receive in the post?",
+  "Give a bad slogan for a dentist.",
+  "What is the weirdest thing to bring to a job interview?",
+  "Invent a terrible name for an energy drink.",
+  "What would be an awful feature in a new car?",
+  "What should never be announced over a supermarket tannoy?",
+  "What is the worst thing to forget on holiday?",
+  "Name a very suspicious item to find in a fridge.",
+  "What would be the world's worst mascot?",
+  "Give a bad name for a weather app.",
+  "What would be the least relaxing spa treatment?",
+  "Name something that should never have a self-destruct button.",
+  "What is a terrible thing to say when meeting someone's parents?",
+  "What is the worst possible thing to hear from a mechanic?",
+  "Invent a terrible new Olympic sport.",
+  "What should never be served at a fancy restaurant?",
+  "What is the worst name for a Wi-Fi network?",
+  "What would be a terrible surprise inside a birthday card?",
+  "Name a ridiculous reason to call in sick.",
+  "What is the last thing you want to hear from a dentist holding a drill?",
+  "What would be a terrible name for a nightclub?",
+  "Invent a useless button for a TV remote.",
+  "What would be a terrible thing to add to a roller coaster?",
+  "What is a suspicious thing for a hotel receptionist to whisper?",
+  "What is the worst thing to accidentally send to the family group chat?",
+  "Give a terrible slogan for an airline.",
+  "What would be the worst smell for a new candle?",
+  "What is a ridiculous thing to keep in a safe?",
+  "Name a terrible subject for a motivational speech.",
+  "What is the worst thing to hear from your taxi driver?",
+  "What would be a terrible name for a children's TV show?",
+  "Invent a new item that absolutely nobody needs.",
+  "What is a terrible thing to see on the menu at breakfast?",
+  "What would be the worst thing to hear from your doctor right before a test?",
+  "What is the most suspicious way to answer the phone?",
+  "Name a bad place to hide during hide-and-seek.",
+  "What is a terrible reason to become famous?",
+  "Give a bad slogan for a funeral director.",
+  "What would be the worst thing for a teacher to write on the board?",
+  "Invent a terrible new flavour of toothpaste.",
+  "What is a bad thing to name your boat?",
+  "What should never come out of a printer?",
+  "What is the worst sentence to hear over an aircraft intercom?",
+  "Name a strange thing to collect.",
+  "What would be a terrible new feature for a microwave?",
+  "What is a suspicious thing to see on your neighbour's driveway?",
+  "Invent a bad name for a dating app.",
+  "What is the worst thing to say while cutting someone's hair?",
+  "What would be an awful replacement for money?",
+  "Name a terrible thing to put in a sandwich.",
+  "What would be the worst sound for an alarm clock?",
+  "What is a ridiculous reason for a train to be delayed?",
+  "Invent a terrible new school subject.",
+  "What would be a bad slogan for a gym?",
+  "What is the strangest thing to say at a drive-through?",
+  "What is the worst possible thing to be allergic to?",
+  "Name a terrible title for an autobiography.",
+  "What would be a useless feature on a phone?",
+  "What is the worst thing to hear in an escape room?",
+  "Invent a terrible name for a takeaway.",
+  "What should never be used as a doorstop?",
+  "What is the worst thing to see when you open a parcel?",
+  "Name a suspicious reason for someone to own 40 traffic cones.",
+  "What would be the worst thing to hear from a lifeguard?",
+  "What is a terrible name for a perfume?",
+  "Invent the least exciting tourist attraction possible.",
+  "What is a bad thing to shout on a quiet train?",
+  "What would be the worst prize in a cereal box?",
+  "Name a terrible flavour of ice cream.",
+  "What should never be stored in a glovebox?",
+  "What is a terrible thing to hear when the lights go out?",
+  "Invent a pointless warning label.",
+  "What would make the world's worst birthday party?",
+  "What is a terrible excuse for forgetting someone's name?",
+  "Give a bad slogan for a bank.",
+  "What is the worst thing to discover after checking into a hotel?",
+  "What would be a bad name for a new planet?",
+  "Invent a terrible command for a voice assistant.",
+  "What is the worst thing to say to a police officer who has pulled you over?",
+  "Name a ridiculous item to bring camping.",
+  "What is a bad thing to hear from the person fixing your computer?",
+  "What would be the worst thing to happen during a live stream?",
+  "Invent a terrible name for a football team.",
+  "What should never be printed on a T-shirt?",
+  "What is the worst thing to hear when you are halfway through a haircut?",
+  "What is a terrible thing to find in a cereal bowl?",
+  "Give a bad slogan for a theme park.",
+  "What would be the worst thing for your phone to autocorrect your name to?",
+  "Name a terrible thing to say during a wedding ceremony.",
+  "What should never be used as a pillow?",
+  "Invent a ridiculous law that would make daily life impossible.",
+  "What would be a terrible name for a supermarket?",
+  "What is the worst thing to hear from your driving examiner?",
+  "Name something that absolutely does not need wheels.",
+  "What would be the world's worst restaurant theme?",
+  "What is a terrible way to start a work email?",
+  "Invent the worst possible username.",
+  "What is the strangest thing a parcel delivery driver could hand you?",
+  "What would be a terrible thing to find in the boot of your car?",
+  "Name a product nobody should buy second-hand.",
+  "What is the worst thing to hear from the captain of a ferry?",
+  "Give a terrible slogan for a pet shop.",
+  "What is the most useless thing to put on a keyring?",
+  "What would be the worst notification to get at 3am?",
+  "Invent a new holiday that nobody would celebrate.",
+  "What is a terrible thing to do on your first day at a new job?",
+  "What would be the worst thing to see written on a bus destination display?",
+  "Name a terrible replacement for a bus stop bell.",
+  "What is the worst thing a passenger could ask a bus driver?",
+  "Invent a ridiculous reason a bus service might be cancelled.",
+  "What would be the least useful feature on a double-decker bus?",
+  "What is the worst thing to hear over a bus PA system?",
+  "Give a terrible slogan for a bus company.",
+  "Name something that should never be left on the top deck of a bus.",
+  "What would be the worst thing to happen five minutes into a road trip?",
+  "Invent a horrible flavour for chewing gum.",
+  "What is the worst thing to hear while standing in a lift?",
+  "Name a terrible name for a smart speaker.",
+  "What would be the worst possible ringtone?",
+  "What is something you should never say when borrowing someone's car?",
+  "Invent a terrible name for a pizza topping.",
+  "What is the most suspicious thing to carry into a cinema?",
+  "What would be a terrible sign to see at the entrance to a zoo?",
+  "Name the worst thing to put in a time capsule.",
+  "What would be the worst thing to hear from a plumber?",
+  "Give a terrible slogan for a phone company.",
+  "What is a ridiculous feature to add to a toaster?",
+  "What should never be used as a bookmark?",
+  "Invent a terrible name for a coffee shop.",
+  "What is the worst thing to hear when your computer is updating?",
+  "What would be the most awkward thing to win in a raffle?",
+  "Name a bad place for a surprise party.",
+  "What is the worst thing to realise after leaving the house?",
+  "Invent a terrible new emoji.",
+  "What is the worst thing to hear just before your internet cuts out?"
+];
+
+const PLACES = ["airport","cinema","supermarket","hospital","school","hotel","restaurant","bus station","train station","theme park","office","gym","library","museum","zoo","beach","wedding","funfair","petrol station","shopping centre","dentist","barber shop","campsite","football stadium","ferry terminal","car park","coffee shop","drive-through","swimming pool","taxi rank"];
+const OBJECTS = ["toaster","fridge","washing machine","phone","laptop","TV","car","bus","train","bicycle","kettle","microwave","vacuum cleaner","doorbell","alarm clock","printer","sat-nav","remote control","headphones","camera","umbrella","backpack","shopping trolley","traffic light","lift","vending machine","ticket machine","calculator","hairdryer","wheelie bin","office chair","smartwatch","coffee machine","game controller","keyboard"];
+const JOBS = ["doctor","dentist","bus driver","pilot","teacher","mechanic","plumber","barber","chef","police officer","taxi driver","lifeguard","builder","electrician","vet","delivery driver","driving instructor","train conductor","DJ","photographer","security guard","waiter","receptionist","football referee","newsreader"];
+const FOODS = ["pizza","ice cream","crisps","sandwich","burger","cake","cereal","soup","chocolate","beans","toast","pasta","chips","sausage roll","milkshake","yoghurt","cheese","coffee","tea","doughnut","biscuit","curry","ketchup","popcorn","porridge"];
+const EVENTS = ["first date","wedding","birthday party","job interview","driving test","school assembly","family dinner","holiday","road trip","funeral","sports day","office meeting","live stream","concert","quiz night","Christmas dinner","barbecue","graduation","house viewing","flight"];
+const TECH = ["social network","dating app","weather app","banking app","sat-nav","smart speaker","video game","streaming service","AI assistant","phone update","website","group chat","email app","fitness tracker","smart fridge","self-checkout","ticket machine","online shop","password manager","VR headset"];
+const TRANSPORT = ["bus","train","taxi","plane","ferry","tram","coach","bicycle","car","van","helicopter","boat","double-decker","school bus","airport shuttle"];
+
+function buildQuestionBank(){
+  const q = [...CURATED];
+  for(const x of PLACES){
+    q.push(`What is the worst announcement to hear at a ${x}?`);
+    q.push(`What is the strangest new rule a ${x} could introduce?`);
+    q.push(`What would make you immediately leave a ${x}?`);
+  }
+  for(const x of OBJECTS){
+    q.push(`What is the worst feature to add to a ${x}?`);
+    q.push(`What should never be hidden inside a ${x}?`);
+    q.push(`What is a terrible slogan for a ${x}?`);
+  }
+  for(const x of JOBS){
+    q.push(`What is the worst thing to hear from a ${x}?`);
+    q.push(`What would be a suspicious hobby for a ${x}?`);
+  }
+  for(const x of FOODS){
+    q.push(`Invent a terrible new flavour of ${x}.`);
+    q.push(`What is the worst ingredient to add to ${x}?`);
+    q.push(`Give ${x} the worst possible luxury makeover.`);
+  }
+  for(const x of EVENTS){
+    q.push(`What is the worst thing to say during a ${x}?`);
+    q.push(`What is the most inappropriate thing to bring to a ${x}?`);
+    q.push(`What would instantly ruin a ${x}?`);
+  }
+  for(const x of TECH){
+    q.push(`What is the worst new feature for a ${x}?`);
+    q.push(`What is the most worrying notification from a ${x}?`);
+    q.push(`Give a terrible name to a new ${x}.`);
+  }
+  for(const x of TRANSPORT){
+    q.push(`What is the worst thing to hear while travelling on a ${x}?`);
+    q.push(`What is the least useful feature to add to a ${x}?`);
+    q.push(`Give a terrible slogan for a ${x} company.`);
+  }
+  const weirdThings = ["rubber duck","garden gnome","traffic cone","banana","shopping basket","spoon","sock","cushion","wheelbarrow","toilet roll","coat hanger","lamp","mug","teddy bear","broom","ladder","watering can","flip-flop","snow globe","saucepan","bucket","door mat","toy dinosaur","cardboard box","alarm clock"];
+  for(const x of weirdThings){
+    q.push(`Give a ridiculous reason to carry a ${x} everywhere.`);
+    q.push(`What secret job could a ${x} have at night?`);
+    q.push(`What would be a terrible warning label for a ${x}?`);
+  }
+  return [...new Set(q)];
+}
+const QUESTION_BANK = buildQuestionBank();
+
+
+function shuffled(array) {
+  const a = [...array];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function makeCode() {
+  let out = "";
+  const bytes = new Uint8Array(6);
+  crypto.getRandomValues(bytes);
+  for (const b of bytes) out += CODE_CHARS[b % CODE_CHARS.length];
+  return out;
+}
+
+function randomToken() {
+  const bytes = new Uint8Array(24);
+  crypto.getRandomValues(bytes);
+  return [...bytes].map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+function toast(message) {
+  clearTimeout(toastTimer);
+  const element = $("#toast");
+  element.textContent = message;
+  element.classList.add("show");
+  toastTimer = setTimeout(() => element.classList.remove("show"), 3000);
+}
+
+function show(id) {
+  $$(".screen").forEach(screen => screen.classList.toggle("active", screen.id === id));
+}
+
+function initials(name) {
+  const words = String(name || "?").trim().split(/\s+/).filter(Boolean);
+  return (words.slice(0, 2).map(word => word[0]).join("") || "?").toUpperCase();
+}
+
+function twitchConfigured() {
+  return TWITCH_CLIENT_ID && !TWITCH_CLIENT_ID.includes("PASTE_TWITCH") && TWITCH_CLIENT_ID.length > 8;
+}
+
+function getStoredTwitch() {
+  try {
+    return JSON.parse(localStorage.getItem(TWITCH_SESSION_KEY) || "null");
+  } catch {
+    return null;
+  }
+}
+
+function saveTwitchSession(value) {
+  twitchUser = value;
+  if (value) localStorage.setItem(TWITCH_SESSION_KEY, JSON.stringify(value));
+  else localStorage.removeItem(TWITCH_SESSION_KEY);
+  renderTwitchStatus();
+}
+
+async function fetchTwitchIdentity(accessToken) {
+  const response = await fetch("https://id.twitch.tv/oauth2/userinfo", {
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${accessToken}`
+    }
+  });
+
+  if (!response.ok) throw new Error("Your Twitch login has expired. Please sign in again.");
+  const info = await response.json();
+  const audiences = Array.isArray(info.aud) ? info.aud : [info.aud];
+  if (!audiences.includes(TWITCH_CLIENT_ID)) throw new Error("Twitch returned a login for a different application.");
+
+  return {
+    id: String(info.sub || ""),
+    displayName: String(info.preferred_username || "Twitch user").slice(0, 30),
+    avatar: String(info.picture || ""),
+    accessToken,
+    verifiedAt: Date.now()
+  };
+}
+
+function cleanOAuthUrl() {
+  const clean = `${location.origin}${location.pathname}`;
+  history.replaceState({}, document.title, clean);
+}
+
+async function restoreTwitchLogin() {
+  const query = new URLSearchParams(location.search);
+  const hash = new URLSearchParams(location.hash.replace(/^#/, ""));
+  const oauthError = query.get("error");
+
+  if (oauthError) {
+    twitchCallbackMessage = query.get("error_description") || "Twitch login was cancelled.";
+    sessionStorage.removeItem(TWITCH_PENDING_KEY);
+    sessionStorage.removeItem(TWITCH_STATE_KEY);
+    sessionStorage.removeItem(TWITCH_NONCE_KEY);
+    cleanOAuthUrl();
+  }
+
+  const callbackToken = hash.get("access_token");
+  if (callbackToken) {
+    const expectedState = sessionStorage.getItem(TWITCH_STATE_KEY);
+    const expectedNonce = sessionStorage.getItem(TWITCH_NONCE_KEY);
+    const returnedState = hash.get("state");
+    const idToken = hash.get("id_token");
+    sessionStorage.removeItem(TWITCH_STATE_KEY);
+    sessionStorage.removeItem(TWITCH_NONCE_KEY);
+
+    if (!expectedState || returnedState !== expectedState) {
+      sessionStorage.removeItem(TWITCH_PENDING_KEY);
+      cleanOAuthUrl();
+      throw new Error("Twitch login could not be verified. Please try again.");
+    }
+
+    if (idToken && expectedNonce) {
+      try {
+        const payloadPart = idToken.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
+        const padded = payloadPart.padEnd(payloadPart.length + ((4 - payloadPart.length % 4) % 4), "=");
+        const payload = JSON.parse(atob(padded));
+        const audience = Array.isArray(payload.aud) ? payload.aud : [payload.aud];
+        if (payload.nonce !== expectedNonce || !audience.includes(TWITCH_CLIENT_ID) || payload.iss !== "https://id.twitch.tv/oauth2") {
+          throw new Error("invalid token claims");
+        }
+      } catch {
+        sessionStorage.removeItem(TWITCH_PENDING_KEY);
+        cleanOAuthUrl();
+        throw new Error("Twitch login could not be verified. Please try again.");
+      }
+    }
+
+    const identity = await fetchTwitchIdentity(callbackToken);
+    saveTwitchSession(identity);
+    twitchCallbackMessage = `Signed in as ${identity.displayName}.`;
+    cleanOAuthUrl();
+    return;
+  }
+
+  const stored = getStoredTwitch();
+  if (!stored?.accessToken || !twitchConfigured()) {
+    if (!twitchConfigured()) saveTwitchSession(null);
+    return;
+  }
+
+  try {
+    const identity = await fetchTwitchIdentity(stored.accessToken);
+    saveTwitchSession(identity);
+  } catch {
+    saveTwitchSession(null);
+  }
+}
+
+function startTwitchLogin(pending = { action: "none" }) {
+  if (!twitchConfigured()) {
+    toast("Twitch login is not configured yet. Add the Twitch Client ID once in index.html.");
+    return;
+  }
+
+  const state = randomToken();
+  const nonce = randomToken();
+  sessionStorage.setItem(TWITCH_STATE_KEY, state);
+  sessionStorage.setItem(TWITCH_NONCE_KEY, nonce);
+  sessionStorage.setItem(TWITCH_PENDING_KEY, JSON.stringify(pending));
+
+  const params = new URLSearchParams({
+    response_type: "token id_token",
+    client_id: TWITCH_CLIENT_ID,
+    redirect_uri: TWITCH_REDIRECT_URI,
+    scope: "openid",
+    state,
+    nonce,
+    force_verify: "false",
+    claims: JSON.stringify({
+      userinfo: {
+        preferred_username: null,
+        picture: null
+      }
+    })
+  });
+
+  location.href = `https://id.twitch.tv/oauth2/authorize?${params.toString()}`;
+}
+
+function disconnectTwitch() {
+  if (roomState?.players?.[me?.uid]) {
+    toast("You cannot disconnect Twitch while you are in a room.");
+    return;
+  }
+  saveTwitchSession(null);
+  toast("Twitch disconnected.");
+}
+
+function renderTwitchStatus() {
+  const button = $("#twitchAuthBtn");
+  const text = $("#twitchAuthText");
+  const avatar = $("#twitchAvatar");
+  if (!button || !text || !avatar) return;
+
+  if (twitchUser) {
+    button.classList.add("signed-in");
+    text.textContent = twitchUser.displayName;
+    if (twitchUser.avatar) {
+      avatar.src = twitchUser.avatar;
+      avatar.alt = `${twitchUser.displayName} Twitch profile picture`;
+      avatar.classList.remove("hidden");
+    } else {
+      avatar.classList.add("hidden");
+    }
+    button.title = "Disconnect Twitch";
+  } else {
+    button.classList.remove("signed-in");
+    text.textContent = twitchConfigured() ? "Login with Twitch" : "Twitch setup needed";
+    avatar.classList.add("hidden");
+    button.title = twitchConfigured() ? "Login with Twitch" : "Add the Twitch Client ID once in index.html";
+  }
+
+  const hostName = $("#hostName");
+  const joinName = $("#joinName");
+  if (hostName) {
+    hostName.disabled = !!twitchUser;
+    if (twitchUser) hostName.value = twitchUser.displayName;
+  }
+  if (joinName) {
+    joinName.disabled = !!twitchUser;
+    if (twitchUser) joinName.value = twitchUser.displayName;
+  }
+
+  const hostState = $("#hostTwitchState");
+  if (hostState) {
+    hostState.classList.toggle("ready", !!twitchUser);
+    hostState.textContent = twitchUser
+      ? `Connected as ${twitchUser.displayName}. Your Twitch name and avatar will be shown.`
+      : twitchConfigured()
+        ? "Optional — play as a guest, or connect Twitch for your verified profile."
+        : "Optional — Twitch login will work after the Client ID is added once.";
+  }
+
+  const joinState = $("#joinTwitchState");
+  if (joinState) {
+    joinState.classList.toggle("signed", !!twitchUser);
+    joinState.innerHTML = twitchUser
+      ? `<span>Connected as <strong>${esc(twitchUser.displayName)}</strong>. Your Twitch profile will be used.</span>`
+      : `<span>Twitch is optional. Choose “Login with Twitch” to authorise BLURT, or enter a name and play as a guest.</span>`;
+  }
+
+  for (const [btnId, textId] of [["#hostTwitchBtn", "#hostTwitchBtnText"], ["#joinTwitchBtn", "#joinTwitchBtnText"]]) {
+    const btn = $(btnId);
+    const label = $(textId);
+    if (!btn || !label) continue;
+    btn.classList.toggle("signed-in", !!twitchUser);
+    label.textContent = twitchUser ? `Connected as ${twitchUser.displayName}` : "Login with Twitch";
+  }
+}
+
+function role() {
+  return roomState?.players?.[me?.uid]?.role || "player";
+}
+function isOwner() { return role() === "owner"; }
+function isHost() { return role() === "owner" || role() === "host"; }
+function roomRef(path = "") { return ref(db, `rooms/${roomCode}${path ? "/" + path : ""}`); }
+function myPlayer() { return roomState?.players?.[me?.uid] || null; }
+function playersArray() {
+  return Object.entries(roomState?.players || {}).map(([uid, player]) => {
+    const presence = roomState?.presence?.[uid] || {};
+    return { uid, ...player, online: presence.online !== false, lastSeen: presence.lastSeen || 0 };
+  });
+}
+function customArray() { return Object.entries(roomState?.customQuestions || {}).map(([id, value]) => ({ id, ...value })); }
+function roundKey() { return String(roomState?.meta?.roundIndex ?? 0); }
+
+async function ensureAuth() {
+  if (auth.currentUser) return auth.currentUser;
+
+  const signInPromise = signInAnonymously(auth).then(result => result.user);
+  const timeoutPromise = new Promise((_, reject) => {
+    setTimeout(() => reject(new Error("Firebase sign-in timed out. Check that Anonymous Authentication is enabled in Firebase.")), 12000);
+  });
+
+  return Promise.race([signInPromise, timeoutPromise]);
+}
+
+function twitchPlayerFields() {
+  if (!twitchUser) return {};
+  return {
+    twitchId: twitchUser.id,
+    twitchName: twitchUser.displayName,
+    twitchAvatar: twitchUser.avatar,
+    twitchVerified: true
+  };
+}
+
+async function createUniqueRoom(name, rounds) {
+  for (let attempt = 0; attempt < 30; attempt++) {
+    const code = makeCode();
+    const player = {
+      name,
+      role: "owner",
+      score: 0,
+      joinedAt: Date.now(),
+      ...twitchPlayerFields()
+    };
+    const data = {
+      meta: {
+        ownerUid: me.uid,
+        phase: "lobby",
+        rounds,
+        roundIndex: 0,
+        currentQuestion: "",
+        questionQueue: [],
+        requireTwitch: false,
+        createdAt: Date.now()
+      },
+      players: { [me.uid]: player },
+      presence: { [me.uid]: { online: true, lastSeen: Date.now() } },
+      bans: {},
+      twitchBans: {},
+      customQuestions: {},
+      answers: {},
+      votes: {}
+    };
+
+    const result = await runTransaction(ref(db, `rooms/${code}`), current => current === null ? data : undefined, { applyLocally: false });
+    if (result.committed) return code;
+  }
+  throw new Error("Could not create a room code. Try again.");
+}
+
+async function setupPresence() {
+  if (!roomCode || !me) return;
+  const playerSnap = await get(ref(db, `rooms/${roomCode}/players/${me.uid}`));
+  if (!playerSnap.exists()) return;
+
+  const presence = ref(db, `rooms/${roomCode}/presence/${me.uid}`);
+  await set(presence, { online: true, lastSeen: Date.now() });
+  try {
+    await onDisconnect(presence).set({ online: false, lastSeen: serverTimestamp() });
+  } catch {}
+}
+
+function stopRoomListener() {
+  if (roomUnsub) {
+    roomUnsub();
+    roomUnsub = null;
+  }
+}
+
+async function leaveToHome(message = "") {
+  localLeaving = true;
+  stopRoomListener();
+  roomCode = "";
+  roomState = null;
+  sessionStorage.removeItem("blurtRoom");
+  $("#roomPill").classList.add("hidden");
+  show("homeScreen");
+  renderTwitchStatus();
+  if (message) toast(message);
+  setTimeout(() => { localLeaving = false; }, 50);
+}
+
+async function enterRoom(code) {
+  stopRoomListener();
+  roomCode = code;
+  sessionStorage.setItem("blurtRoom", code);
+  $("#roomPillCode").textContent = code;
+  $("#roomPill").classList.remove("hidden");
+  show("gameScreen");
+  await setupPresence();
+
+  roomUnsub = onValue(ref(db, `rooms/${code}`), snapshot => {
+    const data = snapshot.val();
+    if (!data) {
+      if (!localLeaving) leaveToHome("That room no longer exists.");
+      return;
+    }
+    if (data.bans?.[me.uid]) {
+      leaveToHome("You have been banned from that room.");
+      return;
+    }
+    if (twitchUser?.id && data.twitchBans?.[twitchUser.id]) {
+      leaveToHome("Your Twitch account has been banned from that room.");
+      return;
+    }
+    if (!data.players?.[me.uid]) {
+      leaveToHome("You were kicked from the room.");
+      return;
+    }
+    roomState = data;
+    render();
+  }, error => toast(error.message));
+}
+
+async function createRoom() {
+  const rounds = Number($("#roundCount").value) || 5;
+  const name = twitchUser ? twitchUser.displayName : cleanName($("#hostName").value);
+  if (!name) return toast("Enter a display name, or login with Twitch.");
+
+  const button = $("#createRoomBtn");
+  button.disabled = true;
+  button.textContent = "Creating…";
+  try {
+    const code = await createUniqueRoom(name, rounds);
+    await enterRoom(code);
+  } catch (error) {
+    toast(error.message);
+  } finally {
+    button.disabled = false;
+    button.textContent = "Create room";
+  }
+}
+
+async function joinRoom() {
+  const code = $("#joinCode").value.trim().toUpperCase();
+  if (code.length !== 6) return toast("Enter the full 6-character room code.");
+
+  const name = twitchUser ? twitchUser.displayName : cleanName($("#joinName").value);
+  if (!name) return toast("Enter a display name, or login with Twitch.");
+
+  const button = $("#joinRoomBtn");
+  button.disabled = true;
+  button.textContent = "Checking room…";
+
+  try {
+    const rr = ref(db, `rooms/${code}`);
+    const snapshot = await get(rr);
+    if (!snapshot.exists()) throw new Error("Room not found.");
+    const room = snapshot.val();
+
+    if (room.bans?.[me.uid]) throw new Error("You are banned from that room.");
+    if (twitchUser?.id && room.twitchBans?.[twitchUser.id]) throw new Error("Your Twitch account is banned from that room.");
+    if (room.meta?.phase !== "lobby") throw new Error("That game has already started.");
+
+    if (twitchUser?.id) {
+      const duplicateTwitch = Object.entries(room.players || {}).some(
+        ([uid, player]) => uid !== me.uid && player.twitchId === twitchUser.id
+      );
+      if (duplicateTwitch) throw new Error("That Twitch account is already in this room.");
+    }
+
+    const names = Object.entries(room.players || {})
+      .filter(([uid]) => uid !== me.uid)
+      .map(([, player]) => String(player.name).toLowerCase());
+    if (names.includes(name.toLowerCase())) throw new Error("That display name is already being used in this room.");
+
+    await set(ref(db, `rooms/${code}/players/${me.uid}`), {
+      name,
+      role: "player",
+      score: 0,
+      joinedAt: Date.now(),
+      ...twitchPlayerFields()
+    });
+    await enterRoom(code);
+  } catch (error) {
+    toast(error.message);
+  } finally {
+    button.disabled = false;
+    button.textContent = "Join room";
+  }
+}
+
+async function resumePendingTwitchAction() {
+  if (!twitchUser) return;
+  let pending = null;
+  try { pending = JSON.parse(sessionStorage.getItem(TWITCH_PENDING_KEY) || "null"); } catch {}
+  if (!pending) return;
+  sessionStorage.removeItem(TWITCH_PENDING_KEY);
+
+  if (pending.action === "host") {
+    show("hostScreen");
+    $("#roundCount").value = String(pending.rounds || 5);
+    renderTwitchStatus();
+  } else if (pending.action === "join") {
+    show("joinScreen");
+    $("#joinCode").value = String(pending.code || "").toUpperCase();
+    renderTwitchStatus();
+  }
+}
+
+function phaseLabel() {
+  return ({ lobby: "LOBBY", answering: "ANSWER", voting: "VOTE", results: "RESULTS", final: "FINAL" })[roomState?.meta?.phase] || "GAME";
+}
+
+function header() {
+  const meta = roomState.meta;
+  const left = meta.phase === "lobby"
+    ? `ROOM ${roomCode}`
+    : `QUESTION ${Math.min(meta.roundIndex + 1, meta.rounds)} OF ${meta.rounds}`;
+  return `<div class="topline"><span class="round-label">${left}</span><span class="phase">${phaseLabel()}</span></div>`;
+}
+
+function currentAnswers() { return roomState?.answers?.[roundKey()] || {}; }
+function currentVotes() { return roomState?.votes?.[roundKey()] || {}; }
+function voteCounts() {
+  const counts = {};
+  for (const target of Object.values(currentVotes())) counts[target] = (counts[target] || 0) + 1;
+  return counts;
+}
+function currentQuestion() { return roomState?.meta?.currentQuestion || ""; }
+
+function avatarHTML(player, className = "player-avatar") {
+  const name = player?.name || "Player";
+  if (player?.twitchAvatar) return `<div class="${className}"><img src="${esc(player.twitchAvatar)}" alt=""></div>`;
+  return `<div class="${className}">${esc(initials(name))}</div>`;
+}
+
+function mainHTML() {
+  const meta = roomState.meta;
+  const players = playersArray();
+
+  if (meta.phase === "lobby") {
+    return `${header()}
+      <div class="game-kicker">SHARE THIS WITH YOUR PLAYERS</div>
+      <div class="lobby-code-card">
+        <div class="lobby-code-top">
+          <div class="room-code-big">${esc(roomCode)}</div>
+          <button id="copyCodeBtn" class="copy-code" type="button">COPY CODE</button>
+        </div>
+        <div class="room-badges">
+          <span class="room-badge">${players.length} PLAYER${players.length === 1 ? "" : "S"}</span>
+          <span class="room-badge">${meta.rounds} QUESTIONS</span>
+          <span class="room-badge twitch">◆ TWITCH OPTIONAL</span>
+        </div>
+      </div>
+      <div class="waiting">Keep this screen open while everyone joins. Players can use a guest name or connect their Twitch account.</div>
+      ${isHost() ? `<div class="host-actions"><button id="startBtn" class="btn primary" ${players.length < 2 ? "disabled" : ""}>START GAME →</button></div>` : ""}`;
+  }
+
+  if (meta.phase === "answering") {
+    const answers = currentAnswers();
+    const answered = !!answers[me.uid];
+    return `${header()}
+      <div class="game-kicker">YOUR ANSWER</div>
+      <h2 class="question">${esc(currentQuestion())}</h2>
+      ${answered
+        ? `<div class="waiting">Your answer is locked in.<br><strong>${Object.keys(answers).length} / ${players.length}</strong> answers are in.</div>`
+        : `<div class="answer-wrap"><textarea id="answerField" class="answer-field" maxlength="160" placeholder="Type something worth voting for…"></textarea><div class="answer-meta"><span>Keep it short. Make it good.</span><span>160 characters max</span></div><button id="submitAnswerBtn" class="btn primary">LOCK IN ANSWER</button></div>`}
+      ${isHost() ? `<div class="host-actions"><button id="revealBtn" class="btn secondary" ${Object.keys(answers).length < 2 ? "disabled" : ""}>REVEAL ANSWERS</button><button id="endBtn" class="btn danger">END GAME</button></div>` : ""}`;
+  }
+
+  if (meta.phase === "voting") {
+    const answers = currentAnswers();
+    const votes = currentVotes();
+    const myVote = votes[me.uid] || "";
+    const list = Object.entries(answers).sort((a, b) => (a[1].sort || 0) - (b[1].sort || 0));
+    return `${header()}
+      <div class="game-kicker">PICK THE BEST ONE</div>
+      <h2 class="question small">${esc(currentQuestion())}</h2>
+      <div class="answers-grid">${list.map(([uid, answer]) => `<button class="answer-card ${uid === me.uid ? "mine" : ""} ${myVote === uid ? "selected" : ""}" data-vote="${uid}" ${myVote || uid === me.uid ? "disabled" : ""}>${esc(answer.text)}</button>`).join("")}</div>
+      ${myVote ? `<div class="waiting">Vote locked in. <strong>${Object.keys(votes).length}</strong> vote${Object.keys(votes).length === 1 ? "" : "s"} received.</div>` : ""}
+      ${isHost() ? `<div class="host-actions"><button id="scoreBtn" class="btn primary">SHOW RESULTS</button><button id="endBtn" class="btn danger">END GAME</button></div>` : ""}`;
+  }
+
+  if (meta.phase === "results") {
+    const answers = currentAnswers();
+    const counts = voteCounts();
+    const rows = Object.entries(answers)
+      .map(([uid, answer]) => ({ uid, text: answer.text, name: roomState.players?.[uid]?.name || "Player", votes: counts[uid] || 0 }))
+      .sort((a, b) => b.votes - a.votes);
+    return `${header()}
+      <div class="game-kicker">ROUND RESULTS</div>
+      <h2 class="question small">${esc(currentQuestion())}</h2>
+      <div class="result-list">${rows.map(row => `<div class="result-card"><div class="result-answer">${esc(row.text)}</div><div class="result-meta"><span>${esc(row.name)}</span><span><strong>${row.votes}</strong> vote${row.votes === 1 ? "" : "s"} · <span class="points">+${row.votes * 100} PTS</span></span></div></div>`).join("")}</div>
+      ${isHost() ? `<div class="host-actions"><button id="nextBtn" class="btn primary">${meta.roundIndex + 1 >= meta.rounds ? "FINAL SCORES" : "NEXT QUESTION →"}</button><button id="endBtn" class="btn danger">END GAME</button></div>` : ""}`;
+  }
+
+  if (meta.phase === "final") {
+    const board = playersArray().sort((a, b) => (b.score || 0) - (a.score || 0) || a.name.localeCompare(b.name));
+    const winner = board[0];
+    return `${header()}
+      <div class="game-kicker">FINAL RESULTS</div>
+      ${winner ? `<div class="winner">${avatarHTML(winner, "winner-avatar")}<div class="winner-crown">WINNER</div><div class="winner-name">${esc(winner.name)}</div><div class="winner-score">${Number(winner.score || 0).toLocaleString()} POINTS</div></div>` : ""}
+      <div class="leaderboard">${board.map((player, index) => `<div class="leader-row"><div class="leader-pos">#${index + 1}</div>${avatarHTML(player, "leader-avatar")}<div class="leader-name">${esc(player.name)}</div><div class="leader-score">${Number(player.score || 0).toLocaleString()}</div></div>`).join("")}</div>
+      <div class="host-actions"><button id="homeBtn" class="btn ghost">BACK TO HOME</button></div>`;
+  }
+
+  return `<div class="waiting">Loading game…</div>`;
+}
+
+function playerRow(player) {
+  const mine = player.uid === me.uid;
+  const roleChip = player.role === "owner"
+    ? `<span class="role owner">OWNER</span>`
+    : player.role === "host" ? `<span class="role">HOST</span>` : "";
+  const twitchChip = player.twitchVerified ? `<span class="verified-badge">◆ TWITCH</span>` : "";
+  const ownerCanManage = isOwner() && !mine && player.role !== "owner";
+  const cohostCanManage = role() === "host" && !mine && player.role === "player";
+  const canKickBan = ownerCanManage || cohostCanManage;
+
+  return `<div class="player-row ${player.online === false ? "offline" : ""}">
+    <div class="player-main">
+      ${avatarHTML(player)}
+      <div class="player-copy">
+        <div class="player-name">${esc(player.name)}</div>
+        <div class="player-sub"><span class="online-dot"></span>${player.online === false ? "offline" : "online"}${roleChip}${twitchChip}</div>
+      </div>
+      <div class="player-score">${Number(player.score || 0).toLocaleString()}</div>
+    </div>
+    ${ownerCanManage || canKickBan ? `<div class="mod-row">${ownerCanManage ? (player.role === "host" ? `<button class="btn small secondary" data-demote="${player.uid}">REMOVE HOST</button>` : `<button class="btn small secondary" data-promote="${player.uid}">MAKE HOST</button>`) : ""}${canKickBan ? `<button class="btn small danger" data-kick="${player.uid}">KICK</button><button class="btn small danger" data-ban="${player.uid}">BAN</button>` : ""}</div>` : ""}
+  </div>`;
+}
+
+function customHTML() {
+  if (!isHost() || roomState.meta.phase !== "lobby") return "";
+  const list = customArray();
+  return `<div class="side-section">
+    <div class="side-head"><h3 class="side-title">CUSTOM QUESTIONS</h3><span class="side-count">${list.length}</span></div>
+    <div class="custom-row"><input id="customField" class="custom-field" maxlength="180" placeholder="Add a custom prompt"><button id="addQuestionBtn" class="btn primary small">ADD</button></div>
+    ${list.length ? `<div class="custom-list">${list.map(question => `<div class="custom-item"><span>${esc(question.text)}</span><button data-remove-question="${question.id}" title="Remove">×</button></div>`).join("")}</div>` : `<div class="notice">BLURT already has ${QUESTION_BANK.length}+ built-in prompts. Your custom prompts are mixed into the random question pool.</div>`}
+  </div>`;
+}
+
+function sideHTML() {
+  const players = playersArray().sort((a, b) => (b.score || 0) - (a.score || 0) || a.name.localeCompare(b.name));
+  const meta = roomState.meta;
+  return `<div class="side-head"><h3 class="side-title">PLAYERS</h3><span class="side-count">${players.length}</span></div>
+    <div class="player-list">${players.map(playerRow).join("")}</div>
+    ${customHTML()}
+    <div class="side-section security-card">
+      <div class="side-head"><h3 class="side-title">ROOM SETTINGS</h3></div>
+      <div class="security-line"><span>Twitch login</span><strong class="twitch-on">OPTIONAL</strong></div>
+      <div class="security-line"><span>Scoring</span><strong>100 / VOTE</strong></div>
+      <div class="security-line"><span>Questions</span><strong>${meta.rounds}</strong></div>
+      <div class="notice">The owner controls host permissions. Co-hosts can run the game and kick or ban normal players, but cannot promote or demote hosts.</div>
+    </div>`;
+}
+
+function render() {
+  if (!roomState || !me) return;
+  $("#roomPillCode").textContent = roomCode;
+  $("#mainPanel").innerHTML = mainHTML();
+  $("#sidePanel").innerHTML = sideHTML();
+  bindGameEvents();
+  renderTwitchStatus();
+}
+
+async function assertHost() {
+  if (!isHost()) throw new Error("Only a host can do that.");
+}
+async function assertOwner() {
+  if (!isOwner()) throw new Error("Only the room owner can change host permissions.");
+}
+
+async function startGame() {
+  try {
+    await assertHost();
+    const custom = customArray().map(question => question.text);
+    const queue = shuffled([...QUESTION_BANK, ...custom]).slice(0, roomState.meta.rounds);
+    const result = await runTransaction(roomRef(), room => {
+      if (!room || room.meta.phase !== "lobby") return;
+      if (Object.keys(room.players || {}).length < 2) return;
+      room.meta.phase = "answering";
+      room.meta.roundIndex = 0;
+      room.meta.questionQueue = queue;
+      room.meta.currentQuestion = queue[0] || QUESTION_BANK[0];
+      room.answers = {};
+      room.votes = {};
+      return room;
+    }, { applyLocally: false });
+    if (!result.committed) toast("You need at least 2 players and the game must still be in the lobby.");
+  } catch (error) {
+    toast(error.message);
+  }
+}
+
+async function submitAnswer() {
+  const text = cleanAnswer($("#answerField")?.value);
+  if (!text) return toast("Type an answer first.");
+  try {
+    if (roomState.meta.phase !== "answering") throw new Error("Answers are closed.");
+    await set(roomRef(`answers/${roundKey()}/${me.uid}`), { text, sort: Math.random() });
+  } catch (error) {
+    toast(error.message);
+  }
+}
+
+async function revealAnswers() {
+  try {
+    await assertHost();
+    const count = Object.keys(currentAnswers()).length;
+    if (count < 2) throw new Error("Wait for at least 2 answers.");
+    await runTransaction(roomRef("meta"), meta => {
+      if (!meta || meta.phase !== "answering") return;
+      meta.phase = "voting";
+      return meta;
+    }, { applyLocally: false });
+  } catch (error) {
+    toast(error.message);
+  }
+}
+
+async function voteFor(uid) {
+  try {
+    if (roomState.meta.phase !== "voting") throw new Error("Voting is closed.");
+    if (uid === me.uid) throw new Error("You cannot vote for your own answer.");
+    if (currentVotes()[me.uid]) throw new Error("You already voted.");
+    if (!currentAnswers()[uid]) throw new Error("That answer is no longer available.");
+    await set(roomRef(`votes/${roundKey()}/${me.uid}`), uid);
+  } catch (error) {
+    toast(error.message);
+  }
+}
+
+function scoreInsideTransaction(room, finalAfter = false) {
+  if (!room || room.meta.phase !== "voting") return room;
+  const key = String(room.meta.roundIndex);
+  const votes = room.votes?.[key] || {};
+  const counts = {};
+  for (const target of Object.values(votes)) counts[target] = (counts[target] || 0) + 1;
+  for (const [uid, count] of Object.entries(counts)) {
+    if (room.players?.[uid]) room.players[uid].score = Number(room.players[uid].score || 0) + (count * 100);
+  }
+  room.meta.phase = finalAfter ? "final" : "results";
+  if (finalAfter) room.meta.currentQuestion = "";
+  return room;
+}
+
+async function scoreRound() {
+  try {
+    await assertHost();
+    await runTransaction(roomRef(), room => scoreInsideTransaction(room, false), { applyLocally: false });
+  } catch (error) {
+    toast(error.message);
+  }
+}
+
+async function nextRound() {
+  try {
+    await assertHost();
+    await runTransaction(roomRef(), room => {
+      if (!room || room.meta.phase !== "results") return;
+      const next = Number(room.meta.roundIndex || 0) + 1;
+      if (next >= Number(room.meta.rounds || 0)) {
+        room.meta.phase = "final";
+        room.meta.currentQuestion = "";
+        return room;
+      }
+      room.meta.roundIndex = next;
+      room.meta.phase = "answering";
+      room.meta.currentQuestion = room.meta.questionQueue?.[next] || shuffled(QUESTION_BANK)[0];
+      return room;
+    }, { applyLocally: false });
+  } catch (error) {
+    toast(error.message);
+  }
+}
+
+async function endGame() {
+  if (!confirm("End the game and show final scores?")) return;
+  try {
+    await assertHost();
+    await runTransaction(roomRef(), room => {
+      if (!room) return;
+      if (room.meta.phase === "voting") return scoreInsideTransaction(room, true);
+      room.meta.phase = "final";
+      room.meta.currentQuestion = "";
+      return room;
+    }, { applyLocally: false });
+  } catch (error) {
+    toast(error.message);
+  }
+}
+
+async function addQuestion() {
+  try {
+    await assertHost();
+    if (roomState.meta.phase !== "lobby") throw new Error("Custom questions can only be changed in the lobby.");
+    const text = cleanQuestion($("#customField")?.value);
+    if (!text) return;
+    await push(roomRef("customQuestions"), { text, by: me.uid, createdAt: Date.now() });
+  } catch (error) {
+    toast(error.message);
+  }
+}
+
+async function removeQuestion(id) {
+  try {
+    await assertHost();
+    if (roomState.meta.phase !== "lobby") throw new Error("Custom questions can only be changed in the lobby.");
+    await remove(roomRef(`customQuestions/${id}`));
+  } catch (error) {
+    toast(error.message);
+  }
+}
+
+async function promote(uid) {
+  try {
+    await assertOwner();
+    if (uid === me.uid) throw new Error("You are already the owner.");
+    const target = roomState.players?.[uid];
+    if (!target || target.role === "owner") throw new Error("That player cannot be promoted.");
+    await update(roomRef(`players/${uid}`), { role: "host" });
+  } catch (error) {
+    toast(error.message);
+  }
+}
+
+async function demote(uid) {
+  try {
+    await assertOwner();
+    const target = roomState.players?.[uid];
+    if (!target || target.role !== "host") throw new Error("That player is not a co-host.");
+    await update(roomRef(`players/${uid}`), { role: "player" });
+  } catch (error) {
+    toast(error.message);
+  }
+}
+
+async function kick(uid) {
+  if (!confirm("Kick this player? They can join the room again later.")) return;
+  try {
+    await assertHost();
+    const target = roomState.players?.[uid];
+    if (!target || target.role === "owner") throw new Error("The owner cannot be kicked.");
+    if (role() === "host" && target.role !== "player") throw new Error("Co-hosts can only kick normal players.");
+    await remove(roomRef(`players/${uid}`));
+  } catch (error) {
+    toast(error.message);
+  }
+}
+
+async function ban(uid) {
+  if (!confirm("Ban this player from this room?")) return;
+  try {
+    await assertHost();
+    const target = roomState.players?.[uid];
+    if (!target || target.role === "owner") throw new Error("The owner cannot be banned.");
+    if (role() === "host" && target.role !== "player") throw new Error("Co-hosts can only ban normal players.");
+
+    const changes = {
+      [`bans/${uid}`]: true,
+      [`players/${uid}`]: null
+    };
+    if (target.twitchId) changes[`twitchBans/${target.twitchId}`] = true;
+    await update(roomRef(), changes);
+  } catch (error) {
+    toast(error.message);
+  }
+}
+
+async function copyRoomCode() {
+  if (!roomCode) return;
+  try {
+    await navigator.clipboard.writeText(roomCode);
+    toast(`Room code ${roomCode} copied.`);
+  } catch {
+    toast(`Room code: ${roomCode}`);
+  }
+}
+
+function bindGameEvents() {
+  $("#startBtn")?.addEventListener("click", startGame);
+  $("#submitAnswerBtn")?.addEventListener("click", submitAnswer);
+  $("#revealBtn")?.addEventListener("click", revealAnswers);
+  $("#scoreBtn")?.addEventListener("click", scoreRound);
+  $("#nextBtn")?.addEventListener("click", nextRound);
+  $("#endBtn")?.addEventListener("click", endGame);
+  $("#homeBtn")?.addEventListener("click", () => leaveToHome());
+  $("#copyCodeBtn")?.addEventListener("click", copyRoomCode);
+  $("#addQuestionBtn")?.addEventListener("click", addQuestion);
+  $$('[data-vote]').forEach(button => button.addEventListener("click", () => voteFor(button.dataset.vote)));
+  $$('[data-promote]').forEach(button => button.addEventListener("click", () => promote(button.dataset.promote)));
+  $$('[data-demote]').forEach(button => button.addEventListener("click", () => demote(button.dataset.demote)));
+  $$('[data-kick]').forEach(button => button.addEventListener("click", () => kick(button.dataset.kick)));
+  $$('[data-ban]').forEach(button => button.addEventListener("click", () => ban(button.dataset.ban)));
+  $$('[data-remove-question]').forEach(button => button.addEventListener("click", () => removeQuestion(button.dataset.removeQuestion)));
+}
+
+$("#openHostBtn").addEventListener("click", () => show("hostScreen"));
+$("#openJoinBtn").addEventListener("click", () => show("joinScreen"));
+$("#createRoomBtn").addEventListener("click", createRoom);
+$("#joinRoomBtn").addEventListener("click", joinRoom);
+$("#brandBtn").addEventListener("click", () => leaveToHome());
+$("#roomPill").addEventListener("click", copyRoomCode);
+$$("[data-home]").forEach(button => button.addEventListener("click", () => show("homeScreen")));
+$("#joinCode").addEventListener("input", event => {
+  event.target.value = event.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6);
+});
+$("#twitchAuthBtn").addEventListener("click", () => twitchUser ? disconnectTwitch() : startTwitchLogin({ action: "none" }));
+$("#hostTwitchBtn")?.addEventListener("click", () => {
+  if (twitchUser) return disconnectTwitch();
+  startTwitchLogin({ action: "host", rounds: Number($("#roundCount").value) || 5 });
+});
+$("#joinTwitchBtn")?.addEventListener("click", () => {
+  if (twitchUser) return disconnectTwitch();
+  const code = $("#joinCode").value.trim().toUpperCase();
+  startTwitchLogin({ action: "join", code });
+});
+
+let startupComplete = false;
+
+async function finishStartup(user) {
+  if (startupComplete || !user) return;
+  startupComplete = true;
+  me = user;
+
+  $("#boot").classList.add("hidden");
+  $("#appShell").classList.remove("hidden");
+  renderTwitchStatus();
+
+  if (roomCode) {
+    try {
+      const playerSnapshot = await get(ref(db, `rooms/${roomCode}/players/${me.uid}`));
+      if (playerSnapshot.exists()) {
+        await enterRoom(roomCode);
+      } else {
+        sessionStorage.removeItem("blurtRoom");
+        roomCode = "";
+        show("homeScreen");
+      }
+    } catch (error) {
+      console.warn("Could not restore previous room:", error);
+      sessionStorage.removeItem("blurtRoom");
+      roomCode = "";
+      show("homeScreen");
+    }
+  } else {
+    show("homeScreen");
+  }
+
+  await resumePendingTwitchAction();
+  if (twitchCallbackMessage) {
+    toast(twitchCallbackMessage);
+    twitchCallbackMessage = "";
+  }
+}
+
+onAuthStateChanged(auth, user => {
+  if (user && !startupComplete) finishStartup(user).catch(console.error);
+});
+
+(async function boot() {
+  try {
+    $("#boot .boot-text").textContent = "Connecting to the game…";
+    if (twitchConfigured()) await restoreTwitchLogin();
+    else renderTwitchStatus();
+
+    $("#boot .boot-text").textContent = "Signing you in…";
+    const user = await ensureAuth();
+    await finishStartup(user);
+  } catch (error) {
+    console.error(error);
+    const message = error?.code === "auth/operation-not-allowed"
+      ? "Anonymous sign-in is disabled. Enable Anonymous under Firebase → Authentication → Sign-in method."
+      : error?.message || "Could not start BLURT";
+    $("#boot .boot-text").textContent = message;
+  }
+})();
+
+console.info(`BLURT loaded with ${QUESTION_BANK.length} unique built-in questions.`);
+
+  </script>
+</body>
+</html>
