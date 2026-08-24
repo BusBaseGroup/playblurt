@@ -1,0 +1,23 @@
+BLURT — TWITCH LOGIN SETUP
+
+1. Open the Twitch Developer Console and register a new application.
+2. Add this exact OAuth Redirect URL:
+   https://playblurt.co.uk/
+3. Copy the application's CLIENT ID.
+4. Open app.js and find:
+   const TWITCH_CLIENT_ID = "PASTE_TWITCH_CLIENT_ID_HERE";
+5. Replace only PASTE_TWITCH_CLIENT_ID_HERE with the Client ID.
+6. Do NOT put a Twitch Client Secret into GitHub or app.js.
+7. Upload index.html, styles.css and app.js to the ROOT of your GitHub Pages repository.
+
+HOW IT WORKS
+- Host can switch on "Require Twitch login" when creating a room.
+- If enabled, the host is sent to Twitch first if they are not signed in.
+- Players entering that room are also sent to Twitch if needed.
+- Twitch-required rooms automatically use the player's Twitch display name.
+- Twitch profile pictures and a TWITCH badge appear in the player list.
+- A Twitch account can only occupy one player slot in a Twitch-required room.
+- If a Twitch-verified player is banned, their Twitch user ID is also banned from that room.
+
+IMPORTANT
+This version is designed for a static GitHub Pages site. Twitch OAuth is verified in the browser, but a fully tamper-proof Twitch requirement would need a trusted server/backend that verifies Twitch tokens before Firebase writes are allowed.
