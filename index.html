@@ -808,6 +808,16 @@ body.streamer-popout .app,body.streamer-popout .round-fx{display:none!important}
             </select>
           </div>
 
+          <div class="field-group">
+            <label for="questionMode">Question source</label>
+            <select id="questionMode">
+              <option value="builtin">BLURT questions</option>
+              <option value="mixed">BLURT + player questions</option>
+              <option value="custom" selected>Player questions only</option>
+            </select>
+            <div class="field-help">In Player questions only, everyone in the lobby can add prompts and none of BLURT's built-in questions are used.</div>
+          </div>
+
           <label class="streamer-toggle" for="streamerMode">
             <span class="streamer-toggle-copy"><strong>Use Streamer mode for me</strong><span>Keep your main game window clean for the stream and move your answers, picks and host controls into a private pop-out panel.</span></span>
             <input id="streamerMode" type="checkbox">
@@ -1578,7 +1588,7 @@ function twitchPlayerFields() {
   };
 }
 
-async function createUniqueRoom(name, rounds, streamerMode = false) {
+async function createUniqueRoom(name, rounds, streamerMode = false, questionMode = "custom") {
   for (let attempt = 0; attempt < 30; attempt++) {
     const code = makeCode();
     const player = {
@@ -1597,6 +1607,7 @@ async function createUniqueRoom(name, rounds, streamerMode = false) {
         roundIndex: 0,
         currentQuestion: "",
         questionQueue: [],
+        questionMode,
         requireTwitch: false,
         streamerMode: false,
         createdAt: Date.now()
@@ -1688,6 +1699,7 @@ async function enterRoom(code) {
 
 async function createRoom() {
   const rounds = Number($("#roundCount").value) || 5;
+  const questionMode = $("#questionMode")?.value || "custom";
   const streamerMode = !!$("#streamerMode")?.checked;
   const name = twitchUser ? twitchUser.displayName : cleanName($("#hostName").value);
   if (!name) return toast("Enter a display name, or login with Twitch.");
@@ -1696,7 +1708,7 @@ async function createRoom() {
   button.disabled = true;
   button.textContent = "Creating…";
   try {
-    const code = await createUniqueRoom(name, rounds, streamerMode);
+    const code = await createUniqueRoom(name, rounds, streamerMode, questionMode);
     await enterRoom(code);
   } catch (error) {
     toast(error.message);
@@ -1767,6 +1779,7 @@ async function resumePendingTwitchAction() {
   if (pending.action === "host") {
     show("hostScreen");
     $("#roundCount").value = String(pending.rounds || 5);
+    if ($("#questionMode")) $("#questionMode").value = pending.questionMode || "custom";
     if ($("#streamerMode")) $("#streamerMode").checked = !!pending.streamerMode;
     renderTwitchStatus();
   } else if (pending.action === "join") {
@@ -1821,6 +1834,7 @@ function mainHTML() {
           <div class="room-badges">
             <span class="room-badge">${players.length} PLAYER${players.length === 1 ? "" : "S"}</span>
             <span class="room-badge">${meta.rounds} QUESTIONS</span>
+            <span class="room-badge">${meta.questionMode === "custom" ? "PLAYER QUESTIONS ONLY" : meta.questionMode === "mixed" ? "MIXED QUESTIONS" : "BLURT QUESTIONS"}</span>
             <span class="room-badge twitch">◆ TWITCH OPTIONAL</span>
             ${streamerMode ? `<span class="room-badge">YOUR STREAMER MODE</span>` : ""}
           </div>
@@ -1828,7 +1842,7 @@ function mainHTML() {
         </div>
         <div class="qr-card"><div><img src="${esc(qrUrl(roomCode))}" alt="QR code to join room ${esc(roomCode)}"><span>SCAN TO JOIN</span></div></div>
       </div>
-      <div class="waiting">Players can scan the QR code or use the six-character code. Twitch remains optional.</div>
+      <div class="waiting">Players can scan the QR code or use the six-character code. ${meta.questionMode === "custom" ? "Everyone can add questions from the lobby before the host starts." : meta.questionMode === "mixed" ? "Player-made questions will be mixed with BLURT prompts." : "This room is using BLURT's built-in question bank."} Twitch remains optional.</div>
       ${streamerMode ? `<div class="streamer-banner"><div><strong>Your controls are in Streamer Mode</strong><span>Keep this main window on stream. Your private panel contains your game controls.</span></div><button id="openStreamerBtn" class="btn secondary small" type="button">OPEN STREAMER PANEL</button></div>` : ""}
       ${isHost() && !streamerMode ? `<div class="host-actions"><button id="startBtn" class="btn primary" ${players.length < 2 ? "disabled" : ""}>START GAME →</button></div>` : ""}`;
   }
@@ -1918,15 +1932,25 @@ function playerRow(player, allowControls = !streamerEnabledForMe()) {
 }
 
 function customHTML(allowControls = !streamerEnabledForMe()) {
-  if (!isHost() || roomState.meta.phase !== "lobby") return "";
+  if (roomState.meta.phase !== "lobby") return "";
   const list = customArray();
+  const mode = roomState.meta.questionMode || "builtin";
+  const canAdd = allowControls && mode !== "builtin";
+  const modeText = mode === "custom"
+    ? "Only player-made questions will be used in this game."
+    : mode === "mixed"
+      ? "Player-made questions are mixed into BLURT's built-in question pool."
+      : "This room is using BLURT's built-in questions only.";
   return `<div class="side-section">
-    <div class="side-head"><h3 class="side-title">CUSTOM QUESTIONS</h3><span class="side-count">${list.length}</span></div>
-    ${allowControls ? `<div class="custom-row"><input id="customField" class="custom-field" maxlength="180" placeholder="Add a custom prompt"><button id="addQuestionBtn" class="btn primary small">ADD</button></div>` : `<div class="notice">Custom-question controls are in your Streamer panel.</div>`}
-    ${list.length ? `<div class="custom-list">${list.map(question => `<div class="custom-item"><span>${esc(question.text)}</span>${allowControls ? `<button data-remove-question="${question.id}" title="Remove">×</button>` : ""}</div>`).join("")}</div>` : `<div class="notice">BLURT already has ${QUESTION_BANK.length}+ built-in prompts. Your custom prompts are mixed into the random question pool.</div>`}
+    <div class="side-head"><h3 class="side-title">PLAYER QUESTIONS</h3><span class="side-count">${list.length}</span></div>
+    ${canAdd ? `<div class="custom-row"><input id="customField" class="custom-field" maxlength="180" placeholder="Write a question for the game"><button id="addQuestionBtn" class="btn primary small">ADD</button></div>` : (mode === "builtin" ? `<div class="notice">The host chose BLURT questions for this room, so player questions are turned off.</div>` : `<div class="notice">Question controls are in your Streamer panel.</div>`)}
+    ${list.length ? `<div class="custom-list">${list.map(question => {
+      const canRemove = allowControls && (isHost() || question.by === me.uid);
+      const author = roomState.players?.[question.by]?.name || "Player";
+      return `<div class="custom-item"><span><strong>${esc(question.text)}</strong><small style="display:block;margin-top:4px;color:var(--muted)">added by ${esc(author)}</small></span>${canRemove ? `<button data-remove-question="${question.id}" title="Remove">×</button>` : ""}</div>`;
+    }).join("")}</div>` : `<div class="notice">${modeText}${mode === "custom" ? ` Add at least ${Number(roomState.meta.rounds || 1)} question${Number(roomState.meta.rounds || 1) === 1 ? "" : "s"} to play without repeats.` : ""}</div>`}
   </div>`;
 }
-
 function sideHTML() {
   const players = playersArray().sort((a, b) => (b.score || 0) - (a.score || 0) || a.name.localeCompare(b.name));
   const meta = roomState.meta;
@@ -1938,7 +1962,8 @@ function sideHTML() {
       <div class="security-line"><span>Twitch login</span><strong class="twitch-on">OPTIONAL</strong></div>
       <div class="security-line"><span>Your streamer mode</span><strong>${streamerEnabledForMe() ? "ON" : "OFF"}</strong></div>
       <div class="security-line"><span>Scoring</span><strong>100 / PICK + BONUS</strong></div>
-      <div class="security-line"><span>Questions</span><strong>${meta.rounds}</strong></div>
+      <div class="security-line"><span>Rounds</span><strong>${meta.rounds}</strong></div>
+      <div class="security-line"><span>Question source</span><strong>${meta.questionMode === "custom" ? "PLAYER ONLY" : meta.questionMode === "mixed" ? "MIXED" : "BLURT"}</strong></div>
       <div class="notice">The owner controls host permissions. Co-hosts can run the game and kick or ban normal players, but cannot promote or demote hosts.</div>
     </div>`;
 }
@@ -1959,9 +1984,10 @@ function render() {
 
 
 function streamerRosterHTML() {
-  if (!isHost()) return "";
+  const questionControls = customHTML(true);
+  if (!isHost()) return questionControls ? `<div class="streamer-control-section"><h3 class="streamer-control-title">Question controls</h3>${questionControls}</div>` : "";
   const players = playersArray().sort((a, b) => (b.score || 0) - (a.score || 0) || a.name.localeCompare(b.name));
-  return `<div class="streamer-control-section"><h3 class="streamer-control-title">Player controls</h3><div class="player-list">${players.map(player => playerRow(player, true)).join("")}</div>${customHTML(true)}</div>`;
+  return `<div class="streamer-control-section"><h3 class="streamer-control-title">Player controls</h3><div class="player-list">${players.map(player => playerRow(player, true)).join("")}</div>${questionControls}</div>`;
 }
 
 function streamerPanelHTML() {
@@ -2089,7 +2115,11 @@ async function startGame() {
   try {
     await assertHost();
     const custom = customArray().map(question => question.text);
-    const queue = shuffled([...QUESTION_BANK, ...custom]).slice(0, roomState.meta.rounds);
+    const mode = roomState.meta.questionMode || "builtin";
+    const rounds = Number(roomState.meta.rounds || 5);
+    if (mode === "custom" && custom.length < rounds) throw new Error(`Add at least ${rounds} custom question${rounds === 1 ? "" : "s"} before starting. You currently have ${custom.length}.`);
+    const source = mode === "custom" ? custom : mode === "mixed" ? [...QUESTION_BANK, ...custom] : QUESTION_BANK;
+    const queue = shuffled(source).slice(0, rounds);
     const result = await runTransaction(roomRef(), room => {
       if (!room || room.meta.phase !== "lobby") return;
       if (Object.keys(room.players || {}).length < 2) return;
@@ -2200,7 +2230,10 @@ async function nextRound() {
       }
       room.meta.roundIndex = next;
       room.meta.phase = "answering";
-      room.meta.currentQuestion = room.meta.questionQueue?.[next] || shuffled(QUESTION_BANK)[0];
+      const custom = Object.values(room.customQuestions || {}).map(question => question.text).filter(Boolean);
+      const mode = room.meta.questionMode || "builtin";
+      const fallbackPool = mode === "custom" ? custom : mode === "mixed" ? [...QUESTION_BANK, ...custom] : QUESTION_BANK;
+      room.meta.currentQuestion = room.meta.questionQueue?.[next] || shuffled(fallbackPool)[0] || "Make up the funniest answer you can.";
       return room;
     }, { applyLocally: false });
   } catch (error) {
@@ -2226,11 +2259,16 @@ async function endGame() {
 
 async function addQuestion() {
   try {
-    await assertHost();
-    if (roomState.meta.phase !== "lobby") throw new Error("Custom questions can only be changed in the lobby.");
+    if (roomState.meta.phase !== "lobby") throw new Error("Questions can only be changed in the lobby.");
+    if ((roomState.meta.questionMode || "builtin") === "builtin") throw new Error("Player questions are turned off for this room.");
     const text = cleanQuestion($("#customField")?.value);
-    if (!text) return;
+    if (!text) return toast("Type a question first.");
+    const duplicate = customArray().some(question => String(question.text || "").trim().toLowerCase() === text.toLowerCase());
+    if (duplicate) return toast("That question has already been added.");
     await push(roomRef("customQuestions"), { text, by: me.uid, createdAt: Date.now() });
+    const field = $("#customField");
+    if (field) field.value = "";
+    sfx("submit");
   } catch (error) {
     toast(error.message);
   }
@@ -2238,8 +2276,10 @@ async function addQuestion() {
 
 async function removeQuestion(id) {
   try {
-    await assertHost();
-    if (roomState.meta.phase !== "lobby") throw new Error("Custom questions can only be changed in the lobby.");
+    if (roomState.meta.phase !== "lobby") throw new Error("Questions can only be changed in the lobby.");
+    const question = roomState.customQuestions?.[id];
+    if (!question) return;
+    if (!isHost() && question.by !== me.uid) throw new Error("You can only remove questions you added.");
     await remove(roomRef(`customQuestions/${id}`));
   } catch (error) {
     toast(error.message);
@@ -2348,7 +2388,7 @@ $("#joinCode").addEventListener("input", event => {
 $("#twitchAuthBtn").addEventListener("click", () => twitchUser ? disconnectTwitch() : startTwitchLogin({ action: "none" }));
 $("#hostTwitchBtn")?.addEventListener("click", () => {
   if (twitchUser) return disconnectTwitch();
-  startTwitchLogin({ action: "host", rounds: Number($("#roundCount").value) || 5, streamerMode: !!$("#streamerMode")?.checked });
+  startTwitchLogin({ action: "host", rounds: Number($("#roundCount").value) || 5, questionMode: $("#questionMode")?.value || "custom", streamerMode: !!$("#streamerMode")?.checked });
 });
 $("#joinTwitchBtn")?.addEventListener("click", () => {
   if (twitchUser) return disconnectTwitch();
