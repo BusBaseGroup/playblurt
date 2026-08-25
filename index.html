@@ -726,6 +726,7 @@ body::before,.ambient{display:none!important}
 .lobby-share-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px;gap:18px;align-items:stretch}.qr-card{border:1px solid var(--line);background:#fff;border-radius:14px;padding:12px;display:grid;place-items:center;text-align:center}.qr-card img{display:block;width:164px;height:164px;image-rendering:auto}.qr-card span{display:block;color:#202024;font-size:11px;font-weight:800;margin-top:8px;letter-spacing:.02em}.join-link{margin-top:10px;color:var(--muted);font-size:12px;word-break:break-all}.streamer-banner{margin-top:14px;border:1px solid rgba(255,93,58,.35);background:rgba(255,93,58,.07);border-radius:12px;padding:13px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px}.streamer-banner strong{font-size:13px}.streamer-banner span{display:block;color:var(--muted);font-size:12px;margin-top:3px;line-height:1.4}
 .streamer-shell{min-height:100vh;width:min(560px,100%);margin:0 auto;padding:22px;display:grid;align-content:start;gap:16px}.streamer-top{display:flex;align-items:center;justify-content:space-between;padding-bottom:13px;border-bottom:1px solid var(--line)}.streamer-brand{font-weight:900;font-size:21px;letter-spacing:-.04em}.streamer-room{font-size:12px;color:var(--muted)}.streamer-card{border:1px solid var(--line);border-radius:16px;background:var(--panel);padding:22px}.streamer-status{font-size:11px;font-weight:800;letter-spacing:.1em;color:var(--accent);text-transform:uppercase}.streamer-question{font-size:clamp(28px,7vw,42px);line-height:1.08;letter-spacing:-.035em;margin:14px 0 22px}.streamer-help{color:var(--muted);font-size:13px;line-height:1.55}.streamer-answer{width:100%;min-height:170px;resize:vertical;margin-top:16px;border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:12px;padding:14px;font:inherit;font-size:18px;outline:none}.streamer-answer:focus{border-color:var(--accent)}.streamer-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.streamer-locked{border:1px solid rgba(65,200,125,.28);background:rgba(65,200,125,.07);padding:15px;border-radius:12px;margin-top:16px}.streamer-private{font-size:11px;color:var(--muted);padding-top:2px}.streamer-shell .btn{min-height:42px}
 body.streamer-popout .app,body.streamer-popout .round-fx{display:none!important}body.streamer-popout{background:var(--bg)}
+.streamer-control-section{margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}.streamer-control-title{margin:0 0 12px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}.streamer-panel-note{border:1px solid rgba(255,93,58,.3);background:rgba(255,93,58,.06);border-radius:12px;padding:13px 14px;margin-top:14px}.streamer-panel-note strong{font-size:13px}.streamer-panel-note span{display:block;color:var(--muted);font-size:12px;line-height:1.45;margin-top:3px}.answer-card.display-only{cursor:default;pointer-events:none}.streamer-card .answers-grid{grid-template-columns:1fr}.streamer-card .host-actions{margin-top:18px}.streamer-card .player-list{margin-top:8px}.streamer-card .side-section{margin-top:18px}.streamer-card .custom-row{grid-template-columns:minmax(0,1fr) auto}.streamer-card .result-card{padding:14px}.streamer-card .question{font-size:30px}.streamer-card .leader-row{grid-template-columns:34px 34px minmax(0,1fr) auto}
 @media(max-width:720px){.lobby-share-grid{grid-template-columns:1fr}.qr-card{width:190px;justify-self:start}.streamer-banner{align-items:flex-start;flex-direction:column}.streamer-shell{padding:16px}}
 
   </style>
@@ -808,7 +809,7 @@ body.streamer-popout .app,body.streamer-popout .round-fx{display:none!important}
           </div>
 
           <label class="streamer-toggle" for="streamerMode">
-            <span class="streamer-toggle-copy"><strong>Streamer mode</strong><span>Keep the main game on stream and answer privately in a separate pop-out window.</span></span>
+            <span class="streamer-toggle-copy"><strong>Use Streamer mode for me</strong><span>Keep your main game window clean for the stream and move your answers, picks and host controls into a private pop-out panel.</span></span>
             <input id="streamerMode" type="checkbox">
             <span class="mini-switch" aria-hidden="true"><i></i></span>
           </label>
@@ -846,6 +847,12 @@ body.streamer-popout .app,body.streamer-popout .round-fx{display:none!important}
             <span>Twitch is optional. If you use it, Twitch will ask you to authorise BLURT.</span>
           </div>
 
+          <label class="streamer-toggle" for="joinStreamerMode">
+            <span class="streamer-toggle-copy"><strong>Use Streamer mode for me</strong><span>After joining, your answer, voting and any host controls you receive are kept in a separate private control panel.</span></span>
+            <input id="joinStreamerMode" type="checkbox">
+            <span class="mini-switch" aria-hidden="true"><i></i></span>
+          </label>
+
           <button id="joinRoomBtn" class="btn primary full action-btn" type="button">Join room</button>
         </div>
       </div>
@@ -861,15 +868,15 @@ body.streamer-popout .app,body.streamer-popout .round-fx{display:none!important}
 
   <main id="streamerShell" class="streamer-shell hidden" aria-live="polite">
     <div class="streamer-top">
-      <div><div class="streamer-brand">BLURT Streamer</div><div class="streamer-room">Private answer window · Room <strong id="streamerRoomCode">------</strong></div></div>
+      <div><div class="streamer-brand">BLURT Streamer</div><div class="streamer-room">Private control panel · Room <strong id="streamerRoomCode">------</strong></div></div>
       <button id="streamerCloseBtn" class="btn secondary small" type="button">Close</button>
     </div>
     <section id="streamerPanel" class="streamer-card">
       <div class="streamer-status">Connecting</div>
       <h1 class="streamer-question">Loading your room…</h1>
-      <p class="streamer-help">This window is only for the streamer's private answer.</p>
+      <p class="streamer-help">Your private controls will appear here.</p>
     </section>
-    <div class="streamer-private">Keep this pop-out off-stream if you want your answer to stay secret until the reveal.</div>
+    <div class="streamer-private">Keep this panel off-stream: answers, picks and moderation controls can appear here.</div>
   </main>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -940,6 +947,47 @@ const initialParams = new URLSearchParams(location.search);
 const isStreamerPopout = initialParams.get("streamer") === "1";
 const requestedRoomCode = String(initialParams.get("room") || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6);
 let streamerUnsub = null;
+
+// Keep each player's unfinished answer on their own device.
+// Firebase updates (for example another player submitting) cause the room to
+// re-render, so without this draft cache somebody else's submission could
+// wipe text that you were still typing.
+function answerDraftKey() {
+  if (!roomCode || !me) return "";
+  return `blurtDraft:${roomCode}:${roundKey()}:${me.uid}`;
+}
+function saveAnswerDraft(value) {
+  const key = answerDraftKey();
+  if (!key) return;
+  try { localStorage.setItem(key, String(value ?? "").slice(0, 160)); } catch {}
+}
+function loadAnswerDraft() {
+  const key = answerDraftKey();
+  if (!key) return "";
+  try { return localStorage.getItem(key) || ""; } catch { return ""; }
+}
+function clearAnswerDraft() {
+  const key = answerDraftKey();
+  if (!key) return;
+  try { localStorage.removeItem(key); } catch {}
+}
+function preserveVisibleAnswerDraft() {
+  const normal = $("#answerField");
+  const streamer = $("#streamerAnswerField");
+  if (normal) saveAnswerDraft(normal.value);
+  if (streamer) saveAnswerDraft(streamer.value);
+}
+function restoreVisibleAnswerDraft() {
+  const draft = loadAnswerDraft();
+  const normal = $("#answerField");
+  const streamer = $("#streamerAnswerField");
+  if (normal && !normal.value) normal.value = draft;
+  if (streamer && !streamer.value) streamer.value = draft;
+}
+function bindAnswerDraftFields() {
+  $("#answerField")?.addEventListener("input", event => saveAnswerDraft(event.target.value));
+  $("#streamerAnswerField")?.addEventListener("input", event => saveAnswerDraft(event.target.value));
+}
 
 function audioContext(){
   if (!soundEnabled) return null;
@@ -1263,12 +1311,13 @@ function qrUrl(code = roomCode) {
 }
 
 function openStreamerPopout() {
-  if (!roomCode) return toast("Create a room first.");
-  if (!roomState?.meta?.streamerMode) return toast("Streamer mode is not enabled for this room.");
+  if (!roomCode || !roomState) return toast("Join a room first.");
+  if (!streamerEnabledForMe()) return toast("Streamer mode is not enabled for you.");
   const url = new URL(location.origin + location.pathname);
   url.searchParams.set("streamer", "1");
   url.searchParams.set("room", roomCode);
-  const popup = window.open(url.toString(), "blurtStreamer", "popup=yes,width=540,height=760,resizable=yes,scrollbars=yes");
+  const popupName = `blurtStreamer_${me?.uid || "player"}`;
+  const popup = window.open(url.toString(), popupName, "popup=yes,width=620,height=820,resizable=yes,scrollbars=yes");
   if (!popup) toast("Pop-up blocked. Allow pop-ups for BLURT and try again.");
   else popup.focus();
 }
@@ -1496,6 +1545,7 @@ function role() {
 }
 function isOwner() { return role() === "owner"; }
 function isHost() { return role() === "owner" || role() === "host"; }
+function streamerEnabledForMe() { return !!roomState?.players?.[me?.uid]?.streamerMode; }
 function roomRef(path = "") { return ref(db, `rooms/${roomCode}${path ? "/" + path : ""}`); }
 function myPlayer() { return roomState?.players?.[me?.uid] || null; }
 function playersArray() {
@@ -1536,6 +1586,7 @@ async function createUniqueRoom(name, rounds, streamerMode = false) {
       role: "owner",
       score: 0,
       joinedAt: Date.now(),
+      streamerMode: !!streamerMode,
       ...twitchPlayerFields()
     };
     const data = {
@@ -1547,7 +1598,7 @@ async function createUniqueRoom(name, rounds, streamerMode = false) {
         currentQuestion: "",
         questionQueue: [],
         requireTwitch: false,
-        streamerMode: !!streamerMode,
+        streamerMode: false,
         createdAt: Date.now()
       },
       players: { [me.uid]: player },
@@ -1660,6 +1711,7 @@ async function joinRoom() {
   if (code.length !== 6) return toast("Enter the full 6-character room code.");
 
   const name = twitchUser ? twitchUser.displayName : cleanName($("#joinName").value);
+  const streamerMode = !!$("#joinStreamerMode")?.checked;
   if (!name) return toast("Enter a display name, or login with Twitch.");
 
   const button = $("#joinRoomBtn");
@@ -1693,6 +1745,7 @@ async function joinRoom() {
       role: "player",
       score: 0,
       joinedAt: Date.now(),
+      streamerMode,
       ...twitchPlayerFields()
     });
     await enterRoom(code);
@@ -1719,6 +1772,7 @@ async function resumePendingTwitchAction() {
   } else if (pending.action === "join") {
     show("joinScreen");
     $("#joinCode").value = String(pending.code || "").toUpperCase();
+    if ($("#joinStreamerMode")) $("#joinStreamerMode").checked = !!pending.streamerMode;
     renderTwitchStatus();
   }
 }
@@ -1753,6 +1807,7 @@ function avatarHTML(player, className = "player-avatar") {
 function mainHTML() {
   const meta = roomState.meta;
   const players = playersArray();
+  const streamerMode = streamerEnabledForMe();
 
   if (meta.phase === "lobby") {
     return `${header()}
@@ -1767,15 +1822,15 @@ function mainHTML() {
             <span class="room-badge">${players.length} PLAYER${players.length === 1 ? "" : "S"}</span>
             <span class="room-badge">${meta.rounds} QUESTIONS</span>
             <span class="room-badge twitch">◆ TWITCH OPTIONAL</span>
-            ${meta.streamerMode ? `<span class="room-badge">STREAMER MODE</span>` : ""}
+            ${streamerMode ? `<span class="room-badge">YOUR STREAMER MODE</span>` : ""}
           </div>
           <div class="join-link">${esc(joinUrl(roomCode))}</div>
         </div>
         <div class="qr-card"><div><img src="${esc(qrUrl(roomCode))}" alt="QR code to join room ${esc(roomCode)}"><span>SCAN TO JOIN</span></div></div>
       </div>
       <div class="waiting">Players can scan the QR code or use the six-character code. Twitch remains optional.</div>
-      ${meta.streamerMode && isOwner() ? `<div class="streamer-banner"><div><strong>Streamer mode is on</strong><span>Keep this game window on stream. Use the private pop-out to type your answers.</span></div><button id="openStreamerBtn" class="btn secondary small" type="button">OPEN ANSWER POP-OUT</button></div>` : ""}
-      ${isHost() ? `<div class="host-actions"><button id="startBtn" class="btn primary" ${players.length < 2 ? "disabled" : ""}>START GAME →</button></div>` : ""}`;
+      ${streamerMode ? `<div class="streamer-banner"><div><strong>Your controls are in Streamer Mode</strong><span>Keep this main window on stream. Your private panel contains your game controls.</span></div><button id="openStreamerBtn" class="btn secondary small" type="button">OPEN STREAMER PANEL</button></div>` : ""}
+      ${isHost() && !streamerMode ? `<div class="host-actions"><button id="startBtn" class="btn primary" ${players.length < 2 ? "disabled" : ""}>START GAME →</button></div>` : ""}`;
   }
 
   if (meta.phase === "answering") {
@@ -1787,10 +1842,10 @@ function mainHTML() {
       ${meterHTML(Object.keys(answers).length, players.length, "BLURTS LOCKED IN")}
       ${answered
         ? `<div class="waiting">Locked. Nobody sees who wrote what until the reveal.</div>`
-        : (meta.streamerMode && isOwner()
-          ? `<div class="streamer-banner"><div><strong>Your answer stays private</strong><span>Type it in the Streamer pop-out while this main game screen stays on stream.</span></div><button id="openStreamerBtn" class="btn secondary small" type="button">OPEN ANSWER POP-OUT</button></div>`
+        : (streamerMode
+          ? `<div class="streamer-banner"><div><strong>Your answer controls are private</strong><span>Type and submit from the Streamer panel. This main window stays display-only.</span></div><button id="openStreamerBtn" class="btn secondary small" type="button">OPEN STREAMER PANEL</button></div>`
           : `<div class="answer-wrap"><textarea id="answerField" class="answer-field" maxlength="160" placeholder="Drop your best BLURT…"></textarea><div class="answer-meta"><span>Short usually hits harder.</span><span>160 characters max</span></div><button id="submitAnswerBtn" class="btn primary">DROP MY BLURT</button></div>`)}
-      ${isHost() ? `<div class="host-actions"><button id="revealBtn" class="btn secondary" ${Object.keys(answers).length < 2 ? "disabled" : ""}>REVEAL ANSWERS</button><button id="endBtn" class="btn danger">END GAME</button></div>` : ""}`;
+      ${isHost() && !streamerMode ? `<div class="host-actions"><button id="revealBtn" class="btn secondary" ${Object.keys(answers).length < 2 ? "disabled" : ""}>REVEAL ANSWERS</button><button id="endBtn" class="btn danger">END GAME</button></div>` : ""}`;
   }
 
   if (meta.phase === "voting") {
@@ -1802,10 +1857,12 @@ function mainHTML() {
       <div class="game-kicker">BLURT BOARD</div>
       <h2 class="question small">${esc(currentQuestion())}</h2>
       <div class="pick-note"><span class="pick-chip">1 PICK</span>Authors stay hidden. Back the BLURT you want to score.</div>
-      <div class="answers-grid">${list.map(([uid, answer]) => `<button class="answer-card ${uid === me.uid ? "mine" : ""} ${myVote === uid ? "selected" : ""}" data-vote="${uid}" ${myVote || uid === me.uid ? "disabled" : ""}>${esc(answer.text)}</button>`).join("")}</div>
+      <div class="answers-grid">${streamerMode
+        ? list.map(([, answer]) => `<div class="answer-card display-only">${esc(answer.text)}</div>`).join("")
+        : list.map(([uid, answer]) => `<button class="answer-card ${uid === me.uid ? "mine" : ""} ${myVote === uid ? "selected" : ""}" data-vote="${uid}" ${myVote || uid === me.uid ? "disabled" : ""}>${esc(answer.text)}</button>`).join("")}</div>
       ${meterHTML(Object.keys(votes).length, players.length, "PICKS LOCKED IN")}
-      ${myVote ? `<div class="waiting">Your pick is locked. Sit tight for the author reveal.</div>` : ""}
-      ${isHost() ? `<div class="host-actions"><button id="scoreBtn" class="btn primary">RUN THE REVEAL</button><button id="endBtn" class="btn danger">END GAME</button></div>` : ""}`;
+      ${streamerMode ? `<div class="streamer-banner"><div><strong>Your pick is private</strong><span>Choose your BLURT from the Streamer panel.</span></div><button id="openStreamerBtn" class="btn secondary small" type="button">OPEN STREAMER PANEL</button></div>` : (myVote ? `<div class="waiting">Your pick is locked. Sit tight for the author reveal.</div>` : "")}
+      ${isHost() && !streamerMode ? `<div class="host-actions"><button id="scoreBtn" class="btn primary">RUN THE REVEAL</button><button id="endBtn" class="btn danger">END GAME</button></div>` : ""}`;
   }
 
   if (meta.phase === "results") {
@@ -1820,7 +1877,8 @@ function mainHTML() {
       <h2 class="question small">${esc(currentQuestion())}</h2>
       <div class="result-list">${rows.map(row => `<div class="result-card ${row.label === "TOP BLURT" ? "top-blurt" : ""}">${row.label ? `<div class="result-rank">${esc(row.label)}</div>` : ""}<div class="result-answer">${esc(row.text)}</div><div class="result-meta"><span>Written by <strong>${esc(row.name)}</strong></span><span class="score-breakdown"><span>${row.votes} pick${row.votes === 1 ? "" : "s"}</span>${row.bonus ? `<span class="bonus-tag">+${row.bonus} BONUS</span>` : ""}<span class="points total">+${Number(row.total ?? row.votes * 100)} PTS</span></span></div></div>`).join("")}</div>
       <div class="blurt-tip"><strong>BLURT bonus:</strong> a clear round winner gets +250 points. A tied top BLURT gets +100 each.</div>
-      ${isHost() ? `<div class="host-actions"><button id="nextBtn" class="btn primary">${meta.roundIndex + 1 >= meta.rounds ? "FINAL BLURT →" : "NEXT BLURT →"}</button><button id="endBtn" class="btn danger">END GAME</button></div>` : ""}`;
+      ${streamerMode ? `<div class="streamer-banner"><div><strong>Round controls are in your private panel</strong><span>Continue the game from Streamer Mode.</span></div><button id="openStreamerBtn" class="btn secondary small" type="button">OPEN STREAMER PANEL</button></div>` : ""}
+      ${isHost() && !streamerMode ? `<div class="host-actions"><button id="nextBtn" class="btn primary">${meta.roundIndex + 1 >= meta.rounds ? "FINAL BLURT →" : "NEXT BLURT →"}</button><button id="endBtn" class="btn danger">END GAME</button></div>` : ""}`;
   }
 
   if (meta.phase === "final") {
@@ -1830,20 +1888,20 @@ function mainHTML() {
       <div class="game-kicker">FINAL BLURT</div>
       ${winner ? `<div class="winner">${avatarHTML(winner, "winner-avatar")}<div class="winner-crown">BLURT CHAMPION</div><div class="winner-name">${esc(winner.name)}</div><div class="winner-score">${Number(winner.score || 0).toLocaleString()} POINTS</div></div>` : ""}
       <div class="leaderboard">${board.map((player, index) => `<div class="leader-row"><div class="leader-pos">#${index + 1}</div>${avatarHTML(player, "leader-avatar")}<div class="leader-name">${esc(player.name)}</div><div class="leader-score">${Number(player.score || 0).toLocaleString()}</div></div>`).join("")}</div>
-      <div class="host-actions"><button id="homeBtn" class="btn ghost">BACK TO HOME</button></div>`;
+      ${streamerMode ? `<div class="streamer-banner"><div><strong>Streamer panel active</strong><span>Use the private panel to finish or close your streamer controls.</span></div><button id="openStreamerBtn" class="btn secondary small" type="button">OPEN STREAMER PANEL</button></div>` : `<div class="host-actions"><button id="homeBtn" class="btn ghost">BACK TO HOME</button></div>`}`;
   }
 
   return `<div class="waiting">Loading game…</div>`;
 }
 
-function playerRow(player) {
+function playerRow(player, allowControls = !streamerEnabledForMe()) {
   const mine = player.uid === me.uid;
   const roleChip = player.role === "owner"
     ? `<span class="role owner">OWNER</span>`
     : player.role === "host" ? `<span class="role">HOST</span>` : "";
   const twitchChip = player.twitchVerified ? `<span class="verified-badge">◆ TWITCH</span>` : "";
-  const ownerCanManage = isOwner() && !mine && player.role !== "owner";
-  const cohostCanManage = role() === "host" && !mine && player.role === "player";
+  const ownerCanManage = allowControls && isOwner() && !mine && player.role !== "owner";
+  const cohostCanManage = allowControls && role() === "host" && !mine && player.role === "player";
   const canKickBan = ownerCanManage || cohostCanManage;
 
   return `<div class="player-row ${player.online === false ? "offline" : ""}">
@@ -1859,13 +1917,13 @@ function playerRow(player) {
   </div>`;
 }
 
-function customHTML() {
+function customHTML(allowControls = !streamerEnabledForMe()) {
   if (!isHost() || roomState.meta.phase !== "lobby") return "";
   const list = customArray();
   return `<div class="side-section">
     <div class="side-head"><h3 class="side-title">CUSTOM QUESTIONS</h3><span class="side-count">${list.length}</span></div>
-    <div class="custom-row"><input id="customField" class="custom-field" maxlength="180" placeholder="Add a custom prompt"><button id="addQuestionBtn" class="btn primary small">ADD</button></div>
-    ${list.length ? `<div class="custom-list">${list.map(question => `<div class="custom-item"><span>${esc(question.text)}</span><button data-remove-question="${question.id}" title="Remove">×</button></div>`).join("")}</div>` : `<div class="notice">BLURT already has ${QUESTION_BANK.length}+ built-in prompts. Your custom prompts are mixed into the random question pool.</div>`}
+    ${allowControls ? `<div class="custom-row"><input id="customField" class="custom-field" maxlength="180" placeholder="Add a custom prompt"><button id="addQuestionBtn" class="btn primary small">ADD</button></div>` : `<div class="notice">Custom-question controls are in your Streamer panel.</div>`}
+    ${list.length ? `<div class="custom-list">${list.map(question => `<div class="custom-item"><span>${esc(question.text)}</span>${allowControls ? `<button data-remove-question="${question.id}" title="Remove">×</button>` : ""}</div>`).join("")}</div>` : `<div class="notice">BLURT already has ${QUESTION_BANK.length}+ built-in prompts. Your custom prompts are mixed into the random question pool.</div>`}
   </div>`;
 }
 
@@ -1873,12 +1931,12 @@ function sideHTML() {
   const players = playersArray().sort((a, b) => (b.score || 0) - (a.score || 0) || a.name.localeCompare(b.name));
   const meta = roomState.meta;
   return `<div class="side-head"><h3 class="side-title">PLAYERS</h3><span class="side-count">${players.length}</span></div>
-    <div class="player-list">${players.map(playerRow).join("")}</div>
-    ${customHTML()}
+    <div class="player-list">${players.map(player => playerRow(player, !streamerEnabledForMe())).join("")}</div>
+    ${customHTML(!streamerEnabledForMe())}
     <div class="side-section security-card">
       <div class="side-head"><h3 class="side-title">ROOM SETTINGS</h3></div>
       <div class="security-line"><span>Twitch login</span><strong class="twitch-on">OPTIONAL</strong></div>
-      <div class="security-line"><span>Streamer mode</span><strong>${meta.streamerMode ? "ON" : "OFF"}</strong></div>
+      <div class="security-line"><span>Your streamer mode</span><strong>${streamerEnabledForMe() ? "ON" : "OFF"}</strong></div>
       <div class="security-line"><span>Scoring</span><strong>100 / PICK + BONUS</strong></div>
       <div class="security-line"><span>Questions</span><strong>${meta.rounds}</strong></div>
       <div class="notice">The owner controls host permissions. Co-hosts can run the game and kick or ban normal players, but cannot promote or demote hosts.</div>
@@ -1887,45 +1945,97 @@ function sideHTML() {
 
 function render() {
   if (!roomState || !me) return;
+  // Save anything being typed before a Firebase room update rebuilds the UI.
+  preserveVisibleAnswerDraft();
   $("#roomPillCode").textContent = roomCode;
   $("#mainPanel").innerHTML = mainHTML();
   $("#sidePanel").innerHTML = sideHTML();
+  restoreVisibleAnswerDraft();
   bindGameEvents();
+  bindAnswerDraftFields();
   renderTwitchStatus();
   phaseFx();
 }
 
 
+function streamerRosterHTML() {
+  if (!isHost()) return "";
+  const players = playersArray().sort((a, b) => (b.score || 0) - (a.score || 0) || a.name.localeCompare(b.name));
+  return `<div class="streamer-control-section"><h3 class="streamer-control-title">Player controls</h3><div class="player-list">${players.map(player => playerRow(player, true)).join("")}</div>${customHTML(true)}</div>`;
+}
+
 function streamerPanelHTML() {
   if (!roomState || !me) return `<div class="streamer-status">Connecting</div><h1 class="streamer-question">Loading your room…</h1>`;
   const meta = roomState.meta || {};
   const mine = roomState.players?.[me.uid];
-  if (!mine) return `<div class="streamer-status">Not connected</div><h1 class="streamer-question">Open this pop-out from the host's BLURT window.</h1><p class="streamer-help">The pop-out must use the same browser profile as the room owner.</p>`;
-  if (mine.role !== "owner") return `<div class="streamer-status">Owner only</div><h1 class="streamer-question">This private answer window belongs to the room owner.</h1>`;
-  if (!meta.streamerMode) return `<div class="streamer-status">Streamer mode off</div><h1 class="streamer-question">Streamer mode was not enabled for this room.</h1>`;
+  const players = playersArray();
+  if (!mine) return `<div class="streamer-status">Not connected</div><h1 class="streamer-question">Open this panel from your BLURT game window.</h1><p class="streamer-help">Use the same browser profile you used to join the room.</p>`;
+  if (!mine.streamerMode) return `<div class="streamer-status">Streamer mode off</div><h1 class="streamer-question">Streamer Mode is not enabled for this player.</h1><p class="streamer-help">Enable it before hosting or joining, then open the panel again.</p>`;
 
-  if (meta.phase === "lobby") return `<div class="streamer-status">Lobby</div><h1 class="streamer-question">Waiting for the game to start.</h1><p class="streamer-help">Keep the main BLURT window on stream. This pop-out will switch to the prompt automatically.</p>`;
+  if (meta.phase === "lobby") {
+    return `<div class="streamer-status">Lobby · ${esc(mine.name)}</div><h1 class="streamer-question">Room ${esc(roomCode)}</h1><p class="streamer-help">Your main BLURT window can stay on stream. All controls available to your account are here.</p>
+      ${isHost() ? `<div class="streamer-actions"><button id="startBtn" class="btn primary" ${players.length < 2 ? "disabled" : ""}>START GAME →</button></div>` : `<div class="streamer-locked"><strong>Waiting for the host.</strong><div class="streamer-help">You are ready to play from this private panel.</div></div>`}
+      ${streamerRosterHTML()}`;
+  }
+
   if (meta.phase === "answering") {
     const answers = currentAnswers();
     const answered = !!answers[me.uid];
     return `<div class="streamer-status">Question ${Math.min(Number(meta.roundIndex || 0) + 1, Number(meta.rounds || 1))} of ${Number(meta.rounds || 1)}</div>
       <h1 class="streamer-question">${esc(currentQuestion())}</h1>
+      ${meterHTML(Object.keys(answers).length, players.length, "BLURTS LOCKED IN")}
       ${answered
-        ? `<div class="streamer-locked"><strong>BLURT locked in.</strong><div class="streamer-help">Your answer is saved. It stays anonymous until the reveal.</div></div>`
-        : `<textarea id="streamerAnswerField" class="streamer-answer" maxlength="160" placeholder="Type your private BLURT…"></textarea><div class="streamer-actions"><button id="streamerSubmitBtn" class="btn primary" type="button">LOCK IN MY BLURT</button></div>`}`;
+        ? `<div class="streamer-locked"><strong>BLURT locked in.</strong><div class="streamer-help">Your answer is saved and anonymous until the reveal.</div></div>`
+        : `<textarea id="streamerAnswerField" class="streamer-answer" maxlength="160" placeholder="Type your private BLURT…"></textarea><div class="streamer-actions"><button id="streamerSubmitBtn" class="btn primary" type="button">DROP MY BLURT</button></div>`}
+      ${isHost() ? `<div class="streamer-actions"><button id="revealBtn" class="btn secondary" ${Object.keys(answers).length < 2 ? "disabled" : ""}>REVEAL ANSWERS</button><button id="endBtn" class="btn danger">END GAME</button></div>` : ""}
+      ${streamerRosterHTML()}`;
   }
-  if (meta.phase === "voting") return `<div class="streamer-status">BLURT board</div><h1 class="streamer-question">Your answer is in.</h1><p class="streamer-help">Use the main game/player screen for the rest of the round. Your private answer is no longer shown here.</p>`;
-  if (meta.phase === "results") return `<div class="streamer-status">Round complete</div><h1 class="streamer-question">Reveal time.</h1><p class="streamer-help">The next prompt will appear here automatically when the host continues.</p>`;
-  if (meta.phase === "final") return `<div class="streamer-status">Game over</div><h1 class="streamer-question">That's the final BLURT.</h1><p class="streamer-help">You can close this private answer window.</p>`;
+
+  if (meta.phase === "voting") {
+    const answers = currentAnswers();
+    const votes = currentVotes();
+    const myVote = votes[me.uid] || "";
+    const list = Object.entries(answers).sort((a, b) => (a[1].sort || 0) - (b[1].sort || 0));
+    return `<div class="streamer-status">BLURT board</div><h1 class="streamer-question">${esc(currentQuestion())}</h1><p class="streamer-help">Back one anonymous BLURT. Your choice stays off the main stream window.</p>
+      <div class="answers-grid">${list.map(([uid, answer]) => `<button class="answer-card ${uid === me.uid ? "mine" : ""} ${myVote === uid ? "selected" : ""}" data-vote="${uid}" ${myVote || uid === me.uid ? "disabled" : ""}>${esc(answer.text)}</button>`).join("")}</div>
+      ${meterHTML(Object.keys(votes).length, players.length, "PICKS LOCKED IN")}
+      ${myVote ? `<div class="streamer-locked"><strong>Pick locked.</strong><div class="streamer-help">Waiting for the reveal.</div></div>` : ""}
+      ${isHost() ? `<div class="streamer-actions"><button id="scoreBtn" class="btn primary">RUN THE REVEAL</button><button id="endBtn" class="btn danger">END GAME</button></div>` : ""}
+      ${streamerRosterHTML()}`;
+  }
+
+  if (meta.phase === "results") {
+    const answers = currentAnswers();
+    const counts = voteCounts();
+    const awards = roomState?.roundAwards?.[roundKey()] || {};
+    const rows = Object.entries(answers).map(([uid, answer]) => ({ uid, text: answer.text, name: roomState.players?.[uid]?.name || "Player", votes: counts[uid] || 0, ...(awards[uid] || {}) })).sort((a,b)=>(b.total || b.votes*100)-(a.total || a.votes*100));
+    return `<div class="streamer-status">Round complete</div><h1 class="streamer-question">Author reveal</h1><div class="result-list">${rows.map(row => `<div class="result-card ${row.label === "TOP BLURT" ? "top-blurt" : ""}">${row.label ? `<div class="result-rank">${esc(row.label)}</div>` : ""}<div class="result-answer">${esc(row.text)}</div><div class="result-meta"><span>${esc(row.name)}</span><span class="points total">+${Number(row.total ?? row.votes*100)} PTS</span></div></div>`).join("")}</div>
+      ${isHost() ? `<div class="streamer-actions"><button id="nextBtn" class="btn primary">${meta.roundIndex + 1 >= meta.rounds ? "FINAL BLURT →" : "NEXT BLURT →"}</button><button id="endBtn" class="btn danger">END GAME</button></div>` : ""}
+      ${streamerRosterHTML()}`;
+  }
+
+  if (meta.phase === "final") {
+    const board = playersArray().sort((a,b)=>(b.score || 0)-(a.score || 0)||a.name.localeCompare(b.name));
+    return `<div class="streamer-status">Game over</div><h1 class="streamer-question">Final scores</h1><div class="leaderboard">${board.map((player,index)=>`<div class="leader-row"><div class="leader-pos">#${index+1}</div>${avatarHTML(player,"leader-avatar")}<div class="leader-name">${esc(player.name)}</div><div class="leader-score">${Number(player.score||0).toLocaleString()}</div></div>`).join("")}</div><div class="streamer-actions"><button id="streamerHomeBtn" class="btn secondary">BACK TO HOME</button><button id="streamerClosePanelBtn" class="btn ghost">CLOSE PANEL</button></div>`;
+  }
   return `<div class="streamer-status">BLURT</div><h1 class="streamer-question">Waiting…</h1>`;
 }
 
 function renderStreamerPopout() {
   const panel = $("#streamerPanel");
   if (!panel) return;
+  preserveVisibleAnswerDraft();
   $("#streamerRoomCode").textContent = roomCode || "------";
   panel.innerHTML = streamerPanelHTML();
+  restoreVisibleAnswerDraft();
+  bindAnswerDraftFields();
+  bindGameEvents();
   $("#streamerSubmitBtn")?.addEventListener("click", submitStreamerAnswer);
+  $("#streamerClosePanelBtn")?.addEventListener("click", () => window.close());
+  $("#streamerHomeBtn")?.addEventListener("click", () => {
+    if (window.opener && !window.opener.closed) window.opener.postMessage({ type: "blurt-streamer-home" }, location.origin);
+    window.close();
+  });
 }
 
 async function submitStreamerAnswer() {
@@ -1933,8 +2043,10 @@ async function submitStreamerAnswer() {
   if (!text) return toast("Type an answer first.");
   try {
     if (roomState?.meta?.phase !== "answering") throw new Error("Answers are closed.");
-    if (roomState.players?.[me.uid]?.role !== "owner") throw new Error("Only the room owner can use this pop-out.");
+    // Every player writes to their own UID path, so submissions cannot replace
+    // another player's answer even when several people submit at once.
     await set(roomRef(`answers/${roundKey()}/${me.uid}`), { text, sort: Math.random() });
+    clearAnswerDraft();
     sfx("lock");
   } catch (error) { toast(error.message); }
 }
@@ -2001,7 +2113,10 @@ async function submitAnswer() {
   if (!text) return toast("Type an answer first.");
   try {
     if (roomState.meta.phase !== "answering") throw new Error("Answers are closed.");
+    // Each player has an independent answer slot. Concurrent submissions are
+    // stored under different Firebase UIDs and do not overwrite one another.
     await set(roomRef(`answers/${roundKey()}/${me.uid}`), { text, sort: Math.random() });
+    clearAnswerDraft();
     sfx("lock");
   } catch (error) {
     toast(error.message);
@@ -2238,12 +2353,17 @@ $("#hostTwitchBtn")?.addEventListener("click", () => {
 $("#joinTwitchBtn")?.addEventListener("click", () => {
   if (twitchUser) return disconnectTwitch();
   const code = $("#joinCode").value.trim().toUpperCase();
-  startTwitchLogin({ action: "join", code });
+  startTwitchLogin({ action: "join", code, streamerMode: !!$("#joinStreamerMode")?.checked });
 });
 
 document.addEventListener("click", event => {
   const button = event.target.closest("button");
   if (button && button.id !== "soundBtn" && !button.disabled) sfx("click");
+});
+
+window.addEventListener("message", event => {
+  if (event.origin !== location.origin || event.data?.type !== "blurt-streamer-home") return;
+  if (!isStreamerPopout) leaveToHome();
 });
 
 let startupComplete = false;
