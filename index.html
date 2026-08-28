@@ -923,6 +923,84 @@ body::before,.ambient,.game-preview::after{display:none!important}
 @media(max-width:900px){.home-screen{grid-template-columns:1fr!important;gap:28px!important}.mode-showcase{grid-template-columns:1fr 1fr!important}.game-grid{grid-template-columns:1fr!important}.side-panel{order:2}.main-panel{min-height:0!important}.photo-stage img{height:auto;max-height:420px}}
 @media(max-width:620px){.app{width:min(100% - 18px,1180px)!important}.home-screen{padding:28px 0 40px!important}.home-copy h1{font-size:52px!important}.mode-showcase{grid-template-columns:1fr!important}.mode-card{min-height:210px!important}.game-grid{padding-top:10px!important}.main-panel{padding:17px!important}.phase-clock{grid-template-columns:auto auto auto!important}.phase-clock-track{grid-column:1/-1}.photo-card img{height:170px}.site-header{min-height:58px!important}}
 
+
+/* game cards */
+.mode-showcase{grid-template-columns:repeat(3,minmax(0,1fr))!important;align-items:stretch!important}
+.mode-card{min-height:244px!important;padding:0!important;overflow:hidden!important;position:relative!important;border-radius:5px!important}
+.mode-card-top{padding:14px 15px!important;border-bottom:1px solid var(--line)!important;background:var(--panel-2)!important}
+.mode-card-copy{padding:18px 16px!important;margin:0!important;font-size:23px!important;line-height:1.12!important}
+.mode-card-copy.small-copy{font-size:20px!important}
+.mode-card-foot{margin-top:auto!important;padding:13px 15px!important;border-top:1px solid var(--line)!important;background:var(--panel-2)!important}
+.photo-card{padding:0!important}.photo-card .mode-card-top{padding:14px 15px!important}.photo-card img{height:137px!important;margin:0!important;border-radius:0!important}.photo-card .mode-card-foot{margin:0!important}
+.imposter-card{border-color:#b6a783!important}.imposter-card .mode-card-top b{color:#8a6727!important}.imposter-mini{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;padding:20px 16px 4px}.imposter-mini span{height:42px;display:grid;place-items:center;border:1px solid var(--line);background:var(--panel-2);font-weight:900;font-size:18px}.imposter-mini .odd{background:#2d332f;color:#fff;border-color:#2d332f}
+.answers-grid{counter-reset:blurt-card;gap:9px!important}
+.answer-card{counter-increment:blurt-card;position:relative!important;min-height:78px!important;padding:17px 16px 17px 55px!important;text-align:left!important;border-radius:4px!important;font-size:16px!important;line-height:1.35!important;font-weight:700!important}
+.answer-card::before{content:counter(blurt-card,upper-alpha);position:absolute;left:14px;top:50%;transform:translateY(-50%);width:26px;height:26px;display:grid;place-items:center;border:1px solid var(--line-strong);border-radius:50%;font-size:11px;color:var(--muted);background:var(--panel-2)}
+.answer-card.selected::before{background:var(--accent);color:#fff;border-color:var(--accent)}
+.result-list{gap:8px!important}.result-card{border-radius:4px!important;padding:15px 16px!important;border-left:4px solid var(--line-strong)!important}.result-card.top-blurt{border-left-color:var(--accent)!important}
+.suspect-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:14px 0 18px}.suspect-card{display:grid;grid-template-columns:42px minmax(0,1fr);gap:11px;align-items:start;padding:13px;border:1px solid var(--line);border-radius:5px;background:#fff;color:var(--text);text-align:left}.suspect-card:not(:disabled):hover{border-color:var(--line-strong);background:var(--panel-2)}.suspect-card.selected{border-color:var(--accent);box-shadow:inset 4px 0 0 var(--accent)}.suspect-card:disabled{cursor:default}.suspect-avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--panel-3);font-size:12px;font-weight:900}.suspect-name{font-size:14px;font-weight:900;margin-bottom:5px}.suspect-answer{color:var(--muted);font-size:13px;line-height:1.35}.suspect-card.mine{opacity:.55}.role-strip{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 14px;padding:10px 12px;border:1px solid var(--line);background:var(--panel-2);font-size:12px}.role-strip strong{font-size:12px;letter-spacing:.6px}.role-strip.imposter{background:#252927;color:#fff;border-color:#252927}.role-strip.imposter span{color:#d9ddd9}.imposter-reveal{border:1px solid var(--line-strong);border-radius:5px;overflow:hidden;background:#fff;margin-bottom:14px}.imposter-reveal-head{padding:18px;background:#252927;color:#fff}.imposter-reveal-head small{display:block;color:#c9ceca;font-size:10px;letter-spacing:1px;font-weight:800;margin-bottom:5px}.imposter-reveal-head strong{font-size:29px;letter-spacing:-1px}.imposter-reveal-head em{display:block;margin-top:5px;font-style:normal;font-size:12px;color:#d6dad7}.imposter-prompts{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line)}.imposter-prompt{padding:14px}.imposter-prompt+ .imposter-prompt{border-left:1px solid var(--line)}.imposter-prompt span{display:block;color:var(--muted);font-size:10px;font-weight:800;letter-spacing:.7px;margin-bottom:5px}.imposter-prompt strong{font-size:14px;line-height:1.35}.imposter-result-row{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:10px;align-items:center;padding:12px 14px;border-top:1px solid var(--line)}.imposter-result-row.is-imposter{background:#f3efe5}.imposter-result-copy strong{display:block;font-size:13px}.imposter-result-copy span{display:block;color:var(--muted);font-size:12px;margin-top:2px}.vote-total{font-size:12px;font-weight:900;text-align:right}.vote-total b{display:block;color:var(--accent);font-size:15px}.imposter-help{margin:10px 0 18px;color:var(--muted);font-size:13px;line-height:1.45}
+@media(max-width:900px){.mode-showcase{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
+@media(max-width:760px){.mode-showcase{grid-template-columns:1fr!important}.suspect-grid{grid-template-columns:1fr}.imposter-prompts{grid-template-columns:1fr}.imposter-prompt+.imposter-prompt{border-left:0;border-top:1px solid var(--line)}}
+
+
+
+/* menu refresh */
+:root{
+  --bg:#0d1117;--bg-soft:#111720;--panel:#171d26;--panel-2:#1d2530;--panel-3:#263140;
+  --text:#f4f1e8;--muted:#9ba6b4;--muted-2:#707c8a;--line:#2a3442;--line-strong:#3a4758;
+  --accent:#d8ff4f;--orange:#d8ff4f;--orange-2:#c6ed3f;--orange-soft:#27311a;--yellow:#ffcf5b;--green:#58d69a;--red:#ff6b6b;
+}
+html,body{background:var(--bg)!important;color:var(--text)!important}
+body{font-family:Arial,Helvetica,sans-serif!important;background:var(--bg)!important}
+.app{width:min(1120px,calc(100% - 28px))!important}
+.site-header{min-height:64px!important;border-bottom:1px solid var(--line)!important;background:var(--bg)!important}
+.brand{font-size:22px!important;font-weight:900!important;letter-spacing:-1.2px!important;color:var(--text)!important}
+.brand::before{content:"■";font-size:12px;color:var(--accent);margin-right:9px}
+.room-pill,.sound-btn{background:var(--panel)!important;color:var(--text)!important;border:1px solid var(--line)!important;border-radius:3px!important}
+.btn,.copy-code{border-radius:3px!important}
+.btn.primary{background:var(--accent)!important;color:#0b0e12!important;border-color:var(--accent)!important}
+.btn.primary:hover:not(:disabled){background:#e5ff78!important}
+.btn.secondary,.btn.ghost{background:var(--panel)!important;color:var(--text)!important;border:1px solid var(--line-strong)!important}
+.panel,.main-panel,.side-panel,.setup-card{background:var(--panel)!important;border-color:var(--line)!important;border-radius:4px!important;color:var(--text)!important}
+
+.home-screen{min-height:calc(100vh - 65px)!important;padding:52px 0 60px!important;grid-template-columns:minmax(0,.92fr) minmax(360px,.78fr)!important;gap:60px!important;align-items:center!important}
+.menu-hero{max-width:610px}
+.menu-kicker{font-size:11px;font-weight:900;letter-spacing:1.8px;color:var(--accent);margin-bottom:12px}
+.menu-hero h1{margin:0;font-size:clamp(78px,11vw,132px);line-height:.82;letter-spacing:-7px;color:var(--text);font-weight:900}
+.menu-hero>p{margin:28px 0 30px;max-width:540px;color:var(--muted);font-size:17px;line-height:1.55}
+.menu-actions{display:grid;gap:9px;max-width:520px}
+.menu-action{min-height:76px;display:grid;grid-template-columns:1fr;justify-items:start;align-content:center;gap:4px;padding:13px 18px;border:1px solid var(--line-strong);border-radius:4px;background:var(--panel);color:var(--text);text-align:left}
+.menu-action:hover{border-color:#718096;background:var(--panel-2)}
+.menu-action.primary{background:var(--accent);border-color:var(--accent);color:#0b0e12}
+.menu-action.primary:hover{background:#e5ff78}
+.menu-action span{font-size:18px;font-weight:900;letter-spacing:.2px}.menu-action small{font-size:12px;color:inherit;opacity:.68;font-weight:600}
+.menu-notes{display:flex;gap:7px;flex-wrap:wrap;margin-top:18px}.menu-notes span{padding:6px 8px;border:1px solid var(--line);color:var(--muted);font-size:10px;font-weight:800;letter-spacing:.5px}
+.menu-board{border:1px solid var(--line-strong);background:var(--panel);border-radius:4px;overflow:hidden}
+.menu-board-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line);font-size:10px;color:var(--muted);letter-spacing:1px;font-weight:900}.menu-board-head b{color:var(--accent)}
+.menu-board-row{display:grid;grid-template-columns:48px 1fr;gap:14px;padding:20px 17px;border-bottom:1px solid var(--line)}
+.menu-board-row>strong{font-size:23px;color:var(--muted-2)}.menu-board-row div{display:grid;gap:5px}.menu-board-row b{font-size:14px;letter-spacing:.6px}.menu-board-row span{font-size:13px;color:var(--muted);line-height:1.45}
+.menu-board-row.twist{background:#121923}.menu-board-row.twist>strong,.menu-board-row.twist b{color:var(--accent)}
+.menu-board-foot{padding:12px 16px;color:var(--muted-2);font-size:10px;font-weight:900;letter-spacing:1px}
+
+.setup-screen{padding:54px 0 70px!important}
+.setup-shell{width:min(920px,100%);margin:0 auto;display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;align-items:start}
+.setup-menu-side{padding:8px 0}.setup-menu-side .back-link{margin-bottom:44px;color:var(--muted)!important}.setup-number{font-size:11px;color:var(--accent);font-weight:900;letter-spacing:1.4px;margin-bottom:7px}.setup-menu-side h2{margin:0 0 8px;font-size:42px;letter-spacing:-2px}.setup-menu-side p{margin:0;color:var(--muted);font-size:14px;line-height:1.5}
+.setup-menu-card{border:1px solid var(--line-strong);background:var(--panel);border-radius:4px;overflow:hidden}
+.setting-section{padding:20px;border-bottom:1px solid var(--line)}.setting-section:last-of-type{border-bottom:0}.setting-section-title{font-size:10px;font-weight:900;letter-spacing:1.5px;color:var(--accent);margin-bottom:15px}.setting-label{display:block;margin-bottom:8px;color:var(--muted);font-size:11px;font-weight:800}
+.settings-two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}.settings-two-col .field-group{margin:0!important}
+.compact-field{margin:0!important}.compact-field+ .compact-field{margin-top:14px!important}.compact-field label{color:var(--muted)!important;font-size:11px!important}.compact-field input,.compact-field select,.field-group input,.field-group select{min-height:48px!important;background:#0f141b!important;border:1px solid var(--line-strong)!important;color:var(--text)!important;border-radius:3px!important;padding:0 12px!important}
+.code-field{font-size:24px!important;letter-spacing:5px!important;font-weight:900!important}
+.mode-choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.mode-choice{min-height:82px;padding:13px;border:1px solid var(--line);border-radius:3px;background:#111720;color:var(--text);text-align:left;display:grid;align-content:center;gap:4px}.mode-choice:hover{border-color:var(--line-strong)}.mode-choice.active{border-color:var(--accent);box-shadow:inset 4px 0 0 var(--accent);background:#172014}.mode-choice b{font-size:13px}.mode-choice span{font-size:11px;color:var(--muted)}.visually-hidden-select{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important}
+.option-row{margin-top:12px;min-height:62px;padding:12px 13px;border:1px solid var(--line);background:#111720;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;cursor:pointer;border-radius:3px}.option-row span{display:grid;gap:3px}.option-row b{font-size:13px}.option-row small{font-size:11px;color:var(--muted);line-height:1.35}.option-row input{position:absolute;opacity:0;pointer-events:none}.option-switch{width:42px;height:22px;border:1px solid var(--line-strong);background:#0d1117;position:relative}.option-switch::after{content:"";position:absolute;left:3px;top:3px;width:14px;height:14px;background:var(--muted-2);transition:.15s}.option-row input:checked+.option-switch{border-color:var(--accent);background:#263214}.option-row input:checked+.option-switch::after{left:23px;background:var(--accent)}.option-row.disabled-option{opacity:.35;pointer-events:none}
+.menu-create-btn{width:100%;height:62px;border:0;background:var(--accent);color:#0b0e12;font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:space-between;padding:0 20px}.menu-create-btn:hover{background:#e5ff78}.menu-create-btn span{font-size:22px}
+.join-menu-card .setting-section{padding:24px}.join-shell{max-width:820px}.join-menu-card .menu-create-btn{margin-top:0}
+
+.lobby-twist-toggle{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:14px;margin:12px 0;padding:13px 14px;border:1px solid var(--line-strong);background:#121923;color:var(--text);cursor:pointer}.lobby-twist-toggle span{display:grid;gap:2px}.lobby-twist-toggle strong{font-size:12px;color:var(--accent)}.lobby-twist-toggle small{font-size:11px;color:var(--muted)}.lobby-twist-toggle input{position:absolute;opacity:0}.lobby-twist-toggle input:checked+.option-switch{border-color:var(--accent);background:#263214}.lobby-twist-toggle input:checked+.option-switch::after{left:23px;background:var(--accent)}.streamer-twist{margin:12px 0 16px}
+
+.game-grid{grid-template-columns:minmax(0,1fr) 300px!important;gap:10px!important;padding-top:18px!important}.main-panel{padding:23px!important;min-height:600px!important}.side-panel{padding:15px!important}.question{color:var(--text)!important}.game-kicker,.round-label{color:var(--accent)!important}.phase-clock{background:#111720!important;border-color:var(--line)!important;color:var(--muted)!important}.phase-clock strong{color:var(--text)!important}.phase-clock-track{background:#263140!important}.phase-clock-track i{background:var(--accent)!important}.answer-card,.result-card,.leader-row,.custom-item,.suspect-card{background:#111720!important;color:var(--text)!important;border-color:var(--line)!important}.answer-card:hover:not(:disabled),.suspect-card:not(:disabled):hover{background:#17202a!important;border-color:var(--line-strong)!important}.answer-card.selected,.suspect-card.selected{background:#202a16!important;border-color:var(--accent)!important}.waiting,.notice,.lobby-code-card,.qr-card,.streamer-banner{background:#111720!important;border-color:var(--line)!important;color:var(--muted)!important}.room-code-big{color:var(--text)!important}.room-badge{background:#0f141b!important;border-color:var(--line)!important;color:var(--muted)!important}.side-title,.security-line strong{color:var(--text)!important}.security-line{border-color:var(--line)!important}.player-avatar,.leader-avatar,.winner-avatar,.side-count,.suspect-avatar{background:#263140!important;color:var(--text)!important;border-color:var(--line)!important}.photo-stage{border-color:var(--line)!important;background:#090c10!important}.photo-stage img{background:#090c10!important}.winner{background:#1f2717!important;border-color:#53662c!important}.imposter-reveal{background:#111720!important;border-color:var(--line)!important}.imposter-reveal-head{background:#202a16!important;color:var(--text)!important}.imposter-prompt+ .imposter-prompt,.imposter-prompts,.imposter-result-row{border-color:var(--line)!important}.imposter-result-row.is-imposter{background:#202a16!important}
+
+@media(max-width:850px){.home-screen{grid-template-columns:1fr!important;gap:28px!important;padding-top:38px!important}.menu-board{max-width:680px}.setup-shell{grid-template-columns:1fr;gap:18px}.setup-menu-side .back-link{margin-bottom:24px}.setup-menu-side h2{font-size:34px}.game-grid{grid-template-columns:1fr!important}.side-panel{order:2}}
+@media(max-width:600px){.app{width:min(100% - 18px,1120px)!important}.home-screen{padding:30px 0 44px!important}.menu-hero h1{font-size:76px;letter-spacing:-5px}.menu-hero>p{font-size:15px;margin:20px 0 24px}.menu-action{min-height:68px}.menu-board-row{grid-template-columns:34px 1fr;padding:16px 13px}.setup-screen{padding-top:28px!important}.setting-section{padding:15px}.settings-two-col,.mode-choice-grid{grid-template-columns:1fr}.setup-menu-side{padding:0}.setup-menu-side .back-link{margin-bottom:18px}.main-panel{padding:15px!important}}
 </style>
 </head>
 <body>
@@ -942,106 +1020,121 @@ body::before,.ambient,.game-preview::after{display:none!important}
 </div>
 </header>
 <section class="screen active home-screen" id="homeScreen">
-<div class="home-copy">
-<p class="eyebrow">MULTIPLAYER PARTY GAME</p>
-<h1>Write it. <span>Back it.</span></h1>
-<p class="hero-text">Pick a sentence round or caption a photo. Every live stage runs on a 30-second clock.</p>
-<div class="hero-actions">
-<button class="btn primary hero-btn" id="openHostBtn" type="button">Host a game</button>
-<button class="btn secondary hero-btn" id="openJoinBtn" type="button">Join a game</button>
-</div>
-
-</div>
-<div class="home-dashboard mode-showcase">
-  <div class="mode-card sentence-card">
-    <div class="mode-card-top"><span>SENTENCE</span><b>30s</b></div>
-    <div class="mode-card-copy">What is the worst thing to hear over a bus PA system?</div>
-    <div class="mode-card-foot">Write a line. Back a favourite.</div>
+  <div class="menu-hero">
+    <div class="menu-kicker">LIVE PARTY GAME</div>
+    <h1>BLURT</h1>
+    <p>Write answers, caption photos, vote for the best one. Add the Imposter twist when you want it.</p>
+    <div class="menu-actions">
+      <button class="menu-action primary" id="openHostBtn" type="button"><span>HOST GAME</span><small>Create a room and choose the rules</small></button>
+      <button class="menu-action" id="openJoinBtn" type="button"><span>JOIN GAME</span><small>Enter a room code and jump in</small></button>
+    </div>
+    <div class="menu-notes"><span>30 sec rounds</span><span>Sentence</span><span>Caption photo</span><span>Imposter optional</span></div>
   </div>
-  <div class="mode-card photo-card">
-    <div class="mode-card-top"><span>CAPTION THIS PHOTO</span><b>30s</b></div>
-    <img src="https://picsum.photos/seed/blurt-preview/900/560" alt="Example photo round">
-    <div class="mode-card-foot">Same photo. Different captions.</div>
+  <div class="menu-board">
+    <div class="menu-board-head"><span>GAME MODES</span><b>BLURT</b></div>
+    <div class="menu-board-row"><strong>01</strong><div><b>SENTENCE</b><span>Answer the prompt. Funniest answer wins the room.</span></div></div>
+    <div class="menu-board-row"><strong>02</strong><div><b>CAPTION PHOTO</b><span>Everyone gets the same photo and writes a caption.</span></div></div>
+    <div class="menu-board-row twist"><strong>+</strong><div><b>IMPOSTER TWIST</b><span>Optional. One player gets a different question and tries to blend in.</span></div></div>
+    <div class="menu-board-foot">HOST → PICK A MODE → START</div>
   </div>
-</div>
 </section>
 <section class="screen setup-screen" id="hostScreen">
-<div class="setup-wrap">
-<div class="setup-heading">
-<button class="back-link" data-home="" type="button">← Back</button>
-<h2>Host a game</h2>
-<p>Set up the room.</p>
-</div>
-<div class="panel setup-card">
-<div class="field-group">
-<label for="hostName">Display name</label>
-<input autocomplete="nickname" id="hostName" maxlength="20" placeholder="Enter your name"/>
-<div class="field-help" id="hostNameHelp">Shown to everyone in the room.</div>
-</div>
-<div class="field-group">
-<label for="roundCount">Questions</label>
-<select id="roundCount">
-<option value="3">3 — Quick</option>
-<option selected="" value="5">5 — Short</option>
-<option value="7">7</option>
-<option value="10">10 — Standard</option>
-<option value="15">15 — Long</option>
-<option value="20">20 — Marathon</option>
-</select>
-</div>
-<div class="field-group">
-<label for="gameMode">Game mode</label>
-<select id="gameMode">
-<option selected="" value="sentence">Sentence</option>
-<option value="photo">Caption this photo</option>
-</select>
-<div class="field-help">Choose what everyone answers each round.</div>
-</div>
-<div class="field-group" id="questionModeGroup">
-<label for="questionMode">Sentence source</label>
-<select id="questionMode">
-<option value="builtin">BLURT questions</option>
-<option value="mixed">BLURT + player questions</option>
-<option selected="" value="custom">Player questions only</option>
-</select>
-<div class="field-help">Only used in Sentence mode.</div>
-</div>
-<label class="streamer-toggle" for="streamerMode">
-<span class="streamer-toggle-copy"><strong>Use Streamer mode for me</strong><span>Put your controls in a separate pop-out window.</span></span>
-<input id="streamerMode" type="checkbox"/>
-<span aria-hidden="true" class="mini-switch"><i></i></span>
-</label>
-<button class="btn primary full action-btn" id="createRoomBtn" type="button">Create room</button>
-</div>
-
-</div>
+  <div class="setup-shell">
+    <aside class="setup-menu-side">
+      <button class="back-link" data-home="" type="button">← MENU</button>
+      <div class="setup-number">01</div>
+      <h2>Host game</h2>
+      <p>Set the room up, then share the code.</p>
+    </aside>
+    <div class="setup-menu-card">
+      <div class="setting-section">
+        <div class="setting-section-title">PLAYER</div>
+        <div class="field-group compact-field">
+          <label for="hostName">Your name</label>
+          <input autocomplete="nickname" id="hostName" maxlength="20" placeholder="Enter your name"/>
+        </div>
+      </div>
+      <div class="setting-section">
+        <div class="setting-section-title">GAME</div>
+        <label class="setting-label">Mode</label>
+        <div class="mode-choice-grid">
+          <button class="mode-choice active" data-mode-choice="sentence" type="button"><b>SENTENCE</b><span>Answer a question</span></button>
+          <button class="mode-choice" data-mode-choice="photo" type="button"><b>CAPTION PHOTO</b><span>Caption the image</span></button>
+        </div>
+        <select class="visually-hidden-select" id="gameMode" aria-label="Game mode">
+          <option selected value="sentence">Sentence</option>
+          <option value="photo">Caption this photo</option>
+        </select>
+        <label class="option-row imposter-option" for="imposterToggle" id="imposterOption">
+          <span><b>Imposter twist</b><small>One player gets a different question. Turn this off for normal BLURT.</small></span>
+          <input id="imposterToggle" type="checkbox"/>
+          <i class="option-switch" aria-hidden="true"></i>
+        </label>
+      </div>
+      <div class="setting-section settings-two-col">
+        <div class="field-group compact-field">
+          <label for="roundCount">Rounds</label>
+          <select id="roundCount">
+            <option value="3">3 — Quick</option>
+            <option selected value="5">5 — Short</option>
+            <option value="7">7</option>
+            <option value="10">10 — Standard</option>
+            <option value="15">15 — Long</option>
+            <option value="20">20 — Marathon</option>
+          </select>
+        </div>
+        <div class="field-group compact-field" id="questionModeGroup">
+          <label for="questionMode">Questions</label>
+          <select id="questionMode">
+            <option value="builtin">BLURT questions</option>
+            <option value="mixed">BLURT + player questions</option>
+            <option selected value="custom">Player questions only</option>
+          </select>
+        </div>
+      </div>
+      <div class="setting-section">
+        <div class="setting-section-title">EXTRAS</div>
+        <label class="option-row" for="streamerMode">
+          <span><b>Streamer mode</b><small>Move your private controls into the pop-out panel.</small></span>
+          <input id="streamerMode" type="checkbox"/>
+          <i class="option-switch" aria-hidden="true"></i>
+        </label>
+      </div>
+      <button class="menu-create-btn" id="createRoomBtn" type="button">CREATE ROOM <span>→</span></button>
+    </div>
+  </div>
 </section>
 <section class="screen setup-screen" id="joinScreen">
-<div class="setup-wrap join-wrap">
-<div class="setup-heading">
-<button class="back-link" data-home="" type="button">← Back</button>
-<h2>Join a game</h2>
-<p>Enter the room code and your name.</p>
-</div>
-<div class="panel setup-card">
-<div class="field-group">
-<label for="joinCode">Room code</label>
-<input autocapitalize="characters" autocomplete="off" class="code-field" id="joinCode" maxlength="6" placeholder="A7K9Q2" spellcheck="false"/>
-</div>
-<div class="field-group">
-<label for="joinName">Display name</label>
-<input autocomplete="nickname" id="joinName" maxlength="20" placeholder="Enter your name"/>
-<div class="field-help">Shown to everyone in the room.</div>
-</div>
-<label class="streamer-toggle" for="joinStreamerMode">
-<span class="streamer-toggle-copy"><strong>Use Streamer mode for me</strong><span>Put your controls in a separate pop-out window.</span></span>
-<input id="joinStreamerMode" type="checkbox"/>
-<span aria-hidden="true" class="mini-switch"><i></i></span>
-</label>
-<button class="btn primary full action-btn" id="joinRoomBtn" type="button">Join room</button>
-</div>
-
-</div>
+  <div class="setup-shell join-shell">
+    <aside class="setup-menu-side">
+      <button class="back-link" data-home="" type="button">← MENU</button>
+      <div class="setup-number">02</div>
+      <h2>Join game</h2>
+      <p>Enter the code from the host screen.</p>
+    </aside>
+    <div class="setup-menu-card join-menu-card">
+      <div class="setting-section">
+        <div class="setting-section-title">ROOM</div>
+        <div class="field-group compact-field">
+          <label for="joinCode">Room code</label>
+          <input autocapitalize="characters" autocomplete="off" class="code-field" id="joinCode" maxlength="6" placeholder="A7K9Q2" spellcheck="false"/>
+        </div>
+        <div class="field-group compact-field">
+          <label for="joinName">Your name</label>
+          <input autocomplete="nickname" id="joinName" maxlength="20" placeholder="Enter your name"/>
+        </div>
+      </div>
+      <div class="setting-section">
+        <div class="setting-section-title">EXTRAS</div>
+        <label class="option-row" for="joinStreamerMode">
+          <span><b>Streamer mode</b><small>Keep answers and votes in your private pop-out.</small></span>
+          <input id="joinStreamerMode" type="checkbox"/>
+          <i class="option-switch" aria-hidden="true"></i>
+        </label>
+      </div>
+      <button class="menu-create-btn" id="joinRoomBtn" type="button">JOIN ROOM <span>→</span></button>
+    </div>
+  </div>
 </section>
 <section class="screen game-screen" id="gameScreen">
 <div class="game-grid">
@@ -1195,9 +1288,9 @@ function flashRound(kicker,text,duration=900){const fx=$("#roundFx");if(!fx)retu
 function meterHTML(done,total,label){const safe=Math.max(1,total||1),pct=Math.max(0,Math.min(100,(done/safe)*100));return `<div class="blurt-meter"><div class="blurt-meter-top"><span>${esc(label)}</span><span>${done} / ${total}</span></div><div class="blurt-meter-track"><div class="blurt-meter-fill" style="width:${pct}%"></div></div></div>`;}
 function phaseFx(){
   if(!roomState?.meta)return;const m=roomState.meta,key=`${m.phase}:${m.roundIndex}`;if(key===lastPhaseFxKey)return;lastPhaseFxKey=key;
-  if(m.phase==="answering"){sfx("round");flashRound(`ROUND ${Number(m.roundIndex)+1}`,m.gameMode === "photo" ? "CAPTION THIS" : "WRITE YOUR ANSWER");}
-  else if(m.phase==="voting"){sfx("reveal");flashRound("ANSWERS ARE IN","BACK ONE");}
-  else if(m.phase==="results"){sfx("score");flashRound("ROUND COMPLETE","THE REVEAL");}
+  if(m.phase==="answering"){sfx("round");flashRound(`ROUND ${Number(m.roundIndex)+1}`,m.gameMode === "photo" ? "CAPTION THIS" : m.gameMode === "imposter" ? "BLEND IN" : "WRITE YOUR ANSWER");}
+  else if(m.phase==="voting"){sfx("reveal");flashRound(m.gameMode === "imposter" ? "WHO SEEMS OFF?" : "ANSWERS ARE IN",m.gameMode === "imposter" ? "VOTE OUT" : "BACK ONE");}
+  else if(m.phase==="results"){sfx("score");flashRound("ROUND COMPLETE",m.gameMode === "imposter" ? "IMPOSTER REVEAL" : "THE REVEAL");}
   else if(m.phase==="final"){sfx("winner");flashRound("GAME OVER","FINAL BLURT");}
 }
 const CURATED = [
@@ -1429,6 +1522,89 @@ function buildQuestionBank(){
 }
 const QUESTION_BANK = buildQuestionBank();
 
+const IMPOSTER_PAIRS = [
+  { normal: 'Name something you would take camping.', imposter: 'Name something you would take to the beach.' },
+  { normal: 'Name a food you would eat at a cinema.', imposter: 'Name a food you would eat at a picnic.' },
+  { normal: 'Name something found in a school bag.', imposter: 'Name something found in a suitcase.' },
+  { normal: 'Name something you might see at a wedding.', imposter: 'Name something you might see at a birthday party.' },
+  { normal: 'Name something people do before bed.', imposter: 'Name something people do after waking up.' },
+  { normal: 'Name a reason to miss a bus.', imposter: 'Name a reason to miss a train.' },
+  { normal: 'Name something you would buy at a supermarket.', imposter: 'Name something you would buy at a petrol station.' },
+  { normal: 'Name something you would find in a kitchen.', imposter: 'Name something you would find in a bathroom.' },
+  { normal: 'Name a place you would go on a sunny day.', imposter: 'Name a place you would go on a rainy day.' },
+  { normal: 'Name something you might wear to work.', imposter: 'Name something you might wear to a party.' },
+  { normal: 'Name a sound you hear in a city.', imposter: 'Name a sound you hear in the countryside.' },
+  { normal: 'Name something people lose often.', imposter: 'Name something people forget often.' },
+  { normal: 'Name something you would take on a long journey.', imposter: 'Name something you would take on a short walk.' },
+  { normal: 'Name a reason someone might be late.', imposter: 'Name a reason someone might leave early.' },
+  { normal: 'Name something you would put in a sandwich.', imposter: 'Name something you would put on a pizza.' },
+  { normal: 'Name something you see at a funfair.', imposter: 'Name something you see at a theme park.' },
+  { normal: 'Name something you would pack for winter.', imposter: 'Name something you would pack for summer.' },
+  { normal: 'Name a job that uses a uniform.', imposter: 'Name a job that uses a computer.' },
+  { normal: 'Name something that belongs in a car.', imposter: 'Name something that belongs on a bus.' },
+  { normal: 'Name something you do when bored.', imposter: 'Name something you do when tired.' },
+  { normal: 'Name a drink you might order in a pub.', imposter: 'Name a drink you might order in a cafe.' },
+  { normal: 'Name something people photograph on holiday.', imposter: 'Name something people photograph at home.' },
+  { normal: 'Name something you might find under a sofa.', imposter: 'Name something you might find under a bed.' },
+  { normal: 'Name something that makes a good gift.', imposter: 'Name something that makes a bad gift.' },
+  { normal: 'Name something you would do at a hotel.', imposter: 'Name something you would do at an airport.' },
+  { normal: 'Name something you might hear from a teacher.', imposter: 'Name something you might hear from a boss.' },
+  { normal: 'Name an animal you might see on a farm.', imposter: 'Name an animal you might see at a zoo.' },
+  { normal: 'Name something people queue for.', imposter: 'Name something people book in advance.' },
+  { normal: 'Name something you need for a barbecue.', imposter: 'Name something you need for a roast dinner.' },
+  { normal: 'Name something you might keep in your pocket.', imposter: 'Name something you might keep in your wallet.' },
+  { normal: 'Name a place where people whisper.', imposter: 'Name a place where people shout.' },
+  { normal: 'Name something you might do on a first date.', imposter: 'Name something you might do with an old friend.' },
+  { normal: 'Name something you would see at the seaside.', imposter: 'Name something you would see by a river.' },
+  { normal: 'Name something people complain about at work.', imposter: 'Name something people complain about at home.' },
+  { normal: 'Name something you might use every morning.', imposter: 'Name something you might use every night.' },
+  { normal: 'Name a reason to call someone.', imposter: 'Name a reason to text someone.' },
+  { normal: 'Name something that can ruin a holiday.', imposter: 'Name something that can ruin a night out.' },
+  { normal: 'Name something you might find in a garage.', imposter: 'Name something you might find in a shed.' },
+  { normal: 'Name something you would buy for a new house.', imposter: 'Name something you would buy for a new car.' },
+  { normal: 'Name something that is usually cold.', imposter: 'Name something that is usually hot.' },
+  { normal: 'Name something you might see in a hospital.', imposter: 'Name something you might see in a dentist.' },
+  { normal: 'Name a place where you need a ticket.', imposter: 'Name a place where you need a reservation.' },
+  { normal: 'Name something people do at Christmas.', imposter: "Name something people do on New Year's Eve." },
+  { normal: 'Name something you would take to the gym.', imposter: 'Name something you would take swimming.' },
+  { normal: 'Name something people argue about in a car.', imposter: 'Name something people argue about at home.' },
+  { normal: 'Name something you might see in a park.', imposter: 'Name something you might see in a garden.' },
+  { normal: 'Name something a dog might chase.', imposter: 'Name something a cat might chase.' },
+  { normal: 'Name something you would use during a power cut.', imposter: 'Name something you would use during a storm.' },
+  { normal: 'Name something people do while waiting.', imposter: 'Name something people do while travelling.' },
+  { normal: 'Name something you would find on a desk.', imposter: 'Name something you would find on a bedside table.' },
+  { normal: 'Name something people put on toast.', imposter: 'Name something people put on chips.' },
+  { normal: 'Name a place where people take selfies.', imposter: 'Name a place where people take group photos.' },
+  { normal: 'Name something that can wake you up.', imposter: 'Name something that can keep you awake.' },
+  { normal: 'Name something you might buy on holiday.', imposter: 'Name something you might buy at a festival.' },
+  { normal: 'Name something people check before leaving home.', imposter: 'Name something people check before going to bed.' },
+  { normal: 'Name something you would find at a bus station.', imposter: 'Name something you would find at a railway station.' },
+  { normal: 'Name something that is annoying on public transport.', imposter: 'Name something that is annoying in a cinema.' },
+  { normal: 'Name something you would take to a festival.', imposter: 'Name something you would take camping.' },
+  { normal: 'Name something you might eat for breakfast.', imposter: 'Name something you might eat late at night.' },
+  { normal: 'Name something people do when they are nervous.', imposter: 'Name something people do when they are excited.' },
+  { normal: 'Name something you might see in a nightclub.', imposter: 'Name something you might see at a concert.' },
+  { normal: 'Name something you would do if your phone died.', imposter: 'Name something you would do if the Wi-Fi died.' },
+  { normal: 'Name a reason to visit a shop.', imposter: 'Name a reason to visit a bank.' },
+  { normal: 'Name something you might keep in the fridge.', imposter: 'Name something you might keep in a cupboard.' },
+  { normal: 'Name something people do on a Sunday.', imposter: 'Name something people do on a Friday night.' },
+  { normal: "Name something you would bring to a friend's house.", imposter: 'Name something you would bring to a family gathering.' },
+  { normal: 'Name something you might find at a takeaway.', imposter: 'Name something you might find at a restaurant.' },
+  { normal: 'Name something people do in a lift.', imposter: 'Name something people do on an escalator.' },
+  { normal: 'Name something you might see from a bus window.', imposter: 'Name something you might see from a plane window.' },
+  { normal: 'Name something you would buy when moving house.', imposter: 'Name something you would throw away when moving house.' },
+  { normal: 'Name something people do when the weather is hot.', imposter: 'Name something people do when the weather is cold.' },
+  { normal: 'Name something you might hear at an airport.', imposter: 'Name something you might hear at a railway station.' },
+  { normal: 'Name something that belongs at a birthday party.', imposter: 'Name something that belongs at a wedding.' },
+  { normal: 'Name something you might do at the beach.', imposter: 'Name something you might do at a swimming pool.' },
+  { normal: 'Name something people keep in their car boot.', imposter: 'Name something people keep in a hallway cupboard.' },
+  { normal: 'Name a reason to open a window.', imposter: 'Name a reason to close a window.' },
+  { normal: 'Name something you might borrow from a neighbour.', imposter: 'Name something you might borrow from a friend.' },
+  { normal: 'Name something you might see in a pub.', imposter: 'Name something you might see in a restaurant.' },
+  { normal: 'Name something people do before a holiday.', imposter: 'Name something people do after a holiday.' },
+  { normal: 'Name something that could make a bus late.', imposter: 'Name something that could make a flight late.' }
+];
+
 
 function shuffled(array) {
   const a = [...array];
@@ -1512,7 +1688,8 @@ function promptHTML(compact = false) {
     const src = currentPhoto();
     return `<div class="photo-stage ${compact ? "compact" : ""}">${src ? `<img src="${esc(src)}" alt="Photo to caption" loading="eager">` : `<div class="photo-missing">Photo unavailable</div>`}</div>`;
   }
-  return `<h2 class="question ${compact ? "small" : ""}">${esc(currentQuestion())}</h2>`;
+  const q = isImposterMode() ? currentPromptForMe() : currentQuestion();
+  return `<h2 class="question ${compact ? "small" : ""}">${esc(q)}</h2>`;
 }
 function phaseTimerHTML(label = "TIME LEFT") {
   const active = ["answering", "voting", "results"].includes(roomState?.meta?.phase);
@@ -1554,6 +1731,10 @@ async function createUniqueRoom(name, rounds, streamerMode = false, questionMode
         questionMode,
         gameMode: selectedGameMode,
         currentPhoto: "",
+        currentImposterUid: "",
+        currentImposterQuestion: "",
+        imposterQueue: [],
+        imposterPairQueue: [],
         phaseEndsAt: 0,
         streamerMode: false,
         createdAt: Date.now()
@@ -1565,7 +1746,8 @@ async function createUniqueRoom(name, rounds, streamerMode = false, questionMode
       customPhotos: {},
       answers: {},
       votes: {},
-      roundAwards: {}
+      roundAwards: {},
+      imposterResults: {}
     };
 
     const result = await runTransaction(ref(db, `rooms/${code}`), current => current === null ? data : undefined, { applyLocally: false });
@@ -1642,7 +1824,9 @@ async function enterRoom(code) {
 async function createRoom() {
   const rounds = Number($("#roundCount").value) || 5;
   const questionMode = $("#questionMode")?.value || "custom";
-  const selectedGameMode = $("#gameMode")?.value || "sentence";
+  const baseGameMode = $("#gameMode")?.value || "sentence";
+  const imposterEnabled = baseGameMode === "sentence" && !!$("#imposterToggle")?.checked;
+  const selectedGameMode = imposterEnabled ? "imposter" : baseGameMode;
   const streamerMode = !!$("#streamerMode")?.checked;
   const name = cleanName($("#hostName").value);
   if (!name) return toast("Enter a display name.");
@@ -1657,7 +1841,7 @@ async function createRoom() {
     toast(error.message);
   } finally {
     button.disabled = false;
-    button.textContent = "Create room";
+    button.innerHTML = `CREATE ROOM <span>→</span>`;
   }
 }
 
@@ -1766,12 +1950,13 @@ async function joinRoom() {
     toast(error.message);
   } finally {
     button.disabled = false;
-    button.textContent = "Join room";
+    button.innerHTML = `JOIN ROOM <span>→</span>`;
   }
 }
 
 
 function phaseLabel() {
+  if (isImposterMode()) return ({ lobby: "LOBBY", answering: "BLEND IN", voting: "VOTE OUT", results: "REVEAL", final: "FINAL" })[roomState?.meta?.phase] || "GAME";
   return ({ lobby: "LOBBY", answering: "WRITE", voting: "BACK ONE", results: "REVEAL", final: "FINAL" })[roomState?.meta?.phase] || "GAME";
 }
 
@@ -1785,110 +1970,147 @@ function header() {
 
 function currentAnswers() { return roomState?.answers?.[roundKey()] || {}; }
 function currentVotes() { return roomState?.votes?.[roundKey()] || {}; }
+function allEligibleVotesIn(state = roomState) {
+  if (!state?.meta || state.meta.phase !== "voting") return false;
+  const key = String(state.meta.roundIndex ?? 0);
+  const votes = state.votes?.[key] || {};
+  const playerIds = Object.keys(state.players || {});
+  if (playerIds.length < 2) return false;
+  let eligible = [];
+  if ((state.meta.gameMode || "sentence") === "imposter") {
+    eligible = playerIds;
+  } else {
+    const answerIds = Object.keys(state.answers?.[key] || {});
+    eligible = playerIds.filter(voter => answerIds.some(target => target !== voter));
+  }
+  return eligible.length > 0 && eligible.every(uid => Boolean(votes[uid]));
+}
+function eligibleVoteCount(state = roomState) {
+  if (!state?.meta) return 0;
+  const key = String(state.meta.roundIndex ?? 0);
+  const playerIds = Object.keys(state.players || {});
+  if ((state.meta.gameMode || "sentence") === "imposter") return playerIds.length;
+  const answerIds = Object.keys(state.answers?.[key] || {});
+  return playerIds.filter(voter => answerIds.some(target => target !== voter)).length;
+}
 function voteCounts() {
   const counts = {};
   for (const target of Object.values(currentVotes())) counts[target] = (counts[target] || 0) + 1;
   return counts;
 }
 function currentQuestion() { return roomState?.meta?.currentQuestion || ""; }
+function isImposterMode() { return gameMode() === "imposter"; }
+function currentPromptForMe() {
+  if (!isImposterMode()) return currentQuestion();
+  return roomState?.meta?.currentImposterUid === me?.uid
+    ? (roomState?.meta?.currentImposterQuestion || currentQuestion())
+    : currentQuestion();
+}
+function gameModeLabel() { return gameMode() === "photo" ? "CAPTION THIS PHOTO" : gameMode() === "imposter" ? "IMPOSTER" : "SENTENCE"; }
+function imposterRoleHTML() {
+  if (!isImposterMode()) return "";
+  const odd = roomState?.meta?.currentImposterUid === me?.uid;
+  return `<div class="role-strip ${odd ? "imposter" : ""}"><strong>${odd ? "YOU ARE THE IMPOSTER" : "YOU HAVE THE MAIN QUESTION"}</strong><span>${odd ? "Answer naturally and blend in." : "Answer normally. Spot who seems off."}</span></div>`;
+}
+function makeImposterQueue(ids, rounds) {
+  const out = [];
+  let bag = [];
+  while (out.length < rounds) {
+    if (!bag.length) bag = shuffled(ids);
+    const next = bag.shift();
+    if (out.length && ids.length > 1 && out[out.length - 1] === next) { bag.push(next); continue; }
+    out.push(next);
+  }
+  return out;
+}
 
 function avatarHTML(player, className = "player-avatar") {
   const name = player?.name || "Player";
   return `<div class="${className}">${esc(initials(name))}</div>`;
 }
 
+function imposterResultHTML() {
+  const meta = roomState.meta || {};
+  const answers = currentAnswers();
+  const counts = voteCounts();
+  const awards = roomState?.roundAwards?.[roundKey()] || {};
+  const imposterUid = meta.currentImposterUid || "";
+  const imposter = roomState.players?.[imposterUid] || { name: "Unknown" };
+  const result = roomState?.imposterResults?.[roundKey()] || {};
+  const caught = result.caught === true;
+  const rows = playersArray().map(player => ({
+    ...player, answer: answers[player.uid]?.text || "No answer submitted", votes: counts[player.uid] || 0, award: awards[player.uid] || {}
+  })).sort((a,b) => b.votes - a.votes || a.name.localeCompare(b.name));
+  return `<div class="imposter-reveal">
+    <div class="imposter-reveal-head"><small>${caught ? "IMPOSTER CAUGHT" : "IMPOSTER ESCAPED"}</small><strong>${esc(imposter.name)}</strong><em>${caught ? "The room found them." : "They blended in and take the escape bonus."}</em></div>
+    <div class="imposter-prompts"><div class="imposter-prompt"><span>MAIN QUESTION</span><strong>${esc(meta.currentQuestion || "")}</strong></div><div class="imposter-prompt"><span>IMPOSTER QUESTION</span><strong>${esc(meta.currentImposterQuestion || "")}</strong></div></div>
+    ${rows.map(player => `<div class="imposter-result-row ${player.uid === imposterUid ? "is-imposter" : ""}"><div class="suspect-avatar">${esc(initials(player.name))}</div><div class="imposter-result-copy"><strong>${esc(player.name)}${player.uid === imposterUid ? " · IMPOSTER" : ""}</strong><span>${esc(player.answer)}</span></div><div class="vote-total"><b>${player.votes}</b>vote${player.votes === 1 ? "" : "s"}<br><span>+${Number(player.award.total || 0)} pts</span></div></div>`).join("")}
+  </div>`;
+}
+
 function mainHTML() {
   const meta = roomState.meta;
   const players = playersArray();
   const streamerMode = streamerEnabledForMe();
+  const minPlayers = meta.gameMode === "imposter" ? 3 : 2;
 
   if (meta.phase === "lobby") {
+    const modeHelp = meta.gameMode === "photo"
+      ? "Caption mode uses the room photo pool. Players can add photo links before the game starts."
+      : meta.gameMode === "imposter"
+        ? "One player gets a different but related question each round. Everyone answers, then votes for the person they think is the imposter."
+        : meta.questionMode === "custom" ? "Everyone can add questions from the lobby before the host starts." : meta.questionMode === "mixed" ? "Player-made questions will be mixed with BLURT prompts." : "This room is using BLURT's built-in question bank.";
     return `${header()}
       <div class="game-kicker">SHARE THIS WITH YOUR PLAYERS</div>
       <div class="lobby-share-grid">
-        <div class="lobby-code-card">
-          <div class="lobby-code-top">
-            <div class="room-code-big">${esc(roomCode)}</div>
-            <button id="copyCodeBtn" class="copy-code" type="button">COPY CODE</button>
-          </div>
-          <div class="room-badges">
-            <span class="room-badge">${players.length} PLAYER${players.length === 1 ? "" : "S"}</span>
-            <span class="room-badge">${meta.rounds} ROUNDS</span>
-            <span class="room-badge">${meta.gameMode === "photo" ? "CAPTION THIS PHOTO" : "SENTENCE"}</span>
-            <span class="room-badge">30 SEC / STAGE</span>
-            ${meta.gameMode !== "photo" ? `<span class="room-badge">${meta.questionMode === "custom" ? "PLAYER QUESTIONS ONLY" : meta.questionMode === "mixed" ? "MIXED QUESTIONS" : "BLURT QUESTIONS"}</span>` : ""}
-            ${streamerMode ? `<span class="room-badge">YOUR STREAMER MODE</span>` : ""}
-          </div>
-          <div class="join-link">${esc(joinUrl(roomCode))}</div>
-        </div>
+        <div class="lobby-code-card"><div class="lobby-code-top"><div class="room-code-big">${esc(roomCode)}</div><button id="copyCodeBtn" class="copy-code" type="button">COPY CODE</button></div>
+          <div class="room-badges"><span class="room-badge">${players.length} PLAYER${players.length === 1 ? "" : "S"}</span><span class="room-badge">${meta.rounds} ROUNDS</span><span class="room-badge">${gameModeLabel()}</span><span class="room-badge">30 SEC / STAGE</span>${meta.gameMode === "sentence" ? `<span class="room-badge">${meta.questionMode === "custom" ? "PLAYER QUESTIONS ONLY" : meta.questionMode === "mixed" ? "MIXED QUESTIONS" : "BLURT QUESTIONS"}</span>` : ""}${streamerMode ? `<span class="room-badge">YOUR STREAMER MODE</span>` : ""}</div>
+          <div class="join-link">${esc(joinUrl(roomCode))}</div></div>
         <div class="qr-card"><div><img src="${esc(qrUrl(roomCode))}" alt="QR code to join room ${esc(roomCode)}"><span>SCAN TO JOIN</span></div></div>
       </div>
-      <div class="waiting">Players can scan the QR code or use the six-character code. ${meta.gameMode === "photo" ? "Caption mode uses the room photo pool. Players can add photo links before the game starts." : meta.questionMode === "custom" ? "Everyone can add questions from the lobby before the host starts." : meta.questionMode === "mixed" ? "Player-made questions will be mixed with BLURT prompts." : "This room is using BLURT's built-in question bank."}</div>
+      <div class="waiting">${modeHelp}${meta.gameMode === "imposter" && players.length < 3 ? ` Imposter needs at least 3 players.` : ""}</div>
+      ${isHost() && !streamerMode && meta.gameMode !== "photo" ? `<label class="lobby-twist-toggle" for="lobbyImposterToggle"><span><strong>Imposter twist</strong><small>${meta.gameMode === "imposter" ? "ON · one player gets a different question" : "OFF · normal sentence game"}</small></span><input id="lobbyImposterToggle" type="checkbox" ${meta.gameMode === "imposter" ? "checked" : ""}><i class="option-switch" aria-hidden="true"></i></label>` : ""}
       ${streamerMode ? `<div class="streamer-banner"><div><strong>Your controls are in Streamer Mode</strong><span>Keep this main window on stream. Your private panel contains your game controls.</span></div><button id="openStreamerBtn" class="btn secondary small" type="button">OPEN STREAMER PANEL</button></div>` : ""}
-      ${isHost() && !streamerMode ? `<div class="host-actions"><button id="startBtn" class="btn primary" ${players.length < 2 ? "disabled" : ""}>START GAME →</button></div>` : ""}`;
+      ${isHost() && !streamerMode ? `<div class="host-actions"><button id="startBtn" class="btn primary" ${players.length < minPlayers ? "disabled" : ""}>START GAME →</button></div>` : ""}`;
   }
 
   if (meta.phase === "answering") {
     const answers = currentAnswers();
     const answered = !!answers[me.uid];
+    const imposterMainHidden = isImposterMode() && streamerMode;
     return `${header()}
-      <div class="game-kicker">${meta.gameMode === "photo" ? "CAPTION THIS PHOTO" : "SENTENCE ROUND"}</div>
+      <div class="game-kicker">${meta.gameMode === "photo" ? "CAPTION THIS PHOTO" : meta.gameMode === "imposter" ? "IMPOSTER ROUND" : "SENTENCE ROUND"}</div>
       ${phaseTimerHTML()}
-      ${promptHTML(false)}
+      ${isImposterMode() && !streamerMode ? imposterRoleHTML() : ""}
+      ${imposterMainHidden ? `<div class="waiting"><strong>Private prompt hidden from stream.</strong> Open your Streamer panel to see your question and role.</div>` : promptHTML(false)}
       ${meterHTML(Object.keys(answers).length, players.length, "ANSWERS IN")}
-      ${answered
-        ? `<div class="waiting">Locked. Nobody sees who wrote what until the reveal.</div>`
-        : (streamerMode
-          ? `<div class="streamer-banner"><div><strong>Your answer controls are private</strong><span>Type and submit from the Streamer panel. This main window stays display-only.</span></div><button id="openStreamerBtn" class="btn secondary small" type="button">OPEN STREAMER PANEL</button></div>`
-          : `<div class="answer-wrap"><textarea id="answerField" class="answer-field" maxlength="160" placeholder="Drop your best BLURT…"></textarea><div class="answer-meta"><span>Short usually hits harder.</span><span>160 characters max</span></div><button id="submitAnswerBtn" class="btn primary">DROP MY BLURT</button></div>`)}
+      ${answered ? `<div class="waiting">Locked. ${isImposterMode() ? "Wait for everyone else to answer." : "Nobody sees who wrote what until the reveal."}</div>` : (streamerMode ? `<div class="streamer-banner"><div><strong>Your answer controls are private</strong><span>Type and submit from the Streamer panel.</span></div><button id="openStreamerBtn" class="btn secondary small" type="button">OPEN STREAMER PANEL</button></div>` : `<div class="answer-wrap"><textarea id="answerField" class="answer-field" maxlength="160" placeholder="${isImposterMode() ? "Give an answer that fits…" : "Drop your best BLURT…"}"></textarea><div class="answer-meta"><span>${isImposterMode() ? "Don't give your prompt away." : "Short usually hits harder."}</span><span>160 characters max</span></div><button id="submitAnswerBtn" class="btn primary">LOCK ANSWER</button></div>`)}
       ${isHost() && !streamerMode ? `<div class="host-actions"><span class="auto-note">Voting opens automatically when the clock hits 0.</span><button id="endBtn" class="btn danger">END GAME</button></div>` : ""}`;
   }
 
   if (meta.phase === "voting") {
-    const answers = currentAnswers();
-    const votes = currentVotes();
-    const myVote = votes[me.uid] || "";
-    const list = Object.entries(answers).sort((a, b) => (a[1].sort || 0) - (b[1].sort || 0));
-    return `${header()}
-      <div class="game-kicker">BACK ONE</div>
-      ${phaseTimerHTML()}
-      ${promptHTML(true)}
-      <div class="pick-note"><span class="pick-chip">1 PICK</span>Authors stay hidden. Back the BLURT you want to score.</div>
-      <div class="answers-grid">${streamerMode
-        ? list.map(([, answer]) => `<div class="answer-card display-only">${esc(answer.text)}</div>`).join("")
-        : list.map(([uid, answer]) => `<button class="answer-card ${uid === me.uid ? "mine" : ""} ${myVote === uid ? "selected" : ""}" data-vote="${uid}" ${myVote || uid === me.uid ? "disabled" : ""}>${esc(answer.text)}</button>`).join("")}</div>
-      ${meterHTML(Object.keys(votes).length, players.length, "PICKS LOCKED IN")}
-      ${streamerMode ? `<div class="streamer-banner"><div><strong>Your pick is private</strong><span>Choose your BLURT from the Streamer panel.</span></div><button id="openStreamerBtn" class="btn secondary small" type="button">OPEN STREAMER PANEL</button></div>` : (myVote ? `<div class="waiting">Your pick is locked. Sit tight for the author reveal.</div>` : "")}
-      ${isHost() && !streamerMode ? `<div class="host-actions"><span class="auto-note">Reveal opens automatically when the clock hits 0.</span><button id="endBtn" class="btn danger">END GAME</button></div>` : ""}`;
+    const answers = currentAnswers(), votes = currentVotes(), myVote = votes[me.uid] || "";
+    if (isImposterMode()) {
+      const suspects = players.map(player => ({...player, answer: answers[player.uid]?.text || "No answer submitted"}));
+      return `${header()}<div class="game-kicker">FIND THE IMPOSTER</div>${phaseTimerHTML()}<div class="imposter-help">Read everyone's answer and vote for the person you think received the different question. You can't vote for yourself.</div>
+        <div class="suspect-grid">${suspects.map(player => streamerMode ? `<div class="suspect-card"><div class="suspect-avatar">${esc(initials(player.name))}</div><div><div class="suspect-name">${esc(player.name)}</div><div class="suspect-answer">${esc(player.answer)}</div></div></div>` : `<button class="suspect-card ${player.uid === me.uid ? "mine" : ""} ${myVote === player.uid ? "selected" : ""}" data-vote="${player.uid}" ${myVote || player.uid === me.uid ? "disabled" : ""}><div class="suspect-avatar">${esc(initials(player.name))}</div><div><div class="suspect-name">${esc(player.name)}</div><div class="suspect-answer">${esc(player.answer)}</div></div></button>`).join("")}</div>
+        ${meterHTML(Object.keys(votes).length, eligibleVoteCount(), "VOTES IN")}${streamerMode ? `<div class="streamer-banner"><div><strong>Your vote is private</strong><span>Choose the suspect from your Streamer panel.</span></div><button id="openStreamerBtn" class="btn secondary small">OPEN STREAMER PANEL</button></div>` : myVote ? `<div class="waiting">Vote locked. The reveal starts as soon as everyone has voted.</div>` : ""}${isHost() && !streamerMode ? `<div class="host-actions"><span class="auto-note">Reveal opens as soon as everyone votes, or at 0.</span><button id="endBtn" class="btn danger">END GAME</button></div>` : ""}`;
+    }
+    const list = Object.entries(answers).sort((a,b)=>(a[1].sort||0)-(b[1].sort||0));
+    return `${header()}<div class="game-kicker">BACK ONE</div>${phaseTimerHTML()}${promptHTML(true)}<div class="pick-note"><span class="pick-chip">1 PICK</span>Authors stay hidden. Back the BLURT you want to score.</div><div class="answers-grid">${streamerMode ? list.map(([,answer])=>`<div class="answer-card display-only">${esc(answer.text)}</div>`).join("") : list.map(([uid,answer])=>`<button class="answer-card ${uid===me.uid?"mine":""} ${myVote===uid?"selected":""}" data-vote="${uid}" ${myVote||uid===me.uid?"disabled":""}>${esc(answer.text)}</button>`).join("")}</div>${meterHTML(Object.keys(votes).length,eligibleVoteCount(),"PICKS LOCKED IN")}${streamerMode?`<div class="streamer-banner"><div><strong>Your pick is private</strong><span>Choose from the Streamer panel.</span></div><button id="openStreamerBtn" class="btn secondary small">OPEN STREAMER PANEL</button></div>`:myVote?`<div class="waiting">Your pick is locked. The reveal starts as soon as everyone has voted.</div>`:""}${isHost()&&!streamerMode?`<div class="host-actions"><span class="auto-note">Reveal opens as soon as everyone votes, or at 0.</span><button id="endBtn" class="btn danger">END GAME</button></div>`:""}`;
   }
 
   if (meta.phase === "results") {
-    const answers = currentAnswers();
-    const counts = voteCounts();
-    const awards = roomState?.roundAwards?.[roundKey()] || {};
-    const rows = Object.entries(answers)
-      .map(([uid, answer]) => ({ uid, text: answer.text, name: roomState.players?.[uid]?.name || "Player", votes: counts[uid] || 0, ...(awards[uid] || {}) }))
-      .sort((a, b) => (b.total || b.votes * 100) - (a.total || a.votes * 100) || b.votes - a.votes);
-    return `${header()}
-      <div class="game-kicker">AUTHOR REVEAL</div>
-      ${phaseTimerHTML("NEXT ROUND IN")}
-      ${promptHTML(true)}
-      <div class="result-list">${rows.map(row => `<div class="result-card ${row.label === "TOP BLURT" ? "top-blurt" : ""}">${row.label ? `<div class="result-rank">${esc(row.label)}</div>` : ""}<div class="result-answer">${esc(row.text)}</div><div class="result-meta"><span>Written by <strong>${esc(row.name)}</strong></span><span class="score-breakdown"><span>${row.votes} pick${row.votes === 1 ? "" : "s"}</span>${row.bonus ? `<span class="bonus-tag">+${row.bonus} BONUS</span>` : ""}<span class="points total">+${Number(row.total ?? row.votes * 100)} PTS</span></span></div></div>`).join("")}</div>
-      <div class="blurt-tip"><strong>BLURT bonus:</strong> a clear round winner gets +250 points. A tied top BLURT gets +100 each.</div>
-      ${streamerMode ? `<div class="streamer-banner"><div><strong>Streamer panel active</strong><span>The next round starts automatically. Your private panel stays synced.</span></div><button id="openStreamerBtn" class="btn secondary small" type="button">OPEN STREAMER PANEL</button></div>` : ""}
-      ${isHost() && !streamerMode ? `<div class="host-actions"><span class="auto-note">${meta.roundIndex + 1 >= meta.rounds ? "Final scores" : "Next round"} opens automatically at 0.</span><button id="endBtn" class="btn danger">END GAME</button></div>` : ""}`;
+    if (isImposterMode()) return `${header()}<div class="game-kicker">IMPOSTER REVEAL</div>${phaseTimerHTML("NEXT ROUND IN")}${imposterResultHTML()}<div class="blurt-tip"><strong>Scoring:</strong> +250 for correctly finding the imposter. The imposter gets +500 if they avoid being the clear top vote.</div>${streamerMode?`<div class="streamer-banner"><div><strong>Streamer panel active</strong><span>The next round starts automatically.</span></div><button id="openStreamerBtn" class="btn secondary small">OPEN STREAMER PANEL</button></div>`:""}${isHost()&&!streamerMode?`<div class="host-actions"><span class="auto-note">${meta.roundIndex+1>=meta.rounds?"Final scores":"Next round"} opens automatically at 0.</span><button id="endBtn" class="btn danger">END GAME</button></div>`:""}`;
+    const answers=currentAnswers(),counts=voteCounts(),awards=roomState?.roundAwards?.[roundKey()]||{};
+    const rows=Object.entries(answers).map(([uid,answer])=>({uid,text:answer.text,name:roomState.players?.[uid]?.name||"Player",votes:counts[uid]||0,...(awards[uid]||{})})).sort((a,b)=>(b.total||b.votes*100)-(a.total||a.votes*100)||b.votes-a.votes);
+    return `${header()}<div class="game-kicker">AUTHOR REVEAL</div>${phaseTimerHTML("NEXT ROUND IN")}${promptHTML(true)}<div class="result-list">${rows.map(row=>`<div class="result-card ${row.label==="TOP BLURT"?"top-blurt":""}">${row.label?`<div class="result-rank">${esc(row.label)}</div>`:""}<div class="result-answer">${esc(row.text)}</div><div class="result-meta"><span>Written by <strong>${esc(row.name)}</strong></span><span class="score-breakdown"><span>${row.votes} pick${row.votes===1?"":"s"}</span>${row.bonus?`<span class="bonus-tag">+${row.bonus} BONUS</span>`:""}<span class="points total">+${Number(row.total??row.votes*100)} PTS</span></span></div></div>`).join("")}</div><div class="blurt-tip"><strong>BLURT bonus:</strong> a clear round winner gets +250 points. A tied top BLURT gets +100 each.</div>${streamerMode?`<div class="streamer-banner"><div><strong>Streamer panel active</strong><span>The next round starts automatically.</span></div><button id="openStreamerBtn" class="btn secondary small">OPEN STREAMER PANEL</button></div>`:""}${isHost()&&!streamerMode?`<div class="host-actions"><span class="auto-note">${meta.roundIndex+1>=meta.rounds?"Final scores":"Next round"} opens automatically at 0.</span><button id="endBtn" class="btn danger">END GAME</button></div>`:""}`;
   }
 
   if (meta.phase === "final") {
-    const board = playersArray().sort((a, b) => (b.score || 0) - (a.score || 0) || a.name.localeCompare(b.name));
-    const winner = board[0];
-    return `${header()}
-      <div class="game-kicker">FINAL BLURT</div>
-      ${winner ? `<div class="winner">${avatarHTML(winner, "winner-avatar")}<div class="winner-crown">BLURT CHAMPION</div><div class="winner-name">${esc(winner.name)}</div><div class="winner-score">${Number(winner.score || 0).toLocaleString()} POINTS</div></div>` : ""}
-      <div class="leaderboard">${board.map((player, index) => `<div class="leader-row"><div class="leader-pos">#${index + 1}</div>${avatarHTML(player, "leader-avatar")}<div class="leader-name">${esc(player.name)}</div><div class="leader-score">${Number(player.score || 0).toLocaleString()}</div></div>`).join("")}</div>
-      ${streamerMode ? `<div class="streamer-banner"><div><strong>Streamer panel active</strong><span>Use the private panel to finish or close your streamer controls.</span></div><button id="openStreamerBtn" class="btn secondary small" type="button">OPEN STREAMER PANEL</button></div>` : `<div class="host-actions"><button id="homeBtn" class="btn ghost">BACK TO HOME</button></div>`}`;
+    const board=playersArray().sort((a,b)=>(b.score||0)-(a.score||0)||a.name.localeCompare(b.name)),winner=board[0];
+    return `${header()}<div class="game-kicker">FINAL BLURT</div>${winner?`<div class="winner">${avatarHTML(winner,"winner-avatar")}<div class="winner-crown">BLURT CHAMPION</div><div class="winner-name">${esc(winner.name)}</div><div class="winner-score">${Number(winner.score||0).toLocaleString()} POINTS</div></div>`:""}<div class="leaderboard">${board.map((player,index)=>`<div class="leader-row"><div class="leader-pos">#${index+1}</div>${avatarHTML(player,"leader-avatar")}<div class="leader-name">${esc(player.name)}</div><div class="leader-score">${Number(player.score||0).toLocaleString()}</div></div>`).join("")}</div>${streamerMode?`<div class="streamer-banner"><div><strong>Streamer panel active</strong><span>Use the private panel to finish.</span></div><button id="openStreamerBtn" class="btn secondary small">OPEN STREAMER PANEL</button></div>`:`<div class="host-actions"><button id="homeBtn" class="btn ghost">BACK TO HOME</button></div>`}`;
   }
-
   return `<div class="waiting">Loading game…</div>`;
 }
 
@@ -1916,6 +2138,7 @@ function playerRow(player, allowControls = !streamerEnabledForMe()) {
 
 function customHTML(allowControls = !streamerEnabledForMe()) {
   if (roomState.meta.phase !== "lobby") return "";
+  if (gameMode() === "imposter") return `<div class="side-section"><div class="side-head"><h3 class="side-title">IMPOSTER MODE</h3><span class="side-count">${IMPOSTER_PAIRS.length}</span></div><div class="notice">Each round picks one imposter and a pair of related questions. The odd player sees the different question.</div></div>`;
   if (gameMode() === "photo") {
     const photos = customPhotoArray();
     return `<div class="side-section">
@@ -1948,21 +2171,9 @@ function customHTML(allowControls = !streamerEnabledForMe()) {
   </div>`;
 }
 function sideHTML() {
-  const players = playersArray().sort((a, b) => (b.score || 0) - (a.score || 0) || a.name.localeCompare(b.name));
-  const meta = roomState.meta;
-  return `<div class="side-head"><h3 class="side-title">PLAYERS</h3><span class="side-count">${players.length}</span></div>
-    <div class="player-list">${players.map(player => playerRow(player, !streamerEnabledForMe())).join("")}</div>
-    ${customHTML(!streamerEnabledForMe())}
-    <div class="side-section security-card">
-      <div class="side-head"><h3 class="side-title">ROOM SETTINGS</h3></div>
-      <div class="security-line"><span>Your streamer mode</span><strong>${streamerEnabledForMe() ? "ON" : "OFF"}</strong></div>
-      <div class="security-line"><span>Game mode</span><strong>${meta.gameMode === "photo" ? "PHOTO" : "SENTENCE"}</strong></div>
-      <div class="security-line"><span>Clock</span><strong>30 SECONDS</strong></div>
-      <div class="security-line"><span>Scoring</span><strong>100 / PICK + BONUS</strong></div>
-      <div class="security-line"><span>Rounds</span><strong>${meta.rounds}</strong></div>
-      ${meta.gameMode !== "photo" ? `<div class="security-line"><span>Sentence source</span><strong>${meta.questionMode === "custom" ? "PLAYER ONLY" : meta.questionMode === "mixed" ? "MIXED" : "BLURT"}</strong></div>` : ""}
-      <div class="notice">Owner manages host permissions. Co-hosts can run rounds and remove players.</div>
-    </div>`;
+  const players=playersArray().sort((a,b)=>(b.score||0)-(a.score||0)||a.name.localeCompare(b.name));
+  const meta=roomState.meta;
+  return `<div class="side-head"><h3 class="side-title">PLAYERS</h3><span class="side-count">${players.length}</span></div><div class="player-list">${players.map(player=>playerRow(player,!streamerEnabledForMe())).join("")}</div>${customHTML(!streamerEnabledForMe())}<div class="side-section security-card"><div class="side-head"><h3 class="side-title">ROOM SETTINGS</h3></div><div class="security-line"><span>Your streamer mode</span><strong>${streamerEnabledForMe()?"ON":"OFF"}</strong></div><div class="security-line"><span>Game mode</span><strong>${gameModeLabel()}</strong></div><div class="security-line"><span>Clock</span><strong>30 SECONDS</strong></div><div class="security-line"><span>Scoring</span><strong>${meta.gameMode==="imposter"?"250 FIND / 500 ESCAPE":"100 / PICK + BONUS"}</strong></div><div class="security-line"><span>Rounds</span><strong>${meta.rounds}</strong></div>${meta.gameMode==="sentence"?`<div class="security-line"><span>Sentence source</span><strong>${meta.questionMode==="custom"?"PLAYER ONLY":meta.questionMode==="mixed"?"MIXED":"BLURT"}</strong></div>`:""}<div class="notice">Owner manages host permissions. Co-hosts can run rounds and remove players.</div></div>`;
 }
 
 function render() {
@@ -1988,60 +2199,28 @@ function streamerRosterHTML() {
 }
 
 function streamerPanelHTML() {
-  if (!roomState || !me) return `<div class="streamer-status">Connecting</div><h1 class="streamer-question">Loading your room…</h1>`;
-  const meta = roomState.meta || {};
-  const mine = roomState.players?.[me.uid];
-  const players = playersArray();
-  if (!mine) return `<div class="streamer-status">Not connected</div><h1 class="streamer-question">Open this panel from your BLURT game window.</h1><p class="streamer-help">Use the same browser profile you used to join the room.</p>`;
-  if (!mine.streamerMode) return `<div class="streamer-status">Streamer mode off</div><h1 class="streamer-question">Streamer Mode is not enabled for this player.</h1><p class="streamer-help">Enable it before hosting or joining, then open the panel again.</p>`;
-
-  if (meta.phase === "lobby") {
-    return `<div class="streamer-status">Lobby · ${esc(mine.name)}</div><h1 class="streamer-question">Room ${esc(roomCode)}</h1><p class="streamer-help">Your main BLURT window can stay on stream. All controls available to your account are here.</p>
-      ${isHost() ? `<div class="streamer-actions"><button id="startBtn" class="btn primary" ${players.length < 2 ? "disabled" : ""}>START GAME →</button></div>` : `<div class="streamer-locked"><strong>Waiting for the host.</strong><div class="streamer-help">You are ready to play from this private panel.</div></div>`}
-      ${streamerRosterHTML()}`;
+  if(!roomState||!me)return `<div class="streamer-status">Connecting</div><h1 class="streamer-question">Loading your room…</h1>`;
+  const meta=roomState.meta||{},mine=roomState.players?.[me.uid],players=playersArray();
+  if(!mine)return `<div class="streamer-status">Not connected</div><h1 class="streamer-question">Open this panel from your BLURT game window.</h1>`;
+  if(!mine.streamerMode)return `<div class="streamer-status">Streamer mode off</div><h1 class="streamer-question">Streamer Mode is not enabled for this player.</h1>`;
+  const minPlayers=meta.gameMode==="imposter"?3:2;
+  if(meta.phase==="lobby")return `<div class="streamer-status">Lobby · ${esc(mine.name)}</div><h1 class="streamer-question">Room ${esc(roomCode)}</h1><p class="streamer-help">Private controls stay here.</p>${isHost() && meta.gameMode!=="photo"?`<label class="lobby-twist-toggle streamer-twist" for="lobbyImposterToggle"><span><strong>Imposter twist</strong><small>${meta.gameMode==="imposter"?"ON · different prompt enabled":"OFF · normal sentence game"}</small></span><input id="lobbyImposterToggle" type="checkbox" ${meta.gameMode==="imposter"?"checked":""}><i class="option-switch" aria-hidden="true"></i></label>`:""}${isHost()?`<div class="streamer-actions"><button id="startBtn" class="btn primary" ${players.length<minPlayers?"disabled":""}>START GAME →</button></div>`:`<div class="streamer-locked"><strong>Waiting for the host.</strong></div>`}${streamerRosterHTML()}`;
+  if(meta.phase==="answering"){
+    const answers=currentAnswers(),answered=!!answers[me.uid];
+    return `<div class="streamer-status">Round ${Math.min(Number(meta.roundIndex||0)+1,Number(meta.rounds||1))} of ${Number(meta.rounds||1)}</div>${phaseTimerHTML()}${isImposterMode()?imposterRoleHTML():""}${meta.gameMode==="photo"?promptHTML(false):`<h1 class="streamer-question">${esc(isImposterMode()?currentPromptForMe():currentQuestion())}</h1>`}${meterHTML(Object.keys(answers).length,players.length,"ANSWERS IN")}${answered?`<div class="streamer-locked"><strong>Answer locked in.</strong></div>`:`<textarea id="streamerAnswerField" class="streamer-answer" maxlength="160" placeholder="${isImposterMode()?"Answer and blend in…":"Type your private BLURT…"}"></textarea><div class="streamer-actions"><button id="streamerSubmitBtn" class="btn primary">LOCK ANSWER</button></div>`}${isHost()?`<div class="streamer-actions"><span class="auto-note">Voting opens automatically at 0.</span><button id="endBtn" class="btn danger">END GAME</button></div>`:""}${streamerRosterHTML()}`;
   }
-
-  if (meta.phase === "answering") {
-    const answers = currentAnswers();
-    const answered = !!answers[me.uid];
-    return `<div class="streamer-status">Round ${Math.min(Number(meta.roundIndex || 0) + 1, Number(meta.rounds || 1))} of ${Number(meta.rounds || 1)}</div>
-      ${phaseTimerHTML()}
-      ${meta.gameMode === "photo" ? promptHTML(false) : `<h1 class="streamer-question">${esc(currentQuestion())}</h1>`}
-      ${meterHTML(Object.keys(answers).length, players.length, "ANSWERS IN")}
-      ${answered
-        ? `<div class="streamer-locked"><strong>BLURT locked in.</strong><div class="streamer-help">Your answer is saved and anonymous until the reveal.</div></div>`
-        : `<textarea id="streamerAnswerField" class="streamer-answer" maxlength="160" placeholder="Type your private BLURT…"></textarea><div class="streamer-actions"><button id="streamerSubmitBtn" class="btn primary" type="button">DROP MY BLURT</button></div>`}
-      ${isHost() ? `<div class="streamer-actions"><span class="auto-note">Voting opens automatically at 0.</span><button id="endBtn" class="btn danger">END GAME</button></div>` : ""}
-      ${streamerRosterHTML()}`;
+  if(meta.phase==="voting"){
+    const answers=currentAnswers(),votes=currentVotes(),myVote=votes[me.uid]||"";
+    if(isImposterMode())return `<div class="streamer-status">Vote out the imposter</div>${phaseTimerHTML()}<p class="streamer-help">Vote for the person whose answer feels like it came from a different question.</p><div class="suspect-grid">${players.map(player=>`<button class="suspect-card ${player.uid===me.uid?"mine":""} ${myVote===player.uid?"selected":""}" data-vote="${player.uid}" ${myVote||player.uid===me.uid?"disabled":""}><div class="suspect-avatar">${esc(initials(player.name))}</div><div><div class="suspect-name">${esc(player.name)}</div><div class="suspect-answer">${esc(answers[player.uid]?.text||"No answer submitted")}</div></div></button>`).join("")}</div>${meterHTML(Object.keys(votes).length,eligibleVoteCount(),"VOTES IN")}${myVote?`<div class="streamer-locked"><strong>Vote locked.</strong></div>`:""}${isHost()?`<div class="streamer-actions"><span class="auto-note">Reveal opens as soon as everyone votes, or at 0.</span><button id="endBtn" class="btn danger">END GAME</button></div>`:""}${streamerRosterHTML()}`;
+    const list=Object.entries(answers).sort((a,b)=>(a[1].sort||0)-(b[1].sort||0));
+    return `<div class="streamer-status">Back one</div>${phaseTimerHTML()}${meta.gameMode==="photo"?promptHTML(true):`<h1 class="streamer-question">${esc(currentQuestion())}</h1>`}<div class="answers-grid">${list.map(([uid,answer])=>`<button class="answer-card ${uid===me.uid?"mine":""} ${myVote===uid?"selected":""}" data-vote="${uid}" ${myVote||uid===me.uid?"disabled":""}>${esc(answer.text)}</button>`).join("")}</div>${meterHTML(Object.keys(votes).length,eligibleVoteCount(),"PICKS LOCKED IN")}${myVote?`<div class="streamer-locked"><strong>Pick locked.</strong></div>`:""}${isHost()?`<div class="streamer-actions"><span class="auto-note">Reveal opens as soon as everyone votes, or at 0.</span><button id="endBtn" class="btn danger">END GAME</button></div>`:""}${streamerRosterHTML()}`;
   }
-
-  if (meta.phase === "voting") {
-    const answers = currentAnswers();
-    const votes = currentVotes();
-    const myVote = votes[me.uid] || "";
-    const list = Object.entries(answers).sort((a, b) => (a[1].sort || 0) - (b[1].sort || 0));
-    return `<div class="streamer-status">Back one</div>${phaseTimerHTML()}${meta.gameMode === "photo" ? promptHTML(true) : `<h1 class="streamer-question">${esc(currentQuestion())}</h1>`}<p class="streamer-help">Back one anonymous answer. Your choice stays off the main stream window.</p>
-      <div class="answers-grid">${list.map(([uid, answer]) => `<button class="answer-card ${uid === me.uid ? "mine" : ""} ${myVote === uid ? "selected" : ""}" data-vote="${uid}" ${myVote || uid === me.uid ? "disabled" : ""}>${esc(answer.text)}</button>`).join("")}</div>
-      ${meterHTML(Object.keys(votes).length, players.length, "PICKS LOCKED IN")}
-      ${myVote ? `<div class="streamer-locked"><strong>Pick locked.</strong><div class="streamer-help">Waiting for the reveal.</div></div>` : ""}
-      ${isHost() ? `<div class="streamer-actions"><span class="auto-note">Reveal opens automatically at 0.</span><button id="endBtn" class="btn danger">END GAME</button></div>` : ""}
-      ${streamerRosterHTML()}`;
+  if(meta.phase==="results"){
+    if(isImposterMode())return `<div class="streamer-status">Imposter reveal</div>${phaseTimerHTML("NEXT ROUND IN")}${imposterResultHTML()}${isHost()?`<div class="streamer-actions"><button id="endBtn" class="btn danger">END GAME</button></div>`:""}${streamerRosterHTML()}`;
+    const answers=currentAnswers(),counts=voteCounts(),awards=roomState?.roundAwards?.[roundKey()]||{};const rows=Object.entries(answers).map(([uid,answer])=>({uid,text:answer.text,name:roomState.players?.[uid]?.name||"Player",votes:counts[uid]||0,...(awards[uid]||{})})).sort((a,b)=>(b.total||b.votes*100)-(a.total||a.votes*100));
+    return `<div class="streamer-status">Round complete</div>${phaseTimerHTML("NEXT ROUND IN")}<div class="result-list">${rows.map(row=>`<div class="result-card"><div class="result-answer">${esc(row.text)}</div><div class="result-meta"><span>${esc(row.name)}</span><span class="points total">+${Number(row.total??row.votes*100)} PTS</span></div></div>`).join("")}</div>${isHost()?`<div class="streamer-actions"><button id="endBtn" class="btn danger">END GAME</button></div>`:""}${streamerRosterHTML()}`;
   }
-
-  if (meta.phase === "results") {
-    const answers = currentAnswers();
-    const counts = voteCounts();
-    const awards = roomState?.roundAwards?.[roundKey()] || {};
-    const rows = Object.entries(answers).map(([uid, answer]) => ({ uid, text: answer.text, name: roomState.players?.[uid]?.name || "Player", votes: counts[uid] || 0, ...(awards[uid] || {}) })).sort((a,b)=>(b.total || b.votes*100)-(a.total || a.votes*100));
-    return `<div class="streamer-status">Round complete</div>${phaseTimerHTML("NEXT ROUND IN")}${meta.gameMode === "photo" ? promptHTML(true) : `<h1 class="streamer-question">Author reveal</h1>`}<div class="result-list">${rows.map(row => `<div class="result-card ${row.label === "TOP BLURT" ? "top-blurt" : ""}">${row.label ? `<div class="result-rank">${esc(row.label)}</div>` : ""}<div class="result-answer">${esc(row.text)}</div><div class="result-meta"><span>${esc(row.name)}</span><span class="points total">+${Number(row.total ?? row.votes*100)} PTS</span></div></div>`).join("")}</div>
-      ${isHost() ? `<div class="streamer-actions"><span class="auto-note">${meta.roundIndex + 1 >= meta.rounds ? "Final scores" : "Next round"} opens automatically.</span><button id="endBtn" class="btn danger">END GAME</button></div>` : ""}
-      ${streamerRosterHTML()}`;
-  }
-
-  if (meta.phase === "final") {
-    const board = playersArray().sort((a,b)=>(b.score || 0)-(a.score || 0)||a.name.localeCompare(b.name));
-    return `<div class="streamer-status">Game over</div><h1 class="streamer-question">Final scores</h1><div class="leaderboard">${board.map((player,index)=>`<div class="leader-row"><div class="leader-pos">#${index+1}</div>${avatarHTML(player,"leader-avatar")}<div class="leader-name">${esc(player.name)}</div><div class="leader-score">${Number(player.score||0).toLocaleString()}</div></div>`).join("")}</div><div class="streamer-actions"><button id="streamerHomeBtn" class="btn secondary">BACK TO HOME</button><button id="streamerClosePanelBtn" class="btn ghost">CLOSE PANEL</button></div>`;
-  }
+  if(meta.phase==="final"){const board=playersArray().sort((a,b)=>(b.score||0)-(a.score||0)||a.name.localeCompare(b.name));return `<div class="streamer-status">Game over</div><h1 class="streamer-question">Final scores</h1><div class="leaderboard">${board.map((player,index)=>`<div class="leader-row"><div class="leader-pos">#${index+1}</div>${avatarHTML(player,"leader-avatar")}<div class="leader-name">${esc(player.name)}</div><div class="leader-score">${Number(player.score||0).toLocaleString()}</div></div>`).join("")}</div><div class="streamer-actions"><button id="streamerHomeBtn" class="btn secondary">BACK TO HOME</button><button id="streamerClosePanelBtn" class="btn ghost">CLOSE PANEL</button></div>`;}
   return `<div class="streamer-status">BLURT</div><h1 class="streamer-question">Waiting…</h1>`;
 }
 
@@ -2108,37 +2287,48 @@ async function assertOwner() {
   if (!isOwner()) throw new Error("Only the room owner can change host permissions.");
 }
 
-async function startGame() {
+async function setLobbyImposter(enabled) {
   try {
     await assertHost();
-    const custom = customArray().map(question => question.text);
-    const customPhotos = customPhotoArray().map(photo => photo.url).filter(Boolean);
-    const selectedMode = gameMode();
-    const mode = roomState.meta.questionMode || "builtin";
-    const rounds = Number(roomState.meta.rounds || 5);
-    if (selectedMode === "sentence" && mode === "custom" && custom.length < rounds) throw new Error(`Add at least ${rounds} custom question${rounds === 1 ? "" : "s"} before starting. You currently have ${custom.length}.`);
-    const source = mode === "custom" ? custom : mode === "mixed" ? [...QUESTION_BANK, ...custom] : QUESTION_BANK;
-    const questionQueue = selectedMode === "sentence" ? shuffled(source).slice(0, rounds) : [];
-    const photoQueue = selectedMode === "photo" ? shuffled([...PHOTO_BANK, ...customPhotos]).slice(0, rounds) : [];
-    const result = await runTransaction(roomRef(), room => {
-      if (!room || room.meta.phase !== "lobby") return;
-      if (Object.keys(room.players || {}).length < 2) return;
-      room.meta.phase = "answering";
-      room.meta.roundIndex = 0;
-      room.meta.questionQueue = questionQueue;
-      room.meta.photoQueue = photoQueue;
-      room.meta.currentQuestion = selectedMode === "photo" ? "Caption this photo" : (questionQueue[0] || QUESTION_BANK[0]);
-      room.meta.currentPhoto = selectedMode === "photo" ? (photoQueue[0] || PHOTO_BANK[0]) : "";
-      room.meta.phaseEndsAt = Date.now() + PHASE_MS;
-      room.answers = {};
-      room.votes = {};
-      room.roundAwards = {};
-      return room;
+    await runTransaction(roomRef("meta"), meta => {
+      if (!meta || meta.phase !== "lobby" || meta.gameMode === "photo") return;
+      meta.gameMode = enabled ? "imposter" : "sentence";
+      meta.currentImposterUid = "";
+      meta.currentImposterQuestion = "";
+      meta.imposterQueue = [];
+      meta.imposterPairQueue = [];
+      return meta;
     }, { applyLocally: false });
-    if (!result.committed) toast("You need at least 2 players and the game must still be in the lobby.");
   } catch (error) {
     toast(error.message);
   }
+}
+
+async function startGame() {
+  try {
+    await assertHost();
+    const custom=customArray().map(question=>question.text),customPhotos=customPhotoArray().map(photo=>photo.url).filter(Boolean);
+    const selectedMode=gameMode(),mode=roomState.meta.questionMode||"builtin",rounds=Number(roomState.meta.rounds||5),playerIds=Object.keys(roomState.players||{});
+    if(selectedMode==="sentence"&&mode==="custom"&&custom.length<rounds)throw new Error(`Add at least ${rounds} custom question${rounds===1?"":"s"} before starting. You currently have ${custom.length}.`);
+    if(selectedMode==="imposter"&&playerIds.length<3)throw new Error("Imposter mode needs at least 3 players.");
+    const source=mode==="custom"?custom:mode==="mixed"?[...QUESTION_BANK,...custom]:QUESTION_BANK;
+    const questionQueue=selectedMode==="sentence"?shuffled(source).slice(0,rounds):[];
+    const photoQueue=selectedMode==="photo"?shuffled([...PHOTO_BANK,...customPhotos]).slice(0,rounds):[];
+    const imposterQueue=selectedMode==="imposter"?makeImposterQueue(playerIds,rounds):[];
+    const shuffledPairs=selectedMode==="imposter"?shuffled(IMPOSTER_PAIRS):[];
+    const pairQueue=selectedMode==="imposter"?Array.from({length:rounds},(_,i)=>shuffledPairs[i%shuffledPairs.length]):[];
+    const firstPair=pairQueue[0]||IMPOSTER_PAIRS[0];
+    const result=await runTransaction(roomRef(),room=>{
+      if(!room||room.meta.phase!=="lobby")return;
+      const count=Object.keys(room.players||{}).length;if(count<(selectedMode==="imposter"?3:2))return;
+      room.meta.phase="answering";room.meta.roundIndex=0;room.meta.questionQueue=questionQueue;room.meta.photoQueue=photoQueue;room.meta.imposterQueue=imposterQueue;room.meta.imposterPairQueue=pairQueue;
+      room.meta.currentImposterUid=selectedMode==="imposter"?(imposterQueue[0]||""):"";
+      room.meta.currentImposterQuestion=selectedMode==="imposter"?(firstPair?.imposter||""):"";
+      room.meta.currentQuestion=selectedMode==="photo"?"Caption this photo":selectedMode==="imposter"?(firstPair?.normal||IMPOSTER_PAIRS[0].normal):(questionQueue[0]||QUESTION_BANK[0]);
+      room.meta.currentPhoto=selectedMode==="photo"?(photoQueue[0]||PHOTO_BANK[0]):"";room.meta.phaseEndsAt=Date.now()+PHASE_MS;room.answers={};room.votes={};room.roundAwards={};room.imposterResults={};return room;
+    },{applyLocally:false});
+    if(!result.committed)toast(selectedMode==="imposter"?"You need at least 3 players and the game must still be in the lobby.":"You need at least 2 players and the game must still be in the lobby.");
+  }catch(error){toast(error.message);}
 }
 async function submitAnswer() {
   const text = cleanAnswer($("#answerField")?.value);
@@ -2171,43 +2361,29 @@ async function revealAnswers() {
 
 async function voteFor(uid) {
   try {
-    if (roomState.meta.phase !== "voting") throw new Error("Voting is closed.");
-    if (uid === me.uid) throw new Error("You cannot vote for your own answer.");
-    if (currentVotes()[me.uid]) throw new Error("You already voted.");
-    if (!currentAnswers()[uid]) throw new Error("That answer is no longer available.");
-    await set(roomRef(`votes/${roundKey()}/${me.uid}`), uid);
-    sfx("pick");
-  } catch (error) {
-    toast(error.message);
-  }
+    if(roomState.meta.phase!=="voting")throw new Error("Voting is closed.");
+    if(uid===me.uid)throw new Error("You cannot vote for yourself.");
+    if(currentVotes()[me.uid])throw new Error("You already voted.");
+    if(isImposterMode()){if(!roomState.players?.[uid])throw new Error("That player is no longer available.");}
+    else if(!currentAnswers()[uid])throw new Error("That answer is no longer available.");
+    await set(roomRef(`votes/${roundKey()}/${me.uid}`),uid);sfx("pick");
+  }catch(error){toast(error.message);}
 }
 
-function scoreInsideTransaction(room, finalAfter = false) {
-  if (!room || room.meta.phase !== "voting") return room;
-  const key = String(room.meta.roundIndex);
-  const votes = room.votes?.[key] || {};
-  const answers = room.answers?.[key] || {};
-  const counts = {};
-  for (const target of Object.values(votes)) counts[target] = (counts[target] || 0) + 1;
-  const answerIds = Object.keys(answers);
-  const topCount = answerIds.reduce((best, uid) => Math.max(best, counts[uid] || 0), 0);
-  const topIds = topCount > 0 ? answerIds.filter(uid => (counts[uid] || 0) === topCount) : [];
-  room.roundAwards = room.roundAwards || {};
-  room.roundAwards[key] = {};
-  for (const uid of answerIds) {
-    const count = counts[uid] || 0;
-    const base = count * 100;
-    const isTop = topIds.includes(uid);
-    const bonus = isTop ? (topIds.length === 1 ? 250 : 100) : 0;
-    const total = base + bonus;
-    const label = isTop ? (topIds.length === 1 ? "TOP BLURT" : "JOINT TOP BLURT") : "";
-    room.roundAwards[key][uid] = { votes: count, base, bonus, total, label };
-    if (room.players?.[uid]) room.players[uid].score = Number(room.players[uid].score || 0) + total;
+function scoreInsideTransaction(room, finalAfter=false) {
+  if(!room||room.meta.phase!=="voting")return room;
+  const key=String(room.meta.roundIndex),votes=room.votes?.[key]||{},answers=room.answers?.[key]||{};
+  const counts={};for(const target of Object.values(votes))counts[target]=(counts[target]||0)+1;
+  room.roundAwards=room.roundAwards||{};room.roundAwards[key]={};
+  if((room.meta.gameMode||"sentence")==="imposter"){
+    const imposterUid=room.meta.currentImposterUid||"";const allIds=Object.keys(room.players||{});const top=Math.max(0,...allIds.map(uid=>counts[uid]||0));const leaders=top>0?allIds.filter(uid=>(counts[uid]||0)===top):[];const caught=leaders.length===1&&leaders[0]===imposterUid;
+    for(const uid of allIds){let total=0,label="";if(uid===imposterUid&&!caught){total=500;label="ESCAPED";}else if(uid!==imposterUid&&votes[uid]===imposterUid){total=250;label="FOUND IMPOSTER";}room.roundAwards[key][uid]={votes:counts[uid]||0,base:total,bonus:0,total,label};if(room.players?.[uid])room.players[uid].score=Number(room.players[uid].score||0)+total;}
+    room.imposterResults=room.imposterResults||{};room.imposterResults[key]={caught,imposterUid,topVotes:top};
+  }else{
+    const answerIds=Object.keys(answers),topCount=answerIds.reduce((best,uid)=>Math.max(best,counts[uid]||0),0),topIds=topCount>0?answerIds.filter(uid=>(counts[uid]||0)===topCount):[];
+    for(const uid of answerIds){const count=counts[uid]||0,base=count*100,isTop=topIds.includes(uid),bonus=isTop?(topIds.length===1?250:100):0,total=base+bonus,label=isTop?(topIds.length===1?"TOP BLURT":"JOINT TOP BLURT"):"";room.roundAwards[key][uid]={votes:count,base,bonus,total,label};if(room.players?.[uid])room.players[uid].score=Number(room.players[uid].score||0)+total;}
   }
-  room.meta.phase = finalAfter ? "final" : "results";
-  room.meta.phaseEndsAt = finalAfter ? 0 : Date.now() + PHASE_MS;
-  if (finalAfter) { room.meta.currentQuestion = ""; room.meta.currentPhoto = ""; }
-  return room;
+  room.meta.phase=finalAfter?"final":"results";room.meta.phaseEndsAt=finalAfter?0:Date.now()+PHASE_MS;if(finalAfter){room.meta.currentQuestion="";room.meta.currentPhoto="";room.meta.currentImposterQuestion="";room.meta.currentImposterUid="";}return room;
 }
 
 async function scoreRound() {
@@ -2220,37 +2396,13 @@ async function scoreRound() {
 }
 
 async function nextRound() {
-  try {
-    await assertHost();
-    await runTransaction(roomRef(), room => {
-      if (!room || room.meta.phase !== "results") return;
-      const next = Number(room.meta.roundIndex || 0) + 1;
-      if (next >= Number(room.meta.rounds || 0)) {
-        room.meta.phase = "final";
-        room.meta.currentQuestion = "";
-        room.meta.currentPhoto = "";
-        room.meta.phaseEndsAt = 0;
-        return room;
-      }
-      room.meta.roundIndex = next;
-      room.meta.phase = "answering";
-      room.meta.phaseEndsAt = Date.now() + PHASE_MS;
-      if ((room.meta.gameMode || "sentence") === "photo") {
-        const customPhotos = Object.values(room.customPhotos || {}).map(photo => photo.url).filter(Boolean);
-        room.meta.currentPhoto = room.meta.photoQueue?.[next] || shuffled([...PHOTO_BANK, ...customPhotos])[0] || PHOTO_BANK[0];
-        room.meta.currentQuestion = "Caption this photo";
-      } else {
-        const custom = Object.values(room.customQuestions || {}).map(question => question.text).filter(Boolean);
-        const mode = room.meta.questionMode || "builtin";
-        const fallbackPool = mode === "custom" ? custom : mode === "mixed" ? [...QUESTION_BANK, ...custom] : QUESTION_BANK;
-        room.meta.currentQuestion = room.meta.questionQueue?.[next] || shuffled(fallbackPool)[0] || "Make up the funniest answer you can.";
-        room.meta.currentPhoto = "";
-      }
-      return room;
-    }, { applyLocally: false });
-  } catch (error) {
-    toast(error.message);
-  }
+  try{await assertHost();await runTransaction(roomRef(),room=>{
+    if(!room||room.meta.phase!=="results")return;const next=Number(room.meta.roundIndex||0)+1;if(next>=Number(room.meta.rounds||0)){room.meta.phase="final";room.meta.currentQuestion="";room.meta.currentPhoto="";room.meta.currentImposterUid="";room.meta.currentImposterQuestion="";room.meta.phaseEndsAt=0;return room;}
+    room.meta.roundIndex=next;room.meta.phase="answering";room.meta.phaseEndsAt=Date.now()+PHASE_MS;const gm=room.meta.gameMode||"sentence";
+    if(gm==="photo"){const customPhotos=Object.values(room.customPhotos||{}).map(photo=>photo.url).filter(Boolean);room.meta.currentPhoto=room.meta.photoQueue?.[next]||shuffled([...PHOTO_BANK,...customPhotos])[0]||PHOTO_BANK[0];room.meta.currentQuestion="Caption this photo";}
+    else if(gm==="imposter"){const pair=room.meta.imposterPairQueue?.[next]||IMPOSTER_PAIRS[next%IMPOSTER_PAIRS.length];room.meta.currentImposterUid=room.meta.imposterQueue?.[next]||Object.keys(room.players||{})[0]||"";room.meta.currentQuestion=pair?.normal||IMPOSTER_PAIRS[0].normal;room.meta.currentImposterQuestion=pair?.imposter||IMPOSTER_PAIRS[0].imposter;room.meta.currentPhoto="";}
+    else{const custom=Object.values(room.customQuestions||{}).map(q=>q.text).filter(Boolean),mode=room.meta.questionMode||"builtin",pool=mode==="custom"?custom:mode==="mixed"?[...QUESTION_BANK,...custom]:QUESTION_BANK;room.meta.currentQuestion=room.meta.questionQueue?.[next]||shuffled(pool)[0]||"Make up the funniest answer you can.";room.meta.currentPhoto="";}
+    return room;},{applyLocally:false});}catch(error){toast(error.message);}
 }
 
 async function endGame() {
@@ -2263,6 +2415,8 @@ async function endGame() {
       room.meta.phase = "final";
       room.meta.currentQuestion = "";
       room.meta.currentPhoto = "";
+      room.meta.currentImposterUid = "";
+      room.meta.currentImposterQuestion = "";
       room.meta.phaseEndsAt = 0;
       return room;
     }, { applyLocally: false });
@@ -2391,14 +2545,17 @@ async function copyRoomCode() {
 }
 
 function updatePhaseClock() {
+  const phase = roomState?.meta?.phase;
   const endsAt = Number(roomState?.meta?.phaseEndsAt || 0);
-  if (!endsAt || !["answering", "voting", "results"].includes(roomState?.meta?.phase)) return;
-  const remainingMs = Math.max(0, endsAt - Date.now());
-  const seconds = Math.max(0, Math.ceil(remainingMs / 1000));
-  const pct = Math.max(0, Math.min(100, (remainingMs / PHASE_MS) * 100));
+  if (!endsAt || !["answering", "voting", "results"].includes(phase)) return;
+  const votesFinished = phase === "voting" && allEligibleVotesIn(roomState);
+  const remainingMs = votesFinished ? 0 : Math.max(0, endsAt - Date.now());
+  const seconds = votesFinished ? 0 : Math.max(0, Math.ceil(remainingMs / 1000));
+  const pct = votesFinished ? 0 : Math.max(0, Math.min(100, (remainingMs / PHASE_MS) * 100));
   $$('[data-phase-countdown]').forEach(el => { el.textContent = String(seconds); el.classList.toggle("urgent", seconds <= 5); });
   $$('[data-phase-progress]').forEach(el => { el.style.width = `${pct}%`; });
-  if (remainingMs <= 0) attemptAutoAdvance();
+  if (votesFinished) attemptAutoAdvance(true);
+  else if (remainingMs <= 0) attemptAutoAdvance(false);
 }
 
 function startPhaseClock() {
@@ -2408,41 +2565,28 @@ function startPhaseClock() {
 }
 
 function advanceAfterResultsInside(room) {
-  const next = Number(room.meta.roundIndex || 0) + 1;
-  if (next >= Number(room.meta.rounds || 0)) {
-    room.meta.phase = "final";
-    room.meta.currentQuestion = "";
-    room.meta.currentPhoto = "";
-    room.meta.phaseEndsAt = 0;
-    return room;
-  }
-  room.meta.roundIndex = next;
-  room.meta.phase = "answering";
-  room.meta.phaseEndsAt = Date.now() + PHASE_MS;
-  if ((room.meta.gameMode || "sentence") === "photo") {
-    const customPhotos = Object.values(room.customPhotos || {}).map(photo => photo.url).filter(Boolean);
-    room.meta.currentPhoto = room.meta.photoQueue?.[next] || shuffled([...PHOTO_BANK, ...customPhotos])[0] || PHOTO_BANK[0];
-    room.meta.currentQuestion = "Caption this photo";
-  } else {
-    const custom = Object.values(room.customQuestions || {}).map(question => question.text).filter(Boolean);
-    const mode = room.meta.questionMode || "builtin";
-    const fallbackPool = mode === "custom" ? custom : mode === "mixed" ? [...QUESTION_BANK, ...custom] : QUESTION_BANK;
-    room.meta.currentQuestion = room.meta.questionQueue?.[next] || shuffled(fallbackPool)[0] || "Make up the funniest answer you can.";
-    room.meta.currentPhoto = "";
-  }
+  const next=Number(room.meta.roundIndex||0)+1;if(next>=Number(room.meta.rounds||0)){room.meta.phase="final";room.meta.currentQuestion="";room.meta.currentPhoto="";room.meta.currentImposterUid="";room.meta.currentImposterQuestion="";room.meta.phaseEndsAt=0;return room;}
+  room.meta.roundIndex=next;room.meta.phase="answering";room.meta.phaseEndsAt=Date.now()+PHASE_MS;const gm=room.meta.gameMode||"sentence";
+  if(gm==="photo"){const customPhotos=Object.values(room.customPhotos||{}).map(photo=>photo.url).filter(Boolean);room.meta.currentPhoto=room.meta.photoQueue?.[next]||shuffled([...PHOTO_BANK,...customPhotos])[0]||PHOTO_BANK[0];room.meta.currentQuestion="Caption this photo";}
+  else if(gm==="imposter"){const pair=room.meta.imposterPairQueue?.[next]||IMPOSTER_PAIRS[next%IMPOSTER_PAIRS.length];room.meta.currentImposterUid=room.meta.imposterQueue?.[next]||Object.keys(room.players||{})[0]||"";room.meta.currentQuestion=pair?.normal||IMPOSTER_PAIRS[0].normal;room.meta.currentImposterQuestion=pair?.imposter||IMPOSTER_PAIRS[0].imposter;room.meta.currentPhoto="";}
+  else{const custom=Object.values(room.customQuestions||{}).map(question=>question.text).filter(Boolean),mode=room.meta.questionMode||"builtin",pool=mode==="custom"?custom:mode==="mixed"?[...QUESTION_BANK,...custom]:QUESTION_BANK;room.meta.currentQuestion=room.meta.questionQueue?.[next]||shuffled(pool)[0]||"Make up the funniest answer you can.";room.meta.currentPhoto="";}
   return room;
 }
 
-async function attemptAutoAdvance() {
+async function attemptAutoAdvance(forceVoting = false) {
   if (autoAdvanceBusy || !roomCode || !roomState) return;
   const phase = roomState.meta?.phase;
   if (!["answering", "voting", "results"].includes(phase)) return;
-  if (Date.now() < Number(roomState.meta?.phaseEndsAt || 0)) return;
+  if (forceVoting) {
+    if (phase !== "voting" || !allEligibleVotesIn(roomState)) return;
+  } else if (Date.now() < Number(roomState.meta?.phaseEndsAt || 0)) return;
   autoAdvanceBusy = true;
   try {
     await runTransaction(roomRef(), room => {
       if (!room?.meta) return;
-      if (Date.now() < Number(room.meta.phaseEndsAt || 0)) return;
+      if (forceVoting) {
+        if (room.meta.phase !== "voting" || !allEligibleVotesIn(room)) return;
+      } else if (Date.now() < Number(room.meta.phaseEndsAt || 0)) return;
       if (room.meta.phase === "answering") {
         room.meta.phase = "voting";
         room.meta.phaseEndsAt = Date.now() + PHASE_MS;
@@ -2475,6 +2619,7 @@ function bindGameEvents() {
   $("#openStreamerBtn")?.addEventListener("click", openStreamerPopout);
   $("#addQuestionBtn")?.addEventListener("click", addQuestion);
   $("#addPhotoBtn")?.addEventListener("click", addPhoto);
+  $("#lobbyImposterToggle")?.addEventListener("change", event => setLobbyImposter(event.target.checked));
   $$('[data-vote]').forEach(button => button.addEventListener("click", () => voteFor(button.dataset.vote)));
   $$('[data-promote]').forEach(button => button.addEventListener("click", () => promote(button.dataset.promote)));
   $$('[data-demote]').forEach(button => button.addEventListener("click", () => demote(button.dataset.demote)));
@@ -2517,10 +2662,21 @@ window.addEventListener("message", event => {
 
 
 function syncHostModeFields() {
-  const photo = $("#gameMode")?.value === "photo";
-  $("#questionModeGroup")?.classList.toggle("hidden", photo);
+  const baseMode = $("#gameMode")?.value || "sentence";
+  const imposterOn = baseMode === "sentence" && !!$("#imposterToggle")?.checked;
+  $("#questionModeGroup")?.classList.toggle("hidden", baseMode !== "sentence" || imposterOn);
+  $("#imposterOption")?.classList.toggle("disabled-option", baseMode !== "sentence");
+  if (baseMode !== "sentence" && $("#imposterToggle")) $("#imposterToggle").checked = false;
+  $$('[data-mode-choice]').forEach(button => button.classList.toggle("active", button.dataset.modeChoice === baseMode));
 }
+$$('[data-mode-choice]').forEach(button => button.addEventListener("click", () => {
+  const select = $("#gameMode");
+  if (!select) return;
+  select.value = button.dataset.modeChoice;
+  syncHostModeFields();
+}));
 $("#gameMode")?.addEventListener("change", syncHostModeFields);
+$("#imposterToggle")?.addEventListener("change", syncHostModeFields);
 syncHostModeFields();
 
 let startupComplete = false;
