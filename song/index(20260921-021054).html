@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>5 Second Song</title>
+<style>
+:root{
+  --bg:#090b10;--panel:#11151d;--panel2:#171c26;--line:#262d3a;
+  --text:#f8f9fc;--muted:#98a1af;--purple:#6f4cff;--purple2:#9a82ff;
+  --green:#27d980;--red:#ff6074
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:
+radial-gradient(circle at 10% 0%,rgba(111,76,255,.18),transparent 32%),
+radial-gradient(circle at 90% 8%,rgba(39,217,128,.07),transparent 28%),var(--bg);color:var(--text)}
+body{padding:18px}
+button,select{font:inherit}
+button{cursor:pointer}
+.app{width:min(1080px,100%);margin:auto}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:20px}
+.brand{display:flex;align-items:center;gap:12px;font-size:1.32rem;font-weight:950;letter-spacing:-.04em}
+.logo{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(135deg,var(--purple),#4f2fdc);box-shadow:0 12px 34px rgba(111,76,255,.25)}
+.mini{font-size:.78rem;color:var(--muted)}
+.card{background:linear-gradient(180deg,rgba(23,28,38,.97),rgba(17,21,29,.97));border:1px solid var(--line);border-radius:22px;box-shadow:0 20px 70px rgba(0,0,0,.3)}
+.start{padding:42px;text-align:center}
+.eyebrow{display:inline-flex;padding:7px 11px;border:1px solid var(--line);border-radius:999px;background:#0d1016;color:#cbd2dd;font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;font-weight:900}
+h1{font-size:clamp(2.5rem,7vw,5.7rem);line-height:.92;letter-spacing:-.07em;margin:20px auto 12px;max-width:820px}
+.lead{max-width:650px;margin:0 auto 28px;color:var(--muted);line-height:1.7}
+.setup{max-width:650px;margin:auto;display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:left}
+.field{display:flex;flex-direction:column;gap:7px}
+.field label{font-size:.72rem;color:#b9c1ce;text-transform:uppercase;letter-spacing:.07em;font-weight:900}
+select{width:100%;padding:13px 14px;border-radius:13px;border:1px solid var(--line);background:#0d1016;color:var(--text);outline:none}
+.btn{border:0;border-radius:13px;padding:13px 17px;min-height:48px;color:white;font-weight:900;background:linear-gradient(135deg,var(--purple),#5735e8)}
+.btn.secondary{background:#10141c;border:1px solid var(--line)}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.startbtn{grid-column:1/-1}
+.game{display:none}
+.hud{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.hudbox{padding:15px;border-radius:17px;background:#0f131b;border:1px solid var(--line)}
+.hudlabel{font-size:.69rem;color:var(--muted);font-weight:900;text-transform:uppercase;letter-spacing:.08em}
+.hudvalue{font-size:1.18rem;font-weight:950;margin-top:3px}
+.roundbar{height:6px;background:#171c25;border-radius:999px;overflow:hidden;margin-bottom:14px}
+#roundProgress{height:100%;width:0;background:linear-gradient(90deg,var(--purple),var(--purple2))}
+.gamecard{padding:28px}
+.grid{display:grid;grid-template-columns:390px 1fr;gap:28px}
+.cliphead{display:flex;justify-content:space-between;font-weight:900;margin-bottom:10px}
+.cliptime{color:var(--muted);font-variant-numeric:tabular-nums}
+
+/* CUSTOM MYSTERY PLAYER — NO YOUTUBE HERE */
+.mystery{
+  height:200px;
+  border-radius:17px;
+  border:1px solid #2e3542;
+  background:
+    radial-gradient(circle at 50% 45%,rgba(111,76,255,.22),transparent 35%),
+    linear-gradient(180deg,#0e1219,#0a0d12);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  overflow:hidden;
+}
+.disc{
+  width:76px;height:76px;border-radius:50%;
+  border:2px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at center,#0d1016 0 10px,#6f4cff 11px 13px,#111722 14px 100%);
+  box-shadow:0 18px 50px rgba(0,0,0,.35);
+  transition:.3s;
+}
+.mystery.playing .disc{animation:spin 2.4s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.wave{
+  height:46px;
+  display:flex;
+  align-items:center;
+  gap:5px;
+  margin-top:14px
+}
+.wave span{
+  width:5px;border-radius:999px;
+  background:linear-gradient(180deg,#a590ff,#6e4aff);
+  animation:bounce .85s ease-in-out infinite;
+  animation-play-state:paused;
+  opacity:.8
+}
+.mystery.playing .wave span{animation-play-state:running}
+.wave span:nth-child(1){height:16px;animation-delay:.02s}
+.wave span:nth-child(2){height:32px;animation-delay:.08s}
+.wave span:nth-child(3){height:22px;animation-delay:.14s}
+.wave span:nth-child(4){height:40px;animation-delay:.20s}
+.wave span:nth-child(5){height:28px;animation-delay:.26s}
+.wave span:nth-child(6){height:38px;animation-delay:.32s}
+.wave span:nth-child(7){height:20px;animation-delay:.38s}
+.wave span:nth-child(8){height:34px;animation-delay:.44s}
+.wave span:nth-child(9){height:15px;animation-delay:.50s}
+@keyframes bounce{0%,100%{transform:scaleY(.45)}50%{transform:scaleY(1.15)}}
+.mysteryLabel{margin-top:8px;color:#b0b8c4;font-size:.78rem;font-weight:850;letter-spacing:.04em}
+.clipbar{height:8px;background:#252b36;border-radius:999px;overflow:hidden;margin-top:15px}
+#clipFill{height:100%;width:0;background:linear-gradient(90deg,var(--purple),var(--green))}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+
+.question h2{font-size:clamp(2rem,4vw,3rem);letter-spacing:-.06em;margin:0 0 5px}
+.hint{color:var(--muted);margin-bottom:17px}
+.answers{display:grid;gap:10px}
+.answer{display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:14px 15px;border-radius:15px;border:1px solid var(--line);background:#0f131b;color:var(--text);font-weight:850;transition:.15s}
+.answer:hover:not(:disabled){transform:translateX(3px);background:#151a24}
+.letter{width:32px;height:32px;border-radius:9px;background:#1b2130;color:#c8d0db;display:grid;place-items:center;font-size:.78rem;flex:0 0 auto}
+.answer.correct{border-color:rgba(39,217,128,.65);background:rgba(39,217,128,.09)}
+.answer.wrong{border-color:rgba(255,96,116,.65);background:rgba(255,96,116,.09)}
+.result{display:none;margin-top:17px;padding:16px;border:1px solid var(--line);border-radius:15px;background:#0d1016}
+.result.show{display:block}
+.resultStatus{font-weight:950;margin-bottom:5px}
+.resultMeta{color:var(--muted);line-height:1.45}
+.resultBtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:13px}
+#nextBtn{margin-left:auto}
+
+/* YouTube only appears after answer */
+.youtubeReveal{display:none;margin-top:14px}
+.youtubeReveal.show{display:block}
+.youtubeWrap{width:356px;max-width:100%;min-height:200px;background:#000;border-radius:14px;overflow:hidden;border:1px solid #2d3340}
+#ytPlayer{width:356px;height:200px;max-width:100%}
+
+.finish{display:none;text-align:center;padding:48px 28px}
+.finish h2{font-size:clamp(2.5rem,6vw,4.8rem);letter-spacing:-.07em;margin:8px 0}
+.notice{font-size:.75rem;color:var(--muted);margin-top:16px;line-height:1.5}
+@media(max-width:820px){body{padding:12px}.grid{grid-template-columns:1fr}.gamecard{padding:18px}.hud{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.setup{grid-template-columns:1fr}.startbtn{grid-column:auto}.actions{grid-template-columns:1fr}.resultBtns{flex-direction:column}#nextBtn{margin-left:0}}
+</style>
+</head>
+<body>
+<main class="app">
+  <div class="topbar">
+    <div class="brand"><div class="logo">♫</div><span>5 Second Song</span></div>
+    <div class="mini">Free browser music game</div>
+  </div>
+
+  <section id="startScreen" class="card start">
+    <span class="eyebrow">Guess it before the clip ends</span>
+    <h1>Know the song in five seconds?</h1>
+    <p class="lead">The mystery round uses audio only, so no song title, YouTube thumbnail or video information is shown before you answer.</p>
+
+    <div class="setup">
+      <div class="field">
+        <label>Song era</label>
+        <select id="eraSelect">
+          <option value="all">Any year</option>
+          <option value="1980-1989">1980–1989</option>
+          <option value="1990-1999">1990–1999</option>
+          <option value="2000-2005">2000–2005</option>
+          <option value="2006-2010">2006–2010</option>
+          <option value="2011-2015">2011–2015</option>
+          <option value="2016-2020">2016–2020</option>
+          <option value="2021-2026">2021–2026</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Rounds</label>
+        <select id="roundSelect">
+          <option value="10">10 songs</option>
+          <option value="20">20 songs</option>
+          <option value="endless">Endless</option>
+        </select>
+      </div>
+
+      <button id="startBtn" class="btn startbtn">Start game</button>
+    </div>
+
+    <div class="notice">Mystery clips use free audio previews when available. YouTube is only loaded after the answer has been revealed. Songs never repeat within the same game.</div>
+  </section>
+
+  <section id="gameScreen" class="game">
+    <div class="hud">
+      <div class="hudbox"><div class="hudlabel">Round</div><div id="roundHud" class="hudvalue">1 / 10</div></div>
+      <div class="hudbox"><div class="hudlabel">Score</div><div id="scoreHud" class="hudvalue">0</div></div>
+      <div class="hudbox"><div class="hudlabel">Streak</div><div id="streakHud" class="hudvalue">0 🔥</div></div>
+      <div class="hudbox"><div class="hudlabel">Era</div><div id="eraHud" class="hudvalue">Any year</div></div>
+    </div>
+
+    <div class="roundbar"><div id="roundProgress"></div></div>
+
+    <section class="card gamecard">
+      <div class="grid">
+        <div>
+          <div class="cliphead">
+            <span>5 second clip</span>
+            <span id="clipTime" class="cliptime">0.0 / 5.0</span>
+          </div>
+
+          <div id="mysteryBox" class="mystery">
+            <div class="disc"></div>
+            <div class="wave">
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span>
+            </div>
+            <div id="mysteryLabel" class="mysteryLabel">Finding mystery audio…</div>
+          </div>
+
+          <div class="clipbar"><div id="clipFill"></div></div>
+
+          <div class="actions">
+            <button id="playBtn" class="btn" disabled>Finding clip…</button>
+            <button id="replayBtn" class="btn secondary" disabled>↻ Replay clip</button>
+          </div>
+        </div>
+
+        <div class="question">
+          <h2>What song is this?</h2>
+          <div class="hint">Choose one answer below.</div>
+          <div id="answers" class="answers"></div>
+
+          <div id="resultBox" class="result">
+            <div id="resultStatus" class="resultStatus"></div>
+            <div id="resultMeta" class="resultMeta"></div>
+
+            <div class="resultBtns">
+              <button id="fullSongBtn" class="btn secondary">▶ Play full song</button>
+              <button id="nextBtn" class="btn">Next song →</button>
+            </div>
+
+            <div id="youtubeReveal" class="youtubeReveal">
+              <div class="youtubeWrap"><div id="ytPlayer"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <section id="finishScreen" class="card finish">
+    <span class="eyebrow">Game finished</span>
+    <h2>Game over.</h2>
+    <p id="finishScore"></p>
+    <button id="againBtn" class="btn">Play again</button>
+  </section>
+</main>
+
+<script>
+const SONGS = [
+  {title:"Never Gonna Give You Up",artist:"Rick Astley",year:1987,youtubeId:"dQw4w9WgXcQ"},
+  {title:"Take On Me",artist:"a-ha",year:1985,youtubeId:"djV11Xbc914"},
+  {title:"Africa",artist:"Toto",year:1982,youtubeId:"FTQbiNvZqaY"},
+  {title:"Sweet Child O' Mine",artist:"Guns N' Roses",year:1987,youtubeId:"1w7OgIMMRc4"},
+
+  {title:"...Baby One More Time",artist:"Britney Spears",year:1998,youtubeId:"C-u5WLJ9Yk4"},
+  {title:"Wannabe",artist:"Spice Girls",year:1996,youtubeId:"gJLIiF15wjQ"},
+  {title:"I Want It That Way",artist:"Backstreet Boys",year:1999,youtubeId:"4fndeDfaWCg"},
+  {title:"No Scrubs",artist:"TLC",year:1999,youtubeId:"FrLequ6dUdM"},
+
+  {title:"One More Time",artist:"Daft Punk",year:2000,youtubeId:"FGBhQbmPwH8"},
+  {title:"Crazy in Love",artist:"Beyoncé",year:2003,youtubeId:"ViwtNLUqkMY"},
+  {title:"Mr. Brightside",artist:"The Killers",year:2003,youtubeId:"gGdGFtwCNBE"},
+  {title:"Hey Ya!",artist:"Outkast",year:2003,youtubeId:"PWgvGjAhvIw"},
+  {title:"Complicated",artist:"Avril Lavigne",year:2002,youtubeId:"5NPBIwQyPWE"},
+  {title:"Yeah!",artist:"Usher",year:2004,youtubeId:"GxBSyx85Kp8"},
+
+  {title:"Poker Face",artist:"Lady Gaga",year:2008,youtubeId:"bESGLojNYSo"},
+  {title:"Viva La Vida",artist:"Coldplay",year:2008,youtubeId:"dvgZkm1xWPE"},
+  {title:"Single Ladies",artist:"Beyoncé",year:2008,youtubeId:"4m1EFMoRFvY"},
+  {title:"I Gotta Feeling",artist:"The Black Eyed Peas",year:2009,youtubeId:"uSD4vsh1zDA"},
+  {title:"Bad Romance",artist:"Lady Gaga",year:2009,youtubeId:"qrO4YZeyl0I"},
+
+  {title:"Rolling in the Deep",artist:"Adele",year:2010,youtubeId:"rYEDA3JcQqw"},
+  {title:"Somebody That I Used to Know",artist:"Gotye",year:2011,youtubeId:"8UVNT4wvIGY"},
+  {title:"Gangnam Style",artist:"PSY",year:2012,youtubeId:"9bZkp7q19f0"},
+  {title:"Call Me Maybe",artist:"Carly Rae Jepsen",year:2011,youtubeId:"fWNaR-rxAic"},
+  {title:"Wake Me Up",artist:"Avicii",year:2013,youtubeId:"IcrbM1l_BoI"},
+  {title:"Happy",artist:"Pharrell Williams",year:2013,youtubeId:"ZbZSe6N_BXs"},
+  {title:"Uptown Funk",artist:"Mark Ronson",year:2014,youtubeId:"OPf0YbXqDm0"},
+
+  {title:"Shape of You",artist:"Ed Sheeran",year:2017,youtubeId:"JGwWNGJdvx8"},
+  {title:"Blinding Lights",artist:"The Weeknd",year:2019,youtubeId:"4NRXx6U8ABQ"},
+  {title:"Havana",artist:"Camila Cabello",year:2017,youtubeId:"BQ0mxQXmLsk"},
+  {title:"New Rules",artist:"Dua Lipa",year:2017,youtubeId:"k2qgadSvNyU"},
+  {title:"Dance Monkey",artist:"Tones and I",year:2019,youtubeId:"q0hyYWKXF0Q"},
+  {title:"Someone You Loved",artist:"Lewis Capaldi",year:2018,youtubeId:"zABLecsR5UE"},
+
+  {title:"Levitating",artist:"Dua Lipa",year:2020,youtubeId:"TUVcZfQe-Kw"},
+  {title:"As It Was",artist:"Harry Styles",year:2022,youtubeId:"H5v3kku4y6Q"},
+  {title:"Flowers",artist:"Miley Cyrus",year:2023,youtubeId:"G7KNmW9a75Y"},
+  {title:"Espresso",artist:"Sabrina Carpenter",year:2024,youtubeId:"eVli-tstM5E"}
+];
+
+const $ = id => document.getElementById(id);
+
+const audio = new Audio();
+audio.preload = "auto";
+audio.crossOrigin = "anonymous";
+
+let pool=[];
+let current=null;
+let currentPreview=null;
+let previewCache=new Map();
+let options=[];
+let used=new Set();
+
+let totalRounds=10;
+let round=0;
+let score=0;
+let streak=0;
+let answered=false;
+
+let clipTimer=null;
+let tickTimer=null;
+let startedAt=0;
+
+let ytReady=false;
+let ytPlayer=null;
+let ytLoadedSongId=null;
+let fullPlaying=false;
+
+function normalize(v){
+  return String(v||"")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .replace(/\([^)]*\)|\[[^\]]*\]/g," ")
+    .replace(/\b(feat|ft)\.?\b/g," ")
+    .replace(/[^a-z0-9]+/g," ")
+    .trim();
+}
+
+function shuffle(a){
+  const b=[...a];
+  for(let i=b.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [b[i],b[j]]=[b[j],b[i]];
+  }
+  return b;
+}
+
+function inRange(song,range){
+  if(range==="all") return true;
+  const [from,to]=range.split("-").map(Number);
+  return song.year>=from && song.year<=to;
+}
+
+function fmt(n){
+  return new Intl.NumberFormat().format(n);
+}
+
+function escapeHtml(v){
+  return String(v)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+async function getPreview(song){
+  const cacheKey=`${song.artist}|${song.title}`;
+  if(previewCache.has(cacheKey)) return previewCache.get(cacheKey);
+
+  try{
+    const term=encodeURIComponent(`${song.artist} ${song.title}`);
+    const url=`https://itunes.apple.com/search?term=${term}&entity=song&limit=25&country=GB`;
+    const response=await fetch(url,{cache:"force-cache"});
+    if(!response.ok) throw new Error("Preview lookup failed");
+
+    const json=await response.json();
+    const wantedTitle=normalize(song.title);
+    const wantedArtist=normalize(song.artist);
+
+    let winner=null;
+    let topScore=-1;
+
+    for(const item of json.results||[]){
+      if(!item.previewUrl) continue;
+
+      const foundTitle=normalize(item.trackName);
+      const foundArtist=normalize(item.artistName);
+      let points=0;
+
+      if(foundTitle===wantedTitle) points+=100;
+      else if(foundTitle.includes(wantedTitle)||wantedTitle.includes(foundTitle)) points+=55;
+
+      if(foundArtist===wantedArtist) points+=70;
+      else if(foundArtist.includes(wantedArtist)||wantedArtist.includes(foundArtist)) points+=35;
+
+      if(points>topScore){
+        topScore=points;
+        winner=item;
+      }
+    }
+
+    const result=topScore>=70 && winner
+      ? {url:winner.previewUrl}
+      : null;
+
+    previewCache.set(cacheKey,result);
+    return result;
+  }catch(err){
+    console.warn(err);
+    previewCache.set(cacheKey,null);
+    return null;
+  }
+}
+
+async function startGame(){
+  const era=$("eraSelect").value;
+  totalRounds=$("roundSelect").value==="endless"
+    ? Infinity
+    : Number($("roundSelect").value);
+
+  pool=SONGS.filter(song=>inRange(song,era));
+
+  if(pool.length<4){
+    alert("Not enough songs are available in this era yet.");
+    return;
+  }
+
+  round=0;
+  score=0;
+  streak=0;
+  used.clear();
+
+  $("startScreen").style.display="none";
+  $("finishScreen").style.display="none";
+  $("gameScreen").style.display="block";
+  $("eraHud").textContent=era==="all"?"Any year":era.replace("-","–");
+
+  nextRound();
+}
+
+function chooseSong(){
+  const available = pool.filter(song => !used.has(song.youtubeId));
+
+  // Never repeat a song during the same game.
+  if(!available.length){
+    return null;
+  }
+
+  const song = available[Math.floor(Math.random() * available.length)];
+  used.add(song.youtubeId);
+  return song;
+}
+
+function makeOptions(correct){
+  let distractors=pool.filter(song=>
+    song.youtubeId!==correct.youtubeId &&
+    song.title!==correct.title
+  );
+
+  if(distractors.length<3){
+    distractors=SONGS.filter(song=>
+      song.youtubeId!==correct.youtubeId &&
+      song.title!==correct.title
+    );
+  }
+
+  return shuffle([
+    correct,
+    ...shuffle(distractors).slice(0,3)
+  ]);
+}
+
+async function nextRound(){
+  stopMysteryAudio();
+  hideYoutube();
+
+  if(totalRounds!==Infinity && round>=totalRounds){
+    finishGame();
+    return;
+  }
+
+  answered=false;
+
+  const nextSong = chooseSong();
+
+  // No unused songs left in this era, so finish instead of repeating one.
+  if(!nextSong){
+    finishGame();
+    return;
+  }
+
+  round++;
+  current=nextSong;
+  options=makeOptions(current);
+  currentPreview=null;
+
+  $("resultBox").classList.remove("show");
+  $("clipFill").style.width="0%";
+  $("clipTime").textContent="0.0 / 5.0";
+  $("mysteryBox").classList.remove("playing");
+  $("mysteryLabel").textContent="Finding mystery audio…";
+  $("playBtn").disabled=true;
+  $("playBtn").textContent="Finding clip…";
+  $("replayBtn").disabled=true;
+
+  renderAnswers();
+  updateHud();
+
+  const thisSong=current;
+  const preview=await getPreview(current);
+
+  if(current!==thisSong) return;
+
+  if(!preview){
+    $("mysteryLabel").textContent="No preview found — choosing another song…";
+    setTimeout(()=>{
+      round--;
+      nextRound();
+    },700);
+    return;
+  }
+
+  currentPreview=preview;
+  audio.src=preview.url;
+  audio.load();
+
+  $("mysteryLabel").textContent="Mystery audio ready";
+  $("playBtn").disabled=false;
+  $("playBtn").textContent="▶ Play 5 seconds";
+}
+
+function renderAnswers(){
+  const letters="ABCD";
+
+  $("answers").innerHTML=options.map((song,index)=>`
+    <button class="answer" data-answer="${index}">
+      <span class="letter">${letters[index]}</span>
+      <span>${escapeHtml(song.title)}</span>
+    </button>
+  `).join("");
+
+  document.querySelectorAll("[data-answer]").forEach(button=>{
+    button.addEventListener("click",()=>{
+      answerSong(Number(button.dataset.answer),button);
+    });
+  });
+}
+
+function playMysteryClip(){
+  if(!currentPreview || answered) return;
+
+  stopMysteryAudio();
+
+  audio.src=currentPreview.url;
+  audio.currentTime=0;
+  audio.volume=1;
+
+  $("mysteryBox").classList.add("playing");
+  $("mysteryLabel").textContent="Playing mystery clip…";
+  $("playBtn").disabled=true;
+  $("replayBtn").disabled=true;
+
+  const playPromise=audio.play();
+
+  if(playPromise){
+    playPromise.catch(()=>{
+      $("mysteryBox").classList.remove("playing");
+      $("mysteryLabel").textContent="Audio blocked — press Play again";
+      $("playBtn").disabled=false;
+      $("replayBtn").disabled=false;
+    });
+  }
+
+  startedAt=performance.now();
+
+  tickTimer=setInterval(()=>{
+    const elapsed=Math.min((performance.now()-startedAt)/1000,5);
+    $("clipFill").style.width=((elapsed/5)*100)+"%";
+    $("clipTime").textContent=elapsed.toFixed(1)+" / 5.0";
+  },50);
+
+  clipTimer=setTimeout(()=>{
+    audio.pause();
+    clearTimeout(clipTimer);
+    clearInterval(tickTimer);
+    clipTimer=null;
+    tickTimer=null;
+
+    $("mysteryBox").classList.remove("playing");
+    $("mysteryLabel").textContent="Clip finished";
+    $("clipFill").style.width="100%";
+    $("clipTime").textContent="5.0 / 5.0";
+    $("playBtn").disabled=false;
+    $("playBtn").textContent="▶ Play again";
+    $("replayBtn").disabled=false;
+  },5000);
+}
+
+function stopMysteryAudio(){
+  clearTimeout(clipTimer);
+  clearInterval(tickTimer);
+  clipTimer=null;
+  tickTimer=null;
+
+  try{audio.pause()}catch(e){}
+
+  $("mysteryBox")?.classList.remove("playing");
+}
+
+function answerSong(index,button){
+  if(answered) return;
+
+  answered=true;
+  stopMysteryAudio();
+
+  const correctIndex=options.findIndex(song=>song.youtubeId===current.youtubeId);
+
+  document.querySelectorAll(".answer").forEach((btn,i)=>{
+    btn.disabled=true;
+    if(i===correctIndex) btn.classList.add("correct");
+  });
+
+  if(index===correctIndex){
+    streak++;
+    const points=1000+Math.min(streak-1,10)*100;
+    score+=points;
+
+    $("resultStatus").textContent=`Correct! +${fmt(points)} points`;
+    $("resultStatus").style.color="var(--green)";
+  }else{
+    streak=0;
+    button.classList.add("wrong");
+    $("resultStatus").textContent="Not quite.";
+    $("resultStatus").style.color="var(--red)";
+  }
+
+  $("resultMeta").innerHTML=
+    `<strong style="color:white">${escapeHtml(current.title)}</strong><br>`+
+    `${escapeHtml(current.artist)} · ${current.year}`;
+
+  $("resultBox").classList.add("show");
+
+  $("mysteryLabel").textContent=`${current.title} — ${current.artist}`;
+  $("playBtn").disabled=true;
+  $("replayBtn").disabled=false;
+
+  updateHud();
+}
+
+function replayAfterAnswer(){
+  if(!currentPreview) return;
+
+  stopMysteryAudio();
+
+  audio.src=currentPreview.url;
+  audio.currentTime=0;
+  audio.volume=1;
+  audio.play().catch(()=>{});
+
+  $("mysteryBox").classList.add("playing");
+  $("mysteryLabel").textContent=`${current.title} — ${current.artist}`;
+  $("replayBtn").disabled=true;
+
+  startedAt=performance.now();
+
+  tickTimer=setInterval(()=>{
+    const elapsed=Math.min((performance.now()-startedAt)/1000,5);
+    $("clipFill").style.width=((elapsed/5)*100)+"%";
+    $("clipTime").textContent=elapsed.toFixed(1)+" / 5.0";
+  },50);
+
+  clipTimer=setTimeout(()=>{
+    audio.pause();
+    clearTimeout(clipTimer);
+    clearInterval(tickTimer);
+    clipTimer=null;
+    tickTimer=null;
+
+    $("mysteryBox").classList.remove("playing");
+    $("clipFill").style.width="100%";
+    $("clipTime").textContent="5.0 / 5.0";
+    $("replayBtn").disabled=false;
+  },5000);
+}
+
+function updateHud(){
+  $("roundHud").textContent=
+    totalRounds===Infinity
+      ? String(round)
+      : `${round} / ${totalRounds}`;
+
+  $("scoreHud").textContent=fmt(score);
+  $("streakHud").textContent=`${streak} 🔥`;
+
+  $("roundProgress").style.width=
+    totalRounds===Infinity
+      ? "100%"
+      : `${Math.min((round/totalRounds)*100,100)}%`;
+}
+
+function finishGame(){
+  stopMysteryAudio();
+  hideYoutube();
+
+  $("gameScreen").style.display="none";
+  $("finishScreen").style.display="block";
+
+  const uniquePlayed = used.size;
+  $("finishScore").textContent =
+    `Final score: ${fmt(score)} points · ${uniquePlayed} unique song${uniquePlayed === 1 ? "" : "s"} played`;
+}
+
+/* YOUTUBE IS ONLY USED AFTER THE ANSWER */
+const ytScript=document.createElement("script");
+ytScript.src="https://www.youtube.com/iframe_api";
+document.head.appendChild(ytScript);
+
+window.onYouTubeIframeAPIReady=()=>{
+  ytReady=true;
+};
+
+function toggleFullSong(){
+  if(!answered || !current) return;
+
+  $("youtubeReveal").classList.add("show");
+
+  if(!ytReady){
+    $("fullSongBtn").textContent="Loading YouTube…";
+    setTimeout(toggleFullSong,350);
+    return;
+  }
+
+  if(!ytPlayer){
+    ytPlayer=new YT.Player("ytPlayer",{
+      width:356,
+      height:200,
+      videoId:current.youtubeId,
+      playerVars:{
+        controls:1,
+        playsinline:1,
+        rel:0,
+        origin:location.origin
+      },
+      events:{
+        onReady:event=>{
+          ytLoadedSongId=current.youtubeId;
+          event.target.playVideo();
+          fullPlaying=true;
+          $("fullSongBtn").textContent="❚❚ Pause full song";
+        },
+        onStateChange:event=>{
+          if(event.data===YT.PlayerState.ENDED){
+            fullPlaying=false;
+            $("fullSongBtn").textContent="▶ Play full song";
+          }
+        }
+      }
+    });
+    return;
+  }
+
+  if(ytLoadedSongId!==current.youtubeId){
+    ytPlayer.loadVideoById(current.youtubeId);
+    ytLoadedSongId=current.youtubeId;
+    fullPlaying=true;
+    $("fullSongBtn").textContent="❚❚ Pause full song";
+    return;
+  }
+
+  if(fullPlaying){
+    ytPlayer.pauseVideo();
+    fullPlaying=false;
+    $("fullSongBtn").textContent="▶ Play full song";
+  }else{
+    ytPlayer.playVideo();
+    fullPlaying=true;
+    $("fullSongBtn").textContent="❚❚ Pause full song";
+  }
+}
+
+function hideYoutube(){
+  $("youtubeReveal").classList.remove("show");
+  $("fullSongBtn").textContent="▶ Play full song";
+  fullPlaying=false;
+
+  if(ytPlayer){
+    try{
+      ytPlayer.stopVideo();
+      ytPlayer.clearVideo();
+    }catch(e){}
+  }
+
+  ytLoadedSongId=null;
+}
+
+$("startBtn").addEventListener("click",startGame);
+$("playBtn").addEventListener("click",playMysteryClip);
+$("replayBtn").addEventListener("click",()=>{
+  answered ? replayAfterAnswer() : playMysteryClip();
+});
+$("nextBtn").addEventListener("click",nextRound);
+$("fullSongBtn").addEventListener("click",toggleFullSong);
+$("againBtn").addEventListener("click",()=>{
+  $("finishScreen").style.display="none";
+  $("startScreen").style.display="block";
+});
+</script>
+</body>
+</html>
