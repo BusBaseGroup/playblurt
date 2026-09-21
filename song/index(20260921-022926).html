@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>5 Second Song</title>
+<style>
+:root{
+  --bg:#090b10;--panel:#11151d;--panel2:#171c26;--line:#262d3a;
+  --text:#f8f9fc;--muted:#98a1af;--purple:#6f4cff;--purple2:#9a82ff;
+  --green:#27d980;--red:#ff6074
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:
+radial-gradient(circle at 10% 0%,rgba(111,76,255,.18),transparent 32%),
+radial-gradient(circle at 90% 8%,rgba(39,217,128,.07),transparent 28%),var(--bg);color:var(--text)}
+body{padding:18px}
+button,select{font:inherit}
+button{cursor:pointer}
+.app{width:min(1080px,100%);margin:auto}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:20px}
+.brand{display:flex;align-items:center;gap:12px;font-size:1.32rem;font-weight:950;letter-spacing:-.04em}
+.logo{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(135deg,var(--purple),#4f2fdc);box-shadow:0 12px 34px rgba(111,76,255,.25)}
+.mini{font-size:.78rem;color:var(--muted)}
+.card{background:linear-gradient(180deg,rgba(23,28,38,.97),rgba(17,21,29,.97));border:1px solid var(--line);border-radius:22px;box-shadow:0 20px 70px rgba(0,0,0,.3)}
+.start{padding:42px;text-align:center}
+.eyebrow{display:inline-flex;padding:7px 11px;border:1px solid var(--line);border-radius:999px;background:#0d1016;color:#cbd2dd;font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;font-weight:900}
+h1{font-size:clamp(2.5rem,7vw,5.7rem);line-height:.92;letter-spacing:-.07em;margin:20px auto 12px;max-width:820px}
+.lead{max-width:650px;margin:0 auto 28px;color:var(--muted);line-height:1.7}
+.setup{max-width:650px;margin:auto;display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:left}
+.field{display:flex;flex-direction:column;gap:7px}
+.field label{font-size:.72rem;color:#b9c1ce;text-transform:uppercase;letter-spacing:.07em;font-weight:900}
+select{width:100%;padding:13px 14px;border-radius:13px;border:1px solid var(--line);background:#0d1016;color:var(--text);outline:none}
+.btn{border:0;border-radius:13px;padding:13px 17px;min-height:48px;color:white;font-weight:900;background:linear-gradient(135deg,var(--purple),#5735e8)}
+.btn.secondary{background:#10141c;border:1px solid var(--line)}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.startbtn{grid-column:1/-1}
+.game{display:none}
+.hud{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.hudbox{padding:15px;border-radius:17px;background:#0f131b;border:1px solid var(--line)}
+.hudlabel{font-size:.69rem;color:var(--muted);font-weight:900;text-transform:uppercase;letter-spacing:.08em}
+.hudvalue{font-size:1.18rem;font-weight:950;margin-top:3px}
+.roundbar{height:6px;background:#171c25;border-radius:999px;overflow:hidden;margin-bottom:14px}
+#roundProgress{height:100%;width:0;background:linear-gradient(90deg,var(--purple),var(--purple2))}
+.gamecard{padding:28px}
+.grid{display:grid;grid-template-columns:390px 1fr;gap:28px}
+.cliphead{display:flex;justify-content:space-between;font-weight:900;margin-bottom:10px}
+.cliptime{color:var(--muted);font-variant-numeric:tabular-nums}
+
+/* CUSTOM MYSTERY PLAYER — NO YOUTUBE HERE */
+.mystery{
+  height:200px;
+  border-radius:17px;
+  border:1px solid #2e3542;
+  background:
+    radial-gradient(circle at 50% 45%,rgba(111,76,255,.22),transparent 35%),
+    linear-gradient(180deg,#0e1219,#0a0d12);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  overflow:hidden;
+}
+.disc{
+  width:76px;height:76px;border-radius:50%;
+  border:2px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at center,#0d1016 0 10px,#6f4cff 11px 13px,#111722 14px 100%);
+  box-shadow:0 18px 50px rgba(0,0,0,.35);
+  transition:.3s;
+}
+.mystery.playing .disc{animation:spin 2.4s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.wave{
+  height:46px;
+  display:flex;
+  align-items:center;
+  gap:5px;
+  margin-top:14px
+}
+.wave span{
+  width:5px;border-radius:999px;
+  background:linear-gradient(180deg,#a590ff,#6e4aff);
+  animation:bounce .85s ease-in-out infinite;
+  animation-play-state:paused;
+  opacity:.8
+}
+.mystery.playing .wave span{animation-play-state:running}
+.wave span:nth-child(1){height:16px;animation-delay:.02s}
+.wave span:nth-child(2){height:32px;animation-delay:.08s}
+.wave span:nth-child(3){height:22px;animation-delay:.14s}
+.wave span:nth-child(4){height:40px;animation-delay:.20s}
+.wave span:nth-child(5){height:28px;animation-delay:.26s}
+.wave span:nth-child(6){height:38px;animation-delay:.32s}
+.wave span:nth-child(7){height:20px;animation-delay:.38s}
+.wave span:nth-child(8){height:34px;animation-delay:.44s}
+.wave span:nth-child(9){height:15px;animation-delay:.50s}
+@keyframes bounce{0%,100%{transform:scaleY(.45)}50%{transform:scaleY(1.15)}}
+.mysteryLabel{margin-top:8px;color:#b0b8c4;font-size:.78rem;font-weight:850;letter-spacing:.04em}
+.clipbar{height:8px;background:#252b36;border-radius:999px;overflow:hidden;margin-top:15px}
+#clipFill{height:100%;width:0;background:linear-gradient(90deg,var(--purple),var(--green))}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+
+.question h2{font-size:clamp(2rem,4vw,3rem);letter-spacing:-.06em;margin:0 0 5px}
+.hint{color:var(--muted);margin-bottom:17px}
+.answers{display:grid;gap:10px}
+.answer{display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:14px 15px;border-radius:15px;border:1px solid var(--line);background:#0f131b;color:var(--text);font-weight:850;transition:.15s}
+.answer:hover:not(:disabled){transform:translateX(3px);background:#151a24}
+.letter{width:32px;height:32px;border-radius:9px;background:#1b2130;color:#c8d0db;display:grid;place-items:center;font-size:.78rem;flex:0 0 auto}
+.answer.correct{border-color:rgba(39,217,128,.65);background:rgba(39,217,128,.09)}
+.answer.wrong{border-color:rgba(255,96,116,.65);background:rgba(255,96,116,.09)}
+.result{display:none;margin-top:17px;padding:16px;border:1px solid var(--line);border-radius:15px;background:#0d1016}
+.result.show{display:block}
+.resultStatus{font-weight:950;margin-bottom:5px}
+.resultMeta{color:var(--muted);line-height:1.45}
+.resultBtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:13px}
+#nextBtn{margin-left:auto}
+
+/* YouTube only appears after answer */
+.youtubeReveal{display:none;margin-top:14px}
+.youtubeReveal.show{display:block}
+.youtubeWrap{width:356px;max-width:100%;min-height:200px;background:#000;border-radius:14px;overflow:hidden;border:1px solid #2d3340}
+#ytPlayer{width:356px;height:200px;max-width:100%}
+
+.finish{display:none;text-align:center;padding:48px 28px}
+.finish h2{font-size:clamp(2.5rem,6vw,4.8rem);letter-spacing:-.07em;margin:8px 0}
+.notice{font-size:.75rem;color:var(--muted);margin-top:16px;line-height:1.5}
+
+.volumeBox{
+  margin-top:14px;
+  padding:12px 13px;
+  border-radius:14px;
+  background:#0d1118;
+  border:1px solid var(--line);
+}
+.volumeTop{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:8px;
+  font-size:.8rem;
+  font-weight:900;
+}
+.volumeTop span:last-child{color:var(--muted)}
+.volumeSlider{
+  width:100%;
+  accent-color:var(--purple);
+  cursor:pointer;
+}
+
+@media(max-width:820px){body{padding:12px}.grid{grid-template-columns:1fr}.gamecard{padding:18px}.hud{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.setup{grid-template-columns:1fr}.startbtn{grid-column:auto}.actions{grid-template-columns:1fr}.resultBtns{flex-direction:column}#nextBtn{margin-left:0}}
+</style>
+</head>
+<body>
+<main class="app">
+  <div class="topbar">
+    <div class="brand"><div class="logo">♫</div><span>5 Second Song</span></div>
+    <div class="mini">Free browser music game</div>
+  </div>
+
+  <section id="startScreen" class="card start">
+    <span class="eyebrow">Guess it before the clip ends</span>
+    <h1>Know the song in five seconds?</h1>
+    <p class="lead">The mystery round uses audio only, so no song title, YouTube thumbnail or video information is shown before you answer.</p>
+
+    <div class="setup">
+      <div class="field">
+        <label>Song era</label>
+        <select id="eraSelect">
+          <option value="all">Any year</option>
+          <option value="1980-1989">1980–1989</option>
+          <option value="1990-1999">1990–1999</option>
+          <option value="2000-2005">2000–2005</option>
+          <option value="2006-2010">2006–2010</option>
+          <option value="2011-2015">2011–2015</option>
+          <option value="2016-2020">2016–2020</option>
+          <option value="2021-2026">2021–2026</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Rounds</label>
+        <select id="roundSelect">
+          <option value="10">10 songs</option>
+          <option value="20">20 songs</option>
+          <option value="endless">Endless</option>
+        </select>
+      </div>
+
+      <button id="startBtn" class="btn startbtn">Start game</button>
+    </div>
+
+    <div class="notice">Mystery clips use free audio previews when available. YouTube is only loaded after the answer has been revealed. This version includes 403 songs and still prevents repeats within the same game. Songs never repeat within the same game.</div>
+  </section>
+
+  <section id="gameScreen" class="game">
+    <div class="hud">
+      <div class="hudbox"><div class="hudlabel">Round</div><div id="roundHud" class="hudvalue">1 / 10</div></div>
+      <div class="hudbox"><div class="hudlabel">Score</div><div id="scoreHud" class="hudvalue">0</div></div>
+      <div class="hudbox"><div class="hudlabel">Streak</div><div id="streakHud" class="hudvalue">0 🔥</div></div>
+      <div class="hudbox"><div class="hudlabel">Era</div><div id="eraHud" class="hudvalue">Any year</div></div>
+    </div>
+
+    <div class="roundbar"><div id="roundProgress"></div></div>
+
+    <section class="card gamecard">
+      <div class="grid">
+        <div>
+          <div class="cliphead">
+            <span>5 second clip</span>
+            <span id="clipTime" class="cliptime">0.0 / 5.0</span>
+          </div>
+
+          <div id="mysteryBox" class="mystery">
+            <div class="disc"></div>
+            <div class="wave">
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span>
+            </div>
+            <div id="mysteryLabel" class="mysteryLabel">Finding mystery audio…</div>
+          </div>
+
+          <div class="clipbar"><div id="clipFill"></div></div>
+
+          <div class="actions">
+            <button id="playBtn" class="btn" disabled>Finding clip…</button>
+            <button id="replayBtn" class="btn secondary" disabled>↻ Replay clip</button>
+          </div>
+
+          <div class="volumeBox">
+            <div class="volumeTop">
+              <span>🔊 Volume</span>
+              <span id="volumeValue">35%</span>
+            </div>
+            <input id="volumeSlider" class="volumeSlider" type="range" min="0" max="100" value="35" step="1">
+          </div>
+        </div>
+
+        <div class="question">
+          <h2>What song is this?</h2>
+          <div class="hint">Choose one answer below.</div>
+          <div id="answers" class="answers"></div>
+
+          <div id="resultBox" class="result">
+            <div id="resultStatus" class="resultStatus"></div>
+            <div id="resultMeta" class="resultMeta"></div>
+
+            <div class="resultBtns">
+              <button id="fullSongBtn" class="btn secondary">▶ Play full song</button>
+              <button id="nextBtn" class="btn">Next song →</button>
+            </div>
+
+            <div id="youtubeReveal" class="youtubeReveal">
+              <div class="youtubeWrap"><div id="ytPlayer"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <section id="finishScreen" class="card finish">
+    <span class="eyebrow">Game finished</span>
+    <h2>Game over.</h2>
+    <p id="finishScore"></p>
+    <button id="againBtn" class="btn">Play again</button>
+  </section>
+</main>
+
+<script>
+const SONGS = [
+  {title:"Another One Bites the Dust",artist:"Queen",year:1980,youtubeId:"rY0WxgSXdEE"},
+  {title:"Private Eyes",artist:"Daryl Hall & John Oates",year:1981,youtubeId:"JsntlJZ9h1U"},
+  {title:"Don't Stop Believin'",artist:"Journey",year:1981,youtubeId:"1k8craCGpgs"},
+  {title:"Never Too Much",artist:"Luther Vandross",year:1981,youtubeId:"pNj9bXKGOiI"},
+  {title:"Under Pressure",artist:"Queen & David Bowie",year:1981,youtubeId:"a01QQZyl-_I"},
+  {title:"Tainted Love",artist:"Soft Cell",year:1981,youtubeId:"XZVpR3Pk-r8"},
+  {title:"Don't You Want Me",artist:"The Human League",year:1981,youtubeId:"uPudE8nDog0"},
+  {title:"I Ran",artist:"A Flock of Seagulls",year:1982,youtubeId:"iIpfWORQWhU"},
+  {title:"Maneater",artist:"Daryl Hall & John Oates",year:1982,youtubeId:"yRYFKcMa_Ek"},
+  {title:"Beat It",artist:"Michael Jackson",year:1982,youtubeId:"oRdxUFDoQe0"},
+  {title:"Billie Jean",artist:"Michael Jackson",year:1982,youtubeId:"Zi_XLOBDo_Y"},
+  {title:"Thriller",artist:"Michael Jackson",year:1982,youtubeId:"sOnqjkJTMaA"},
+  {title:"Africa",artist:"Toto",year:1982,youtubeId:"FTQbiNvZqaY"},
+  {title:"Karma Chameleon",artist:"Culture Club",year:1983,youtubeId:"JmcA9LIIXWw"},
+  {title:"Girls Just Want to Have Fun",artist:"Cyndi Lauper",year:1983,youtubeId:"PIb6AZdTr-A"},
+  {title:"Time After Time",artist:"Cyndi Lauper",year:1983,youtubeId:"VdQY7BusJNU"},
+  {title:"Maniac",artist:"Michael Sembello",year:1983,youtubeId:"324it5DKoXU"},
+  {title:"Red Red Wine",artist:"UB40",year:1983,youtubeId:"zXt56MB-3vc"},
+  {title:"Holding Out for a Hero",artist:"Bonnie Tyler",year:1984,youtubeId:"bWcASV2sey0"},
+  {title:"Heaven",artist:"Bryan Adams",year:1984,youtubeId:"s6TtwR2Dbjg"},
+  {title:"Summer of '69",artist:"Bryan Adams",year:1984,youtubeId:"eFjjO_lhf9c"},
+  {title:"You Spin Me Round",artist:"Dead or Alive",year:1984,youtubeId:"PGNiXGX2nLU"},
+  {title:"Careless Whisper",artist:"George Michael",year:1984,youtubeId:"izGwDsrQ1eQ"},
+  {title:"Footloose",artist:"Kenny Loggins",year:1984,youtubeId:"ltrMfT4Qz5Y"},
+  {title:"Material Girl",artist:"Madonna",year:1984,youtubeId:"6p-lDYPR2P8"},
+  {title:"Shout",artist:"Tears for Fears",year:1984,youtubeId:"Ye7FKc1JQe4"},
+  {title:"Wake Me Up Before You Go-Go",artist:"Wham!",year:1984,youtubeId:"pIgZ7gMze7A"},
+  {title:"Take On Me",artist:"a-ha",year:1985,youtubeId:"djV11Xbc914"},
+  {title:"The Power of Love",artist:"Huey Lewis and the News",year:1985,youtubeId:"wBl2QGAIx1s"},
+  {title:"Walking on Sunshine",artist:"Katrina and the Waves",year:1985,youtubeId:"iPUmE-tne5U"},
+  {title:"West End Girls",artist:"Pet Shop Boys",year:1985,youtubeId:"p3j2NYZ8FKs"},
+  {title:"Everybody Wants to Rule the World",artist:"Tears for Fears",year:1985,youtubeId:"aGCdLKXNF3w"},
+  {title:"Livin' on a Prayer",artist:"Bon Jovi",year:1986,youtubeId:"lDK9QqIzhwk"},
+  {title:"You Give Love a Bad Name",artist:"Bon Jovi",year:1986,youtubeId:"KrZHPOeOxQQ"},
+  {title:"The Final Countdown",artist:"Europe",year:1986,youtubeId:"9jK-NcRmVcw"},
+  {title:"Heaven Is a Place on Earth",artist:"Belinda Carlisle",year:1987,youtubeId:"NOGEyBeoBGM"},
+  {title:"Faith",artist:"George Michael",year:1987,youtubeId:"6Cs3Pvmmv0E"},
+  {title:"Sweet Child O' Mine",artist:"Guns N' Roses",year:1987,youtubeId:"1w7OgIMMRc4"},
+  {title:"The Way You Make Me Feel",artist:"Michael Jackson",year:1987,youtubeId:"HzZ_urpj4As"},
+  {title:"Never Gonna Give You Up",artist:"Rick Astley",year:1987,youtubeId:"dQw4w9WgXcQ"},
+  {title:"Nothing's Gonna Stop Us Now",artist:"Starship",year:1987,youtubeId:"3wxyN3z9PL4"},
+  {title:"I Think We're Alone Now",artist:"Tiffany",year:1987,youtubeId:"w6Q3mHyzn78"},
+  {title:"If I Could Turn Back Time",artist:"Cher",year:1989,youtubeId:"9n3A_-HRFfc"},
+  {title:"Like a Prayer",artist:"Madonna",year:1989,youtubeId:"79fzeNUqQbQ"},
+  {title:"Gonna Make You Sweat",artist:"C+C Music Factory",year:1990,youtubeId:"LaTGrV58wec"},
+  {title:"Groove Is in the Heart",artist:"Deee-Lite",year:1990,youtubeId:"etviGf1uWlg"},
+  {title:"Finally",artist:"CeCe Peniston",year:1991,youtubeId:"xk8mm1Qmt-Y"},
+  {title:"Smells Like Teen Spirit",artist:"Nirvana",year:1991,youtubeId:"hTWKbfoikeg"},
+  {title:"Losing My Religion",artist:"R.E.M.",year:1991,youtubeId:"xwtdhWltSIg"},
+  {title:"What's Up?",artist:"4 Non Blondes",year:1992,youtubeId:"6NXnxTNIWkc"},
+  {title:"Rhythm Is a Dancer",artist:"Snap!",year:1992,youtubeId:"JYIaWeVL1JM"},
+  {title:"What Is Love",artist:"Haddaway",year:1993,youtubeId:"HEXWRTEbj1I"},
+  {title:"Show Me Love",artist:"Robin S",year:1993,youtubeId:"Ps2Jc28tQrw"},
+  {title:"Parklife",artist:"Blur",year:1994,youtubeId:"YSuHrTfcikU"},
+  {title:"Kiss from a Rose",artist:"Seal",year:1994,youtubeId:"AMD2TwRvuoU"},
+  {title:"Zombie",artist:"The Cranberries",year:1994,youtubeId:"6Ejga4kJUts"},
+  {title:"You Oughta Know",artist:"Alanis Morissette",year:1995,youtubeId:"NPcyTyilmYY"},
+  {title:"Insomnia",artist:"Faithless",year:1995,youtubeId:"P8JEm4d6Wu4"},
+  {title:"This Is How We Do It",artist:"Montell Jordan",year:1995,youtubeId:"0hiUuL5uTKc"},
+  {title:"Don't Look Back in Anger",artist:"Oasis",year:1995,youtubeId:"cmpRLQZkTb8"},
+  {title:"Wonderwall",artist:"Oasis",year:1995,youtubeId:"bx1Bh8ZvH84"},
+  {title:"Common People",artist:"Pulp",year:1995,youtubeId:"yuTMWgOduFM"},
+  {title:"Born Slippy",artist:"Underworld",year:1995,youtubeId:"XiMrrleH_hI"},
+  {title:"Because You Loved Me",artist:"Celine Dion",year:1996,youtubeId:"O3XGynvy_V4"},
+  {title:"Freed from Desire",artist:"Gala",year:1996,youtubeId:"p3l7fgvrEKM"},
+  {title:"Virtual Insanity",artist:"Jamiroquai",year:1996,youtubeId:"4JkIs37a2JE"},
+  {title:"Return of the Mack",artist:"Mark Morrison",year:1996,youtubeId:"uB1D9wWxd2w"},
+  {title:"I Want You",artist:"Savage Garden",year:1996,youtubeId:"HQt6jIKNwgU"},
+  {title:"Wannabe",artist:"Spice Girls",year:1996,youtubeId:"gJLIiF15wjQ"},
+  {title:"Barbie Girl",artist:"Aqua",year:1997,youtubeId:"ZyhrYis509A"},
+  {title:"Everybody",artist:"Backstreet Boys",year:1997,youtubeId:"6M6samPEMpM"},
+  {title:"Song 2",artist:"Blur",year:1997,youtubeId:"SSbBvKaM6sk"},
+  {title:"My Heart Will Go On",artist:"Celine Dion",year:1997,youtubeId:"3gK_2XdjOdY"},
+  {title:"Tubthumping",artist:"Chumbawamba",year:1997,youtubeId:"2H5uWRjFsGc"},
+  {title:"MMMBop",artist:"Hanson",year:1997,youtubeId:"NHozn0YXAeE"},
+  {title:"Tearin' Up My Heart",artist:"NSYNC",year:1997,youtubeId:"_ZcmuKsyvzg"},
+  {title:"Truly Madly Deeply",artist:"Savage Garden",year:1997,youtubeId:"WQnAxOQxQIU"},
+  {title:"You're Still the One",artist:"Shania Twain",year:1997,youtubeId:"KNZH-emehxA"},
+  {title:"Bittersweet Symphony",artist:"The Verve",year:1997,youtubeId:"1lyu1KKwC74"},
+  {title:"I Don't Want to Miss a Thing",artist:"Aerosmith",year:1998,youtubeId:"JkK8g6FMEXE"},
+  {title:"...Baby One More Time",artist:"Britney Spears",year:1998,youtubeId:"C-u5WLJ9Yk4"},
+  {title:"Believe",artist:"Cher",year:1998,youtubeId:"nZXRV4MezEw"},
+  {title:"Blue (Da Ba Dee)",artist:"Eiffel 65",year:1998,youtubeId:"68ugkg9RePc"},
+  {title:"Praise You",artist:"Fatboy Slim",year:1998,youtubeId:"ruAi4VBoBSM"},
+  {title:"The Rockafeller Skank",artist:"Fatboy Slim",year:1998,youtubeId:"FMrIy9zm7QY"},
+  {title:"Iris",artist:"Goo Goo Dolls",year:1998,youtubeId:"NdYWuo9OFAw"},
+  {title:"Frozen",artist:"Madonna",year:1998,youtubeId:"XS088Opj9o0"},
+  {title:"Ray of Light",artist:"Madonna",year:1998,youtubeId:"x3ov9USxVxY"},
+  {title:"I Want It That Way",artist:"Backstreet Boys",year:1999,youtubeId:"4fndeDfaWCg"},
+  {title:"Genie in a Bottle",artist:"Christina Aguilera",year:1999,youtubeId:"kIDWgqDBNXA"},
+  {title:"Canned Heat",artist:"Jamiroquai",year:1999,youtubeId:"vE4VlA_9OrI"},
+  {title:"Livin' la Vida Loca",artist:"Ricky Martin",year:1999,youtubeId:"p47fEXGabaY"},
+  {title:"All Star",artist:"Smash Mouth",year:1999,youtubeId:"L_jWHffIx5E"},
+  {title:"No Scrubs",artist:"TLC",year:1999,youtubeId:"FrLequ6dUdM"},
+  {title:"Oops!... I Did It Again",artist:"Britney Spears",year:2000,youtubeId:"CduA0TULnow"},
+  {title:"One More Time",artist:"Daft Punk",year:2000,youtubeId:"FGBhQbmPwH8"},
+  {title:"Bye Bye Bye",artist:"NSYNC",year:2000,youtubeId:"Eo-KmOd3i7s"},
+  {title:"Teenage Dirtbag",artist:"Wheatus",year:2000,youtubeId:"FC3y9llDXuM"},
+  {title:"Can't Get You Out of My Head",artist:"Kylie Minogue",year:2001,youtubeId:"c18441Eh_WE"},
+  {title:"Whenever, Wherever",artist:"Shakira",year:2001,youtubeId:"weRHyjj34ZE"},
+  {title:"Murder on the Dancefloor",artist:"Sophie Ellis-Bextor",year:2001,youtubeId:"hAx6mYeC6pY"},
+  {title:"Complicated",artist:"Avril Lavigne",year:2002,youtubeId:"5NPBIwQyPWE"},
+  {title:"I'm With You",artist:"Avril Lavigne",year:2002,youtubeId:"dGR65RWwzg8"},
+  {title:"Sk8er Boi",artist:"Avril Lavigne",year:2002,youtubeId:"TIy3n2b7V9k"},
+  {title:"Beautiful",artist:"Christina Aguilera",year:2002,youtubeId:"eAfyFTzZDMM"},
+  {title:"Dirrty",artist:"Christina Aguilera",year:2002,youtubeId:"4Rg3sAb8Id8"},
+  {title:"Lose Yourself",artist:"Eminem",year:2002,youtubeId:"_Yhyp-_hX2s"},
+  {title:"Without Me",artist:"Eminem",year:2002,youtubeId:"YVkUvmDQ3HY"},
+  {title:"Cry Me a River",artist:"Justin Timberlake",year:2002,youtubeId:"DksSPZTZES0"},
+  {title:"Rock Your Body",artist:"Justin Timberlake",year:2002,youtubeId:"TSVHoHyErBQ"},
+  {title:"She Will Be Loved",artist:"Maroon 5",year:2002,youtubeId:"nIjVuRTm-dc"},
+  {title:"This Love",artist:"Maroon 5",year:2002,youtubeId:"XPpTgCho5ZA"},
+  {title:"Hot in Herre",artist:"Nelly",year:2002,youtubeId:"GeZZr_p6vB8"},
+  {title:"Dilemma",artist:"Nelly ft. Kelly Rowland",year:2002,youtubeId:"8WYHDfJDPDc"},
+  {title:"All the Things She Said",artist:"t.A.T.u.",year:2002,youtubeId:"8mGBaXPlri8"},
+  {title:"In Da Club",artist:"50 Cent",year:2003,youtubeId:"5qm8PH4xAss"},
+  {title:"Baby Boy",artist:"Beyoncé",year:2003,youtubeId:"8ucz_pm3LX8"},
+  {title:"Crazy in Love",artist:"Beyoncé",year:2003,youtubeId:"ViwtNLUqkMY"},
+  {title:"Toxic",artist:"Britney Spears",year:2003,youtubeId:"LOZuxwVk7TU"},
+  {title:"The Reason",artist:"Hoobastank",year:2003,youtubeId:"fV4DiAyExN0"},
+  {title:"Are You Gonna Be My Girl",artist:"Jet",year:2003,youtubeId:"tuK6n2Lkza0"},
+  {title:"Milkshake",artist:"Kelis",year:2003,youtubeId:"pGL2rytTraA"},
+  {title:"Hey Ya!",artist:"Outkast",year:2003,youtubeId:"PWgvGjAhvIw"},
+  {title:"Where Is the Love?",artist:"The Black Eyed Peas",year:2003,youtubeId:"WpYeekQkAdc"},
+  {title:"Mr. Brightside",artist:"The Killers",year:2003,youtubeId:"gGdGFtwCNBE"},
+  {title:"Seven Nation Army",artist:"The White Stripes",year:2003,youtubeId:"0J2QdDbelmY"},
+  {title:"1, 2 Step",artist:"Ciara",year:2004,youtubeId:"iBHNgV6_znU"},
+  {title:"Goodies",artist:"Ciara",year:2004,youtubeId:"YtC92pzp5vw"},
+  {title:"Take Me Out",artist:"Franz Ferdinand",year:2004,youtubeId:"Ijk4j-r7qPA"},
+  {title:"American Idiot",artist:"Green Day",year:2004,youtubeId:"Ee_uujKuJMI"},
+  {title:"Boulevard of Broken Dreams",artist:"Green Day",year:2004,youtubeId:"Soa3gO7tL-c"},
+  {title:"You're Beautiful",artist:"James Blunt",year:2004,youtubeId:"oofSnsGkops"},
+  {title:"Behind These Hazel Eyes",artist:"Kelly Clarkson",year:2004,youtubeId:"yipoOY56MbM"},
+  {title:"Since U Been Gone",artist:"Kelly Clarkson",year:2004,youtubeId:"R7UrFYvl5TE"},
+  {title:"Suddenly I See",artist:"KT Tunstall",year:2004,youtubeId:"9AEoUa0Hlso"},
+  {title:"Let Me Love You",artist:"Mario",year:2004,youtubeId:"H64QG4UsrGI"},
+  {title:"Unwritten",artist:"Natasha Bedingfield",year:2004,youtubeId:"b7k0a5hYnSI"},
+  {title:"Let's Get It Started",artist:"The Black Eyed Peas",year:2004,youtubeId:"IKqV7DB8Iwg"},
+  {title:"Somebody Told Me",artist:"The Killers",year:2004,youtubeId:"Y5fBdpreJiU"},
+  {title:"Burn",artist:"Usher",year:2004,youtubeId:"t5XNWFw5HVw"},
+  {title:"Yeah!",artist:"Usher",year:2004,youtubeId:"GxBSyx85Kp8"},
+  {title:"Candy Shop",artist:"50 Cent",year:2005,youtubeId:"SRcnnId15BA"},
+  {title:"Everytime We Touch",artist:"Cascada",year:2005,youtubeId:"4G6QDNC4jPs"},
+  {title:"Bad Day",artist:"Daniel Powter",year:2005,youtubeId:"gH476CxJxfg"},
+  {title:"Hips Don't Lie",artist:"Shakira",year:2005,youtubeId:"DUT5rEU6pqM"},
+  {title:"Dakota",artist:"Stereophonics",year:2005,youtubeId:"SzBJQnD7TRM"},
+  {title:"How to Save a Life",artist:"The Fray",year:2005,youtubeId:"cjVQ36NhbMk"},
+  {title:"Rehab",artist:"Amy Winehouse",year:2006,youtubeId:"KUmZp8pR1uc"},
+  {title:"Crazy",artist:"Gnarls Barkley",year:2006,youtubeId:"-N4jf6rtyuw"},
+  {title:"What Goes Around... Comes Around",artist:"Justin Timberlake",year:2006,youtubeId:"TOrnUquxtwA"},
+  {title:"Promiscuous",artist:"Nelly Furtado",year:2006,youtubeId:"0J3vgcE5i2o"},
+  {title:"Chasing Cars",artist:"Snow Patrol",year:2006,youtubeId:"GemKqzILV4w"},
+  {title:"Chelsea Dagger",artist:"The Fratellis",year:2006,youtubeId:"sEXHeTcxQy4"},
+  {title:"Low",artist:"Flo Rida ft. T-Pain",year:2007,youtubeId:"U2waT9TxPU0"},
+  {title:"Bleeding Love",artist:"Leona Lewis",year:2007,youtubeId:"Vzo-EL_62fQ"},
+  {title:"Valerie",artist:"Mark Ronson ft. Amy Winehouse",year:2007,youtubeId:"bixuI_GV5I0"},
+  {title:"Don't Stop the Music",artist:"Rihanna",year:2007,youtubeId:"yd8jh9QYfEs"},
+  {title:"Umbrella",artist:"Rihanna",year:2007,youtubeId:"CvBfHwUxHIk"},
+  {title:"Beautiful Girls",artist:"Sean Kingston",year:2007,youtubeId:"MrTz5xjmso4"},
+  {title:"Apologize",artist:"Timbaland ft. OneRepublic",year:2007,youtubeId:"ZSM3w1v-A_Y"},
+  {title:"Single Ladies",artist:"Beyoncé",year:2008,youtubeId:"4m1EFMoRFvY"},
+  {title:"Viva La Vida",artist:"Coldplay",year:2008,youtubeId:"dvgZkm1xWPE"},
+  {title:"Mercy",artist:"Duffy",year:2008,youtubeId:"y7ZEVA5dy-Y"},
+  {title:"Infinity 2008",artist:"Guru Josh Project",year:2008,youtubeId:"jzy2dgEUOhY"},
+  {title:"Hot N Cold",artist:"Katy Perry",year:2008,youtubeId:"kTHNpusq654"},
+  {title:"I Kissed a Girl",artist:"Katy Perry",year:2008,youtubeId:"tAp9BKosZXs"},
+  {title:"Sex on Fire",artist:"Kings of Leon",year:2008,youtubeId:"RF0HhrwIwp0"},
+  {title:"Use Somebody",artist:"Kings of Leon",year:2008,youtubeId:"gnhXHvRoUd0"},
+  {title:"Just Dance",artist:"Lady Gaga",year:2008,youtubeId:"2Abk1jAONjw"},
+  {title:"Paparazzi",artist:"Lady Gaga",year:2008,youtubeId:"d2smz_1L2_0"},
+  {title:"Poker Face",artist:"Lady Gaga",year:2008,youtubeId:"bESGLojNYSo"},
+  {title:"So What",artist:"Pink",year:2008,youtubeId:"FJfFZqTlWrQ"},
+  {title:"Disturbia",artist:"Rihanna",year:2008,youtubeId:"E1mU6h4Xdxc"},
+  {title:"Evacuate the Dancefloor",artist:"Cascada",year:2009,youtubeId:"A68j28KQaik"},
+  {title:"Sexy Bitch",artist:"David Guetta ft. Akon",year:2009,youtubeId:"mIIN_SGQy9c"},
+  {title:"When Love Takes Over",artist:"David Guetta ft. Kelly Rowland",year:2009,youtubeId:"zudbz4hOcbc"},
+  {title:"Stereo Love",artist:"Edward Maya & Vika Jigulina",year:2009,youtubeId:"p-Z3YrHJ1sU"},
+  {title:"Right Round",artist:"Flo Rida",year:2009,youtubeId:"CcCw1ggftuQ"},
+  {title:"Replay",artist:"Iyaz",year:2009,youtubeId:"ZoG5jJ3E8rg"},
+  {title:"Whatcha Say",artist:"Jason Derulo",year:2009,youtubeId:"pBI3lc18k8Q"},
+  {title:"Down",artist:"Jay Sean ft. Lil Wayne",year:2009,youtubeId:"oUbpGmR1-QM"},
+  {title:"Tik Tok",artist:"Kesha",year:2009,youtubeId:"iP6XpLQM2Cs"},
+  {title:"Bad Romance",artist:"Lady Gaga",year:2009,youtubeId:"qrO4YZeyl0I"},
+  {title:"Fireflies",artist:"Owl City",year:2009,youtubeId:"psuRGfAaju4"},
+  {title:"Replay",artist:"Sean Kingston",year:2009,youtubeId:"qFJ3VKnwmJw"},
+  {title:"Break Your Heart",artist:"Taio Cruz",year:2009,youtubeId:"y_SI2EDM6Lo"},
+  {title:"Boom Boom Pow",artist:"The Black Eyed Peas",year:2009,youtubeId:"4m48GqaOz90"},
+  {title:"I Gotta Feeling",artist:"The Black Eyed Peas",year:2009,youtubeId:"uSD4vsh1zDA"},
+  {title:"Meet Me Halfway",artist:"The Black Eyed Peas",year:2009,youtubeId:"I7HahVwYpwo"},
+  {title:"Rolling in the Deep",artist:"Adele",year:2010,youtubeId:"rYEDA3JcQqw"},
+  {title:"Airplanes",artist:"B.o.B ft. Hayley Williams",year:2010,youtubeId:"kn6-c223DUU"},
+  {title:"Grenade",artist:"Bruno Mars",year:2010,youtubeId:"SR6iYWJxHqs"},
+  {title:"Just the Way You Are",artist:"Bruno Mars",year:2010,youtubeId:"LjhCEhWiKXk"},
+  {title:"Memories",artist:"David Guetta ft. Kid Cudi",year:2010,youtubeId:"NUVCQXMUVnI"},
+  {title:"Love the Way You Lie",artist:"Eminem ft. Rihanna",year:2010,youtubeId:"uelHwf8o7_U"},
+  {title:"Ridin' Solo",artist:"Jason Derulo",year:2010,youtubeId:"8ESdn0MuJWQ"},
+  {title:"California Gurls",artist:"Katy Perry",year:2010,youtubeId:"F57P9C4SAW4"},
+  {title:"Teenage Dream",artist:"Katy Perry",year:2010,youtubeId:"98WtmW-lfeE"},
+  {title:"Raise Your Glass",artist:"Pink",year:2010,youtubeId:"XjVNlG5cZyQ"},
+  {title:"Only Girl (In the World)",artist:"Rihanna",year:2010,youtubeId:"pa14VNsdSYM"},
+  {title:"Dynamite",artist:"Taio Cruz",year:2010,youtubeId:"Vysgv7qVYTo"},
+  {title:"OMG",artist:"Usher ft. will.i.am",year:2010,youtubeId:"1RnPB76mjxI"},
+  {title:"Levels",artist:"Avicii",year:2011,youtubeId:"_ovdm2yX4MA"},
+  {title:"Call Me Maybe",artist:"Carly Rae Jepsen",year:2011,youtubeId:"fWNaR-rxAic"},
+  {title:"Titanium",artist:"David Guetta ft. Sia",year:2011,youtubeId:"JRfuAukYTKg"},
+  {title:"Without You",artist:"David Guetta ft. Usher",year:2011,youtubeId:"jUe8uoKdHao"},
+  {title:"We Are Young",artist:"fun. ft. Janelle Monáe",year:2011,youtubeId:"Sv6dMFF_yts"},
+  {title:"Somebody That I Used to Know",artist:"Gotye",year:2011,youtubeId:"8UVNT4wvIGY"},
+  {title:"Domino",artist:"Jessie J",year:2011,youtubeId:"UJtB55MaoD0"},
+  {title:"Price Tag",artist:"Jessie J",year:2011,youtubeId:"qMxX-QOV9tI"},
+  {title:"Party Rock Anthem",artist:"LMFAO",year:2011,youtubeId:"KQ6zr6kCPj8"},
+  {title:"Sexy and I Know It",artist:"LMFAO",year:2011,youtubeId:"wyx6JDQCslE"},
+  {title:"Dance with Me Tonight",artist:"Olly Murs",year:2011,youtubeId:"F3EG4olrFjY"},
+  {title:"What Makes You Beautiful",artist:"One Direction",year:2011,youtubeId:"QJO3ROT-A4E"},
+  {title:"Give Me Everything",artist:"Pitbull ft. Ne-Yo",year:2011,youtubeId:"EPo5wWmKEaI"},
+  {title:"We Found Love",artist:"Rihanna ft. Calvin Harris",year:2011,youtubeId:"tg00YEETFzg"},
+  {title:"Glad You Came",artist:"The Wanted",year:2011,youtubeId:"2ggzxInyzVE"},
+  {title:"Locked Out of Heaven",artist:"Bruno Mars",year:2012,youtubeId:"e-fA-gBCkj0"},
+  {title:"Treasure",artist:"Bruno Mars",year:2012,youtubeId:"nPvuNsRccVw"},
+  {title:"Some Nights",artist:"fun.",year:2012,youtubeId:"qQkBeOisNM0"},
+  {title:"Demons",artist:"Imagine Dragons",year:2012,youtubeId:"mWRsgZuwf_8"},
+  {title:"Radioactive",artist:"Imagine Dragons",year:2012,youtubeId:"ktvTqknDobU"},
+  {title:"Gangnam Style",artist:"PSY",year:2012,youtubeId:"9bZkp7q19f0"},
+  {title:"Diamonds",artist:"Rihanna",year:2012,youtubeId:"lWA2pjMjpBs"},
+  {title:"Hey Brother",artist:"Avicii",year:2013,youtubeId:"6Cp6mKbRTQY"},
+  {title:"Wake Me Up",artist:"Avicii",year:2013,youtubeId:"IcrbM1l_BoI"},
+  {title:"Pompeii",artist:"Bastille",year:2013,youtubeId:"F90Cw4l-8NY"},
+  {title:"Get Lucky",artist:"Daft Punk ft. Pharrell Williams",year:2013,youtubeId:"5NV6Rdv1a3I"},
+  {title:"Take Me to Church",artist:"Hozier",year:2013,youtubeId:"PVjiKRfKpPI"},
+  {title:"Talk Dirty",artist:"Jason Derulo ft. 2 Chainz",year:2013,youtubeId:"RbtPXFlZlHg"},
+  {title:"Dark Horse",artist:"Katy Perry",year:2013,youtubeId:"0KSOMA3QBU0"},
+  {title:"Roar",artist:"Katy Perry",year:2013,youtubeId:"CevxZvSJLk8"},
+  {title:"Royals",artist:"Lorde",year:2013,youtubeId:"nlcIKh6sBtc"},
+  {title:"Rude",artist:"MAGIC!",year:2013,youtubeId:"PIh2xe4jnpk"},
+  {title:"Animals",artist:"Martin Garrix",year:2013,youtubeId:"gCYcHz2k5x0"},
+  {title:"Best Song Ever",artist:"One Direction",year:2013,youtubeId:"o_v9MY_FMcw"},
+  {title:"Story of My Life",artist:"One Direction",year:2013,youtubeId:"W-TE_Ys4iwM"},
+  {title:"Counting Stars",artist:"OneRepublic",year:2013,youtubeId:"hT_nvWreIhg"},
+  {title:"Happy",artist:"Pharrell Williams",year:2013,youtubeId:"ZbZSe6N_BXs"},
+  {title:"Timber",artist:"Pitbull ft. Kesha",year:2013,youtubeId:"hHUbLv4ThOo"},
+  {title:"Blurred Lines",artist:"Robin Thicke ft. T.I. & Pharrell",year:2013,youtubeId:"yyDUC1LUXSU"},
+  {title:"Love Me Harder",artist:"Ariana Grande & The Weeknd",year:2014,youtubeId:"g5qU7p7yOY8"},
+  {title:"Problem",artist:"Ariana Grande ft. Iggy Azalea",year:2014,youtubeId:"iS1g8G_njx8"},
+  {title:"Break Free",artist:"Ariana Grande ft. Zedd",year:2014,youtubeId:"L8eRzOYhLuw"},
+  {title:"Rather Be",artist:"Clean Bandit",year:2014,youtubeId:"m-M1AtrxztU"},
+  {title:"Real Love",artist:"Clean Bandit & Jess Glynne",year:2014,youtubeId:"qdo_-U4PEsk"},
+  {title:"Rather Be",artist:"Clean Bandit ft. Jess Glynne",year:2014,youtubeId:"m-M1AtrxztU"},
+  {title:"Budapest",artist:"George Ezra",year:2014,youtubeId:"VHrLPs3_1Fs"},
+  {title:"Fancy",artist:"Iggy Azalea ft. Charli XCX",year:2014,youtubeId:"O-zpOMYRi0w"},
+  {title:"Black Widow",artist:"Iggy Azalea ft. Rita Ora",year:2014,youtubeId:"u3u22OYqFGo"},
+  {title:"Bang Bang",artist:"Jessie J, Ariana Grande & Nicki Minaj",year:2014,youtubeId:"0HDdjwpPM3Y"},
+  {title:"Prayer in C",artist:"Lilly Wood & The Prick and Robin Schulz",year:2014,youtubeId:"fiore9Z5iUg"},
+  {title:"Uptown Funk",artist:"Mark Ronson",year:2014,youtubeId:"OPf0YbXqDm0"},
+  {title:"Cheerleader",artist:"OMI",year:2014,youtubeId:"jGflUbPQfW8"},
+  {title:"Love Runs Out",artist:"OneRepublic",year:2014,youtubeId:"0OWj0CiM8WU"},
+  {title:"Chandelier",artist:"Sia",year:2014,youtubeId:"2vjPBrBU-TM"},
+  {title:"Elastic Heart",artist:"Sia",year:2014,youtubeId:"KWZGAExj-es"},
+  {title:"Blank Space",artist:"Taylor Swift",year:2014,youtubeId:"e-ORhEE9VVg"},
+  {title:"Shake It Off",artist:"Taylor Swift",year:2014,youtubeId:"nfWlot6h_JM"},
+  {title:"Style",artist:"Taylor Swift",year:2014,youtubeId:"-CmadmM5cOk"},
+  {title:"Cake by the Ocean",artist:"DNCE",year:2015,youtubeId:"vWaRiD5ym74"},
+  {title:"Makeba",artist:"Jain",year:2015,youtubeId:"59Q_lhgGANc"},
+  {title:"Want to Want Me",artist:"Jason Derulo",year:2015,youtubeId:"rClUOdS5Zyw"},
+  {title:"Love Yourself",artist:"Justin Bieber",year:2015,youtubeId:"oyEuk8j8imI"},
+  {title:"Sorry",artist:"Justin Bieber",year:2015,youtubeId:"fRh_vgS2dFE"},
+  {title:"What Do You Mean?",artist:"Justin Bieber",year:2015,youtubeId:"DK_0jXPuIr0"},
+  {title:"Lean On",artist:"Major Lazer & DJ Snake ft. MØ",year:2015,youtubeId:"YqeW9_5kURI"},
+  {title:"Sugar",artist:"Robin Schulz ft. Francesco Yates",year:2015,youtubeId:"bvC_0foemLY"},
+  {title:"The Hills",artist:"The Weeknd",year:2015,youtubeId:"yzTuBuRdAyA"},
+  {title:"My Way",artist:"Calvin Harris",year:2016,youtubeId:"b4Bj7Zb-YD4"},
+  {title:"This Is What You Came For",artist:"Calvin Harris ft. Rihanna",year:2016,youtubeId:"kOkQ4T5WO9E"},
+  {title:"Rockabye",artist:"Clean Bandit ft. Sean Paul & Anne-Marie",year:2016,youtubeId:"papuvlVeZg8"},
+  {title:"Can't Stop the Feeling!",artist:"Justin Timberlake",year:2016,youtubeId:"ru0K8uYEZWw"},
+  {title:"Good as Hell",artist:"Lizzo",year:2016,youtubeId:"SmbmeOgWsqE"},
+  {title:"Treat You Better",artist:"Shawn Mendes",year:2016,youtubeId:"lY2yjAdbvdQ"},
+  {title:"Cheap Thrills",artist:"Sia",year:2016,youtubeId:"nYh-n7EOtMA"},
+  {title:"Don't Let Me Down",artist:"The Chainsmokers ft. Daya",year:2016,youtubeId:"Io0fBr1XBUA"},
+  {title:"Closer",artist:"The Chainsmokers ft. Halsey",year:2016,youtubeId:"PT2_F-1esPk"},
+  {title:"Die for You",artist:"The Weeknd",year:2016,youtubeId:"QLCpqdqeoII"},
+  {title:"Starboy",artist:"The Weeknd ft. Daft Punk",year:2016,youtubeId:"34Na4j8AVgA"},
+  {title:"Ciao Adios",artist:"Anne-Marie",year:2017,youtubeId:"qqob4D3BoZc"},
+  {title:"Havana",artist:"Camila Cabello",year:2017,youtubeId:"BQ0mxQXmLsk"},
+  {title:"Attention",artist:"Charlie Puth",year:2017,youtubeId:"nfs8NYg7yQM"},
+  {title:"How Long",artist:"Charlie Puth",year:2017,youtubeId:"CwfoyVa980U"},
+  {title:"Symphony",artist:"Clean Bandit ft. Zara Larsson",year:2017,youtubeId:"aatr_2MstrI"},
+  {title:"IDGAF",artist:"Dua Lipa",year:2017,youtubeId:"Mgfe5tIwOj0"},
+  {title:"New Rules",artist:"Dua Lipa",year:2017,youtubeId:"k2qgadSvNyU"},
+  {title:"Castle on the Hill",artist:"Ed Sheeran",year:2017,youtubeId:"K0ibBPhiaG0"},
+  {title:"Perfect",artist:"Ed Sheeran",year:2017,youtubeId:"2Vv-BfVoq4g"},
+  {title:"Shape of You",artist:"Ed Sheeran",year:2017,youtubeId:"JGwWNGJdvx8"},
+  {title:"Believer",artist:"Imagine Dragons",year:2017,youtubeId:"7wtfhZwyrcc"},
+  {title:"Thunder",artist:"Imagine Dragons",year:2017,youtubeId:"fKopy74weus"},
+  {title:"Mi Gente",artist:"J Balvin & Willy William",year:2017,youtubeId:"wnJ6LuUFpMo"},
+  {title:"Truth Hurts",artist:"Lizzo",year:2017,youtubeId:"P00HMxdsVZI"},
+  {title:"Despacito",artist:"Luis Fonsi ft. Daddy Yankee",year:2017,youtubeId:"kJQP7kiw5Fk"},
+  {title:"Silence",artist:"Marshmello ft. Khalid",year:2017,youtubeId:"Tx1sqYc3qas"},
+  {title:"There's Nothing Holdin' Me Back",artist:"Shawn Mendes",year:2017,youtubeId:"dT2owtxkU8k"},
+  {title:"Something Just Like This",artist:"The Chainsmokers & Coldplay",year:2017,youtubeId:"FM7MFYoylVs"},
+  {title:"2002",artist:"Anne-Marie",year:2018,youtubeId:"Il-an3K9pjg"},
+  {title:"God Is a Woman",artist:"Ariana Grande",year:2018,youtubeId:"kHLHSlExFis"},
+  {title:"No Tears Left to Cry",artist:"Ariana Grande",year:2018,youtubeId:"ffxKSjUwKdU"},
+  {title:"thank u, next",artist:"Ariana Grande",year:2018,youtubeId:"gl1aHhXnN1k"},
+  {title:"lovely",artist:"Billie Eilish & Khalid",year:2018,youtubeId:"V1Pl8CzNzCw"},
+  {title:"One Kiss",artist:"Calvin Harris & Dua Lipa",year:2018,youtubeId:"DkeiKbqa02g"},
+  {title:"Promises",artist:"Calvin Harris & Sam Smith",year:2018,youtubeId:"kkLk2XWMBf8"},
+  {title:"Paradise",artist:"George Ezra",year:2018,youtubeId:"XOwihbur34E"},
+  {title:"Shotgun",artist:"George Ezra",year:2018,youtubeId:"aAiVsqfbn5g"},
+  {title:"Someone You Loved",artist:"Lewis Capaldi",year:2018,youtubeId:"zABLecsR5UE"},
+  {title:"Friends",artist:"Marshmello & Anne-Marie",year:2018,youtubeId:"jzD_yyEcp0M"},
+  {title:"Happier",artist:"Marshmello ft. Bastille",year:2018,youtubeId:"m7Bc3pLyij0"},
+  {title:"High Hopes",artist:"Panic! at the Disco",year:2018,youtubeId:"IPXIgEAGe4U"},
+  {title:"7 rings",artist:"Ariana Grande",year:2019,youtubeId:"QYh6mYIJG2Y"},
+  {title:"bad guy",artist:"Billie Eilish",year:2019,youtubeId:"DyDfgMOUjCI"},
+  {title:"bury a friend",artist:"Billie Eilish",year:2019,youtubeId:"HUHC9tYz8ik"},
+  {title:"Say So",artist:"Doja Cat",year:2019,youtubeId:"pok8H_KF1FA"},
+  {title:"Don't Start Now",artist:"Dua Lipa",year:2019,youtubeId:"oygrmJFKYZY"},
+  {title:"Adore You",artist:"Harry Styles",year:2019,youtubeId:"VF-r5TtlT9w"},
+  {title:"Watermelon Sugar",artist:"Harry Styles",year:2019,youtubeId:"E07s5ZYygMg"},
+  {title:"Before You Go",artist:"Lewis Capaldi",year:2019,youtubeId:"Jtauh8GcxBY"},
+  {title:"Old Town Road",artist:"Lil Nas X",year:2019,youtubeId:"r7qovpFAGrQ"},
+  {title:"Señorita",artist:"Shawn Mendes & Camila Cabello",year:2019,youtubeId:"Pkh8UtuejGw"},
+  {title:"Cruel Summer",artist:"Taylor Swift",year:2019,youtubeId:"ic8j13piAhQ"},
+  {title:"Blinding Lights",artist:"The Weeknd",year:2019,youtubeId:"4NRXx6U8ABQ"},
+  {title:"Dance Monkey",artist:"Tones and I",year:2019,youtubeId:"q0hyYWKXF0Q"},
+  {title:"Pink Pony Club",artist:"Chappell Roan",year:2020,youtubeId:"GR3Liudev18"},
+  {title:"Levitating",artist:"Dua Lipa",year:2020,youtubeId:"TUVcZfQe-Kw"},
+  {title:"Physical",artist:"Dua Lipa",year:2020,youtubeId:"9HDEHj2yzew"},
+  {title:"Head & Heart",artist:"Joel Corry ft. MNEK",year:2020,youtubeId:"CRuOOxF-ENQ"},
+  {title:"Save Your Tears",artist:"The Weeknd",year:2020,youtubeId:"XXYlFuWEuKI"},
+  {title:"Remember",artist:"Becky Hill & David Guetta",year:2021,youtubeId:"4o_vK7nEo9c"},
+  {title:"Woman",artist:"Doja Cat",year:2021,youtubeId:"yxW5yuzVi8w"},
+  {title:"Bad Habits",artist:"Ed Sheeran",year:2021,youtubeId:"orJSJGHjBLI"},
+  {title:"Shivers",artist:"Ed Sheeran",year:2021,youtubeId:"Il0S8BoucSA"},
+  {title:"Cold Heart",artist:"Elton John & Dua Lipa",year:2021,youtubeId:"qod03PVTLqk"},
+  {title:"BED",artist:"Joel Corry, RAYE & David Guetta",year:2021,youtubeId:"mD-8tS0Yd5M"},
+  {title:"Where Are You Now",artist:"Lost Frequencies & Calum Scott",year:2021,youtubeId:"PoP2Sa7wYNQ"},
+  {title:"Deja Vu",artist:"Olivia Rodrigo",year:2021,youtubeId:"cii6ruuycQA"},
+  {title:"Drivers License",artist:"Olivia Rodrigo",year:2021,youtubeId:"ZmDBbnmKpqQ"},
+  {title:"Good 4 U",artist:"Olivia Rodrigo",year:2021,youtubeId:"gNi_6U5Pm_o"},
+  {title:"I'm Good (Blue)",artist:"David Guetta & Bebe Rexha",year:2022,youtubeId:"90RLzVUuXe4"},
+  {title:"Crazy What Love Can Do",artist:"David Guetta, Becky Hill & Ella Henderson",year:2022,youtubeId:"8UMnAIaBofo"},
+  {title:"Celestial",artist:"Ed Sheeran",year:2022,youtubeId:"23g5HBOg3Ic"},
+  {title:"Hold Me Closer",artist:"Elton John & Britney Spears",year:2022,youtubeId:"qExVlz3zb0k"},
+  {title:"Green Green Grass",artist:"George Ezra",year:2022,youtubeId:"VQeW62X8rEA"},
+  {title:"As It Was",artist:"Harry Styles",year:2022,youtubeId:"H5v3kku4y6Q"},
+  {title:"Late Night Talking",artist:"Harry Styles",year:2022,youtubeId:"4VaqA-5aQTM"},
+  {title:"Ferrari",artist:"James Hype & Miggy Dela Rosa",year:2022,youtubeId:"4cCi6-16HR4"},
+  {title:"Where Did You Go?",artist:"Jax Jones ft. MNEK",year:2022,youtubeId:"C8Q6VtWUTv8"},
+  {title:"Lionheart (Fearless)",artist:"Joel Corry & Tom Grennan",year:2022,youtubeId:"0MMcK3KkL2U"},
+  {title:"Forget Me",artist:"Lewis Capaldi",year:2022,youtubeId:"nBZLRX_M9Ao"},
+  {title:"Pointless",artist:"Lewis Capaldi",year:2022,youtubeId:"4V1Xz9sKq2U"},
+  {title:"Afraid to Feel",artist:"LF SYSTEM",year:2022,youtubeId:"V79QJ5dJ8NQ"},
+  {title:"About Damn Time",artist:"Lizzo",year:2022,youtubeId:"IXXxciRUMzE"},
+  {title:"Made You Look",artist:"Meghan Trainor",year:2022,youtubeId:"gPCCYMeXin0"},
+  {title:"Creepin'",artist:"Metro Boomin, The Weeknd & 21 Savage",year:2022,youtubeId:"61ymOWwOwuk"},
+  {title:"21 Reasons",artist:"Nathan Dawe ft. Ella Henderson",year:2022,youtubeId:"7F5B28O-t4M"},
+  {title:"Stick Season",artist:"Noah Kahan",year:2022,youtubeId:"JKrDdsgXuso"},
+  {title:"Escapism.",artist:"RAYE ft. 070 Shake",year:2022,youtubeId:"Dll6VJ2C7wo"},
+  {title:"Calm Down",artist:"Rema & Selena Gomez",year:2022,youtubeId:"WcIcVapfqXw"},
+  {title:"Unholy",artist:"Sam Smith ft. Kim Petras",year:2022,youtubeId:"Uq9gPaIzbe8"},
+  {title:"Anti-Hero",artist:"Taylor Swift",year:2022,youtubeId:"b1kbLwvqugk"},
+  {title:"Disconnect",artist:"Becky Hill & Chase & Status",year:2023,youtubeId:"YQ7b5y9ZaCw"},
+  {title:"What Was I Made For?",artist:"Billie Eilish",year:2023,youtubeId:"cW8VLC9nnTo"},
+  {title:"Miracle",artist:"Calvin Harris & Ellie Goulding",year:2023,youtubeId:"961v0E3b01g"},
+  {title:"Desire",artist:"Calvin Harris & Sam Smith",year:2023,youtubeId:"6DaL-Z4dwzI"},
+  {title:"Prada",artist:"cassö, RAYE & D-Block Europe",year:2023,youtubeId:"r7D8kX-Kxcs"},
+  {title:"HOT TO GO!",artist:"Chappell Roan",year:2023,youtubeId:"xaPNR-_Cfn0"},
+  {title:"Baby Don't Hurt Me",artist:"David Guetta, Anne-Marie & Coi Leray",year:2023,youtubeId:"k3DBmAlUh1A"},
+  {title:"Paint the Town Red",artist:"Doja Cat",year:2023,youtubeId:"m4_9TFeMfJE"},
+  {title:"Dance the Night",artist:"Dua Lipa",year:2023,youtubeId:"OiC1rgCPmUQ"},
+  {title:"Houdini",artist:"Dua Lipa",year:2023,youtubeId:"suAR1PYFNYA"},
+  {title:"Eyes Closed",artist:"Ed Sheeran",year:2023,youtubeId:"u6wOyMUs74I"},
+  {title:"Whistle",artist:"Jax Jones & Calum Scott",year:2023,youtubeId:"N3M4VmkbeKI"},
+  {title:"Won't Forget You",artist:"Jax Jones, D.O.D & Ina Wroldsen",year:2023,youtubeId:"Sngg8MY5H_8"},
+  {title:"Strangers",artist:"Kenya Grace",year:2023,youtubeId:"S2TaAcwC_zI"},
+  {title:"Padam Padam",artist:"Kylie Minogue",year:2023,youtubeId:"p6Cnazi_Fi0"},
+  {title:"Flowers",artist:"Miley Cyrus",year:2023,youtubeId:"G7KNmW9a75Y"},
+  {title:"Used to Be Young",artist:"Miley Cyrus",year:2023,youtubeId:"IZ3XMOdOdKM"},
+  {title:"0800 Heaven",artist:"Nathan Dawe, Joel Corry & Ella Henderson",year:2023,youtubeId:"cxTksM0JQbc"},
+  {title:"Vampire",artist:"Olivia Rodrigo",year:2023,youtubeId:"RlPNh_PBZb4"},
+  {title:"React",artist:"Switch Disco & Ella Henderson",year:2023,youtubeId:"8fd7AJXGSxU"},
+  {title:"exes",artist:"Tate McRae",year:2023,youtubeId:"YbtXg7xWiKM"},
+  {title:"greedy",artist:"Tate McRae",year:2023,youtubeId:"To4SWGZkEPk"},
+  {title:"Lose Control",artist:"Teddy Swims",year:2023,youtubeId:"GZ3zL7kT6_c"},
+  {title:"One of Your Girls",artist:"Troye Sivan",year:2023,youtubeId:"ZhGl8McrOHo"},
+  {title:"Rush",artist:"Troye Sivan",year:2023,youtubeId:"b53QJYP-lqY"},
+  {title:"Water",artist:"Tyla",year:2023,youtubeId:"XoiOOiuH8iI"},
+  {title:"Never Be Alone",artist:"Becky Hill & Sonny Fodera",year:2024,youtubeId:"m0rM7Xz5LwM"},
+  {title:"Beautiful Things",artist:"Benson Boone",year:2024,youtubeId:"Oa_RSwwpPaA"},
+  {title:"Slow It Down",artist:"Benson Boone",year:2024,youtubeId:"ZBdyhf7vQYo"},
+  {title:"Birds of a Feather",artist:"Billie Eilish",year:2024,youtubeId:"V9PVRfjEBTI"},
+  {title:"Lunch",artist:"Billie Eilish",year:2024,youtubeId:"MB3VkzPdgLA"},
+  {title:"Good Luck, Babe!",artist:"Chappell Roan",year:2024,youtubeId:"1RKqOmSkGgM"},
+  {title:"Training Season",artist:"Dua Lipa",year:2024,youtubeId:"ZjBZ8MUnB0E"},
+  {title:"Too Sweet",artist:"Hozier",year:2024,youtubeId:"NTpbbQUBbuo"},
+  {title:"Messy",artist:"Lola Young",year:2024,youtubeId:"H4t5aM8vDyk"},
+  {title:"Worth It.",artist:"RAYE",year:2024,youtubeId:"BfR7TT2FJjk"},
+  {title:"Espresso",artist:"Sabrina Carpenter",year:2024,youtubeId:"eVli-tstM5E"},
+  {title:"Please Please Please",artist:"Sabrina Carpenter",year:2024,youtubeId:"cF1Na4AIecM"},
+  {title:"Taste",artist:"Sabrina Carpenter",year:2024,youtubeId:"KEG7b851Ric"},
+  {title:"A Bar Song (Tipsy)",artist:"Shaboozey",year:2024,youtubeId:"t7bQwwqW-Hc"},
+  {title:"I Can Do It With a Broken Heart",artist:"Taylor Swift",year:2024,youtubeId:"Sl6en1NPTYM"},
+  {title:"Fortnight",artist:"Taylor Swift ft. Post Malone",year:2024,youtubeId:"q3zqJs7JUCQ"},
+];
+
+const $ = id => document.getElementById(id);
+
+const audio = new Audio();
+audio.preload = "auto";
+audio.crossOrigin = "anonymous";
+
+let gameVolume = Number(localStorage.getItem("fiveSecondSongVolume") || 35);
+gameVolume = Math.max(0, Math.min(100, gameVolume));
+audio.volume = gameVolume / 100;
+
+let pool=[];
+let current=null;
+let currentPreview=null;
+let previewCache=new Map();
+let options=[];
+let used=new Set();
+
+let totalRounds=10;
+let round=0;
+let score=0;
+let streak=0;
+let answered=false;
+
+let clipTimer=null;
+let tickTimer=null;
+let startedAt=0;
+
+let ytReady=false;
+let ytPlayer=null;
+let ytLoadedSongId=null;
+let fullPlaying=false;
+
+function normalize(v){
+  return String(v||"")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .replace(/\([^)]*\)|\[[^\]]*\]/g," ")
+    .replace(/\b(feat|ft)\.?\b/g," ")
+    .replace(/[^a-z0-9]+/g," ")
+    .trim();
+}
+
+function shuffle(a){
+  const b=[...a];
+  for(let i=b.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [b[i],b[j]]=[b[j],b[i]];
+  }
+  return b;
+}
+
+function inRange(song,range){
+  if(range==="all") return true;
+  const [from,to]=range.split("-").map(Number);
+  return song.year>=from && song.year<=to;
+}
+
+function fmt(n){
+  return new Intl.NumberFormat().format(n);
+}
+
+function escapeHtml(v){
+  return String(v)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+async function getPreview(song){
+  const cacheKey=`${song.artist}|${song.title}`;
+  if(previewCache.has(cacheKey)) return previewCache.get(cacheKey);
+
+  try{
+    const term=encodeURIComponent(`${song.artist} ${song.title}`);
+    const url=`https://itunes.apple.com/search?term=${term}&entity=song&limit=25&country=GB`;
+    const response=await fetch(url,{cache:"force-cache"});
+    if(!response.ok) throw new Error("Preview lookup failed");
+
+    const json=await response.json();
+    const wantedTitle=normalize(song.title);
+    const wantedArtist=normalize(song.artist);
+
+    let winner=null;
+    let topScore=-1;
+
+    for(const item of json.results||[]){
+      if(!item.previewUrl) continue;
+
+      const foundTitle=normalize(item.trackName);
+      const foundArtist=normalize(item.artistName);
+      let points=0;
+
+      if(foundTitle===wantedTitle) points+=100;
+      else if(foundTitle.includes(wantedTitle)||wantedTitle.includes(foundTitle)) points+=55;
+
+      if(foundArtist===wantedArtist) points+=70;
+      else if(foundArtist.includes(wantedArtist)||wantedArtist.includes(foundArtist)) points+=35;
+
+      if(points>topScore){
+        topScore=points;
+        winner=item;
+      }
+    }
+
+    const result=topScore>=70 && winner
+      ? {url:winner.previewUrl}
+      : null;
+
+    previewCache.set(cacheKey,result);
+    return result;
+  }catch(err){
+    console.warn(err);
+    previewCache.set(cacheKey,null);
+    return null;
+  }
+}
+
+async function startGame(){
+  const era=$("eraSelect").value;
+  totalRounds=$("roundSelect").value==="endless"
+    ? Infinity
+    : Number($("roundSelect").value);
+
+  pool=SONGS.filter(song=>inRange(song,era));
+
+  if(pool.length<4){
+    alert("Not enough songs are available in this era yet.");
+    return;
+  }
+
+  round=0;
+  score=0;
+  streak=0;
+  used.clear();
+
+  $("startScreen").style.display="none";
+  $("finishScreen").style.display="none";
+  $("gameScreen").style.display="block";
+  $("eraHud").textContent=era==="all"?"Any year":era.replace("-","–");
+
+  nextRound();
+}
+
+function chooseSong(){
+  const available = pool.filter(song => !used.has(song.youtubeId));
+
+  // Never repeat a song during the same game.
+  if(!available.length){
+    return null;
+  }
+
+  const song = available[Math.floor(Math.random() * available.length)];
+  used.add(song.youtubeId);
+  return song;
+}
+
+function makeOptions(correct){
+  let distractors=pool.filter(song=>
+    song.youtubeId!==correct.youtubeId &&
+    song.title!==correct.title
+  );
+
+  if(distractors.length<3){
+    distractors=SONGS.filter(song=>
+      song.youtubeId!==correct.youtubeId &&
+      song.title!==correct.title
+    );
+  }
+
+  return shuffle([
+    correct,
+    ...shuffle(distractors).slice(0,3)
+  ]);
+}
+
+async function nextRound(){
+  stopMysteryAudio();
+  hideYoutube();
+
+  if(totalRounds!==Infinity && round>=totalRounds){
+    finishGame();
+    return;
+  }
+
+  answered=false;
+
+  const nextSong = chooseSong();
+
+  // No unused songs left in this era, so finish instead of repeating one.
+  if(!nextSong){
+    finishGame();
+    return;
+  }
+
+  round++;
+  current=nextSong;
+  options=makeOptions(current);
+  currentPreview=null;
+
+  $("resultBox").classList.remove("show");
+  $("clipFill").style.width="0%";
+  $("clipTime").textContent="0.0 / 5.0";
+  $("mysteryBox").classList.remove("playing");
+  $("mysteryLabel").textContent="Finding mystery audio…";
+  $("playBtn").disabled=true;
+  $("playBtn").textContent="Finding clip…";
+  $("replayBtn").disabled=true;
+
+  renderAnswers();
+  updateHud();
+
+  const thisSong=current;
+  const preview=await getPreview(current);
+
+  if(current!==thisSong) return;
+
+  if(!preview){
+    $("mysteryLabel").textContent="No preview found — choosing another song…";
+    setTimeout(()=>{
+      round--;
+      nextRound();
+    },700);
+    return;
+  }
+
+  currentPreview=preview;
+  audio.src=preview.url;
+  audio.load();
+
+  $("mysteryLabel").textContent="Mystery audio ready";
+  $("playBtn").disabled=false;
+  $("playBtn").textContent="▶ Play 5 seconds";
+}
+
+function renderAnswers(){
+  const letters="ABCD";
+
+  $("answers").innerHTML=options.map((song,index)=>`
+    <button class="answer" data-answer="${index}">
+      <span class="letter">${letters[index]}</span>
+      <span>${escapeHtml(song.title)}</span>
+    </button>
+  `).join("");
+
+  document.querySelectorAll("[data-answer]").forEach(button=>{
+    button.addEventListener("click",()=>{
+      answerSong(Number(button.dataset.answer),button);
+    });
+  });
+}
+
+function playMysteryClip(){
+  if(!currentPreview || answered) return;
+
+  stopMysteryAudio();
+
+  audio.src=currentPreview.url;
+  audio.currentTime=0;
+  audio.volume=gameVolume/100;
+
+  $("mysteryBox").classList.add("playing");
+  $("mysteryLabel").textContent="Playing mystery clip…";
+  $("playBtn").disabled=true;
+  $("replayBtn").disabled=true;
+
+  const playPromise=audio.play();
+
+  if(playPromise){
+    playPromise.catch(()=>{
+      $("mysteryBox").classList.remove("playing");
+      $("mysteryLabel").textContent="Audio blocked — press Play again";
+      $("playBtn").disabled=false;
+      $("replayBtn").disabled=false;
+    });
+  }
+
+  startedAt=performance.now();
+
+  tickTimer=setInterval(()=>{
+    const elapsed=Math.min((performance.now()-startedAt)/1000,5);
+    $("clipFill").style.width=((elapsed/5)*100)+"%";
+    $("clipTime").textContent=elapsed.toFixed(1)+" / 5.0";
+  },50);
+
+  clipTimer=setTimeout(()=>{
+    audio.pause();
+    clearTimeout(clipTimer);
+    clearInterval(tickTimer);
+    clipTimer=null;
+    tickTimer=null;
+
+    $("mysteryBox").classList.remove("playing");
+    $("mysteryLabel").textContent="Clip finished";
+    $("clipFill").style.width="100%";
+    $("clipTime").textContent="5.0 / 5.0";
+    $("playBtn").disabled=false;
+    $("playBtn").textContent="▶ Play again";
+    $("replayBtn").disabled=false;
+  },5000);
+}
+
+function stopMysteryAudio(){
+  clearTimeout(clipTimer);
+  clearInterval(tickTimer);
+  clipTimer=null;
+  tickTimer=null;
+
+  try{audio.pause()}catch(e){}
+
+  $("mysteryBox")?.classList.remove("playing");
+}
+
+function answerSong(index,button){
+  if(answered) return;
+
+  answered=true;
+  stopMysteryAudio();
+
+  const correctIndex=options.findIndex(song=>song.youtubeId===current.youtubeId);
+
+  document.querySelectorAll(".answer").forEach((btn,i)=>{
+    btn.disabled=true;
+    if(i===correctIndex) btn.classList.add("correct");
+  });
+
+  if(index===correctIndex){
+    streak++;
+    const points=1000+Math.min(streak-1,10)*100;
+    score+=points;
+
+    $("resultStatus").textContent=`Correct! +${fmt(points)} points`;
+    $("resultStatus").style.color="var(--green)";
+  }else{
+    streak=0;
+    button.classList.add("wrong");
+    $("resultStatus").textContent="Not quite.";
+    $("resultStatus").style.color="var(--red)";
+  }
+
+  $("resultMeta").innerHTML=
+    `<strong style="color:white">${escapeHtml(current.title)}</strong><br>`+
+    `${escapeHtml(current.artist)} · ${current.year}`;
+
+  $("resultBox").classList.add("show");
+
+  $("mysteryLabel").textContent=`${current.title} — ${current.artist}`;
+  $("playBtn").disabled=true;
+  $("replayBtn").disabled=false;
+
+  updateHud();
+}
+
+function replayAfterAnswer(){
+  if(!currentPreview) return;
+
+  stopMysteryAudio();
+
+  audio.src=currentPreview.url;
+  audio.currentTime=0;
+  audio.volume=gameVolume/100;
+  audio.play().catch(()=>{});
+
+  $("mysteryBox").classList.add("playing");
+  $("mysteryLabel").textContent=`${current.title} — ${current.artist}`;
+  $("replayBtn").disabled=true;
+
+  startedAt=performance.now();
+
+  tickTimer=setInterval(()=>{
+    const elapsed=Math.min((performance.now()-startedAt)/1000,5);
+    $("clipFill").style.width=((elapsed/5)*100)+"%";
+    $("clipTime").textContent=elapsed.toFixed(1)+" / 5.0";
+  },50);
+
+  clipTimer=setTimeout(()=>{
+    audio.pause();
+    clearTimeout(clipTimer);
+    clearInterval(tickTimer);
+    clipTimer=null;
+    tickTimer=null;
+
+    $("mysteryBox").classList.remove("playing");
+    $("clipFill").style.width="100%";
+    $("clipTime").textContent="5.0 / 5.0";
+    $("replayBtn").disabled=false;
+  },5000);
+}
+
+function updateHud(){
+  $("roundHud").textContent=
+    totalRounds===Infinity
+      ? String(round)
+      : `${round} / ${totalRounds}`;
+
+  $("scoreHud").textContent=fmt(score);
+  $("streakHud").textContent=`${streak} 🔥`;
+
+  $("roundProgress").style.width=
+    totalRounds===Infinity
+      ? "100%"
+      : `${Math.min((round/totalRounds)*100,100)}%`;
+}
+
+function finishGame(){
+  stopMysteryAudio();
+  hideYoutube();
+
+  $("gameScreen").style.display="none";
+  $("finishScreen").style.display="block";
+
+  const uniquePlayed = used.size;
+  $("finishScore").textContent =
+    `Final score: ${fmt(score)} points · ${uniquePlayed} unique song${uniquePlayed === 1 ? "" : "s"} played`;
+}
+
+/* YOUTUBE IS ONLY USED AFTER THE ANSWER */
+const ytScript=document.createElement("script");
+ytScript.src="https://www.youtube.com/iframe_api";
+document.head.appendChild(ytScript);
+
+window.onYouTubeIframeAPIReady=()=>{
+  ytReady=true;
+};
+
+function toggleFullSong(){
+  if(!answered || !current) return;
+
+  $("youtubeReveal").classList.add("show");
+
+  if(!ytReady){
+    $("fullSongBtn").textContent="Loading YouTube…";
+    setTimeout(toggleFullSong,350);
+    return;
+  }
+
+  if(!ytPlayer){
+    ytPlayer=new YT.Player("ytPlayer",{
+      width:356,
+      height:200,
+      videoId:current.youtubeId,
+      playerVars:{
+        controls:1,
+        playsinline:1,
+        rel:0,
+        origin:location.origin
+      },
+      events:{
+        onReady:event=>{
+          ytLoadedSongId=current.youtubeId;
+          try{
+            event.target.setVolume(gameVolume);
+            if(gameVolume === 0) event.target.mute();
+            else event.target.unMute();
+          }catch(e){}
+          event.target.playVideo();
+          fullPlaying=true;
+          $("fullSongBtn").textContent="❚❚ Pause full song";
+        },
+        onStateChange:event=>{
+          if(event.data===YT.PlayerState.ENDED){
+            fullPlaying=false;
+            $("fullSongBtn").textContent="▶ Play full song";
+          }
+        }
+      }
+    });
+    return;
+  }
+
+  if(ytLoadedSongId!==current.youtubeId){
+    try{
+      ytPlayer.setVolume(gameVolume);
+      if(gameVolume === 0) ytPlayer.mute();
+      else ytPlayer.unMute();
+    }catch(e){}
+    ytPlayer.loadVideoById(current.youtubeId);
+    ytLoadedSongId=current.youtubeId;
+    fullPlaying=true;
+    $("fullSongBtn").textContent="❚❚ Pause full song";
+    return;
+  }
+
+  if(fullPlaying){
+    ytPlayer.pauseVideo();
+    fullPlaying=false;
+    $("fullSongBtn").textContent="▶ Play full song";
+  }else{
+    ytPlayer.playVideo();
+    fullPlaying=true;
+    $("fullSongBtn").textContent="❚❚ Pause full song";
+  }
+}
+
+function hideYoutube(){
+  $("youtubeReveal").classList.remove("show");
+  $("fullSongBtn").textContent="▶ Play full song";
+  fullPlaying=false;
+
+  if(ytPlayer){
+    try{
+      ytPlayer.stopVideo();
+      ytPlayer.clearVideo();
+    }catch(e){}
+  }
+
+  ytLoadedSongId=null;
+}
+
+const volumeSlider = $("volumeSlider");
+const volumeValue = $("volumeValue");
+
+volumeSlider.value = String(gameVolume);
+volumeValue.textContent = gameVolume + "%";
+
+volumeSlider.addEventListener("input",()=>{
+  gameVolume = Number(volumeSlider.value);
+  volumeValue.textContent = gameVolume + "%";
+  localStorage.setItem("fiveSecondSongVolume", String(gameVolume));
+
+  audio.volume = gameVolume / 100;
+
+  if(ytPlayer){
+    try{
+      ytPlayer.setVolume(gameVolume);
+      if(gameVolume === 0) ytPlayer.mute();
+      else ytPlayer.unMute();
+    }catch(e){}
+  }
+});
+
+$("startBtn").addEventListener("click",startGame);
+$("playBtn").addEventListener("click",playMysteryClip);
+$("replayBtn").addEventListener("click",()=>{
+  answered ? replayAfterAnswer() : playMysteryClip();
+});
+$("nextBtn").addEventListener("click",nextRound);
+$("fullSongBtn").addEventListener("click",toggleFullSong);
+$("againBtn").addEventListener("click",()=>{
+  $("finishScreen").style.display="none";
+  $("startScreen").style.display="block";
+});
+</script>
+</body>
+</html>
